@@ -1,4 +1,4 @@
-package proyecto_poo;
+package proyecto_algoritmos;
 
 import vista.area0Login.FormLogin;
 
