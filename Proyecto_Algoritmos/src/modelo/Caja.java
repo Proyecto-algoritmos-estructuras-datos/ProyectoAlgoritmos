@@ -108,7 +108,6 @@ public class Caja {
     }
 
     // toString()
-
     @Override
     public String toString() {
         return "Caja{" + "idCaja=" + idCaja + ", empleadoApertura=" + empleadoApertura + ", empleadoCierre=" + empleadoCierre + ", fecha=" + fecha + ", horaApertura=" + horaApertura + ", horaCierre=" + horaCierre + ", montoApertura=" + montoApertura + ", montoCierre=" + montoCierre + ", estado=" + estado + '}';
