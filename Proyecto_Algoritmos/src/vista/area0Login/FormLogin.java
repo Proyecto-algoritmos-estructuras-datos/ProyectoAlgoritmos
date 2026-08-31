@@ -1,15 +1,10 @@
 package vista.area0Login;
 
-import controlador.CajaController;
-import controlador.EmpleadoController;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import modelo.Caja;
-import modelo.Empleado;
-import utilidades.Mensajes;
 import vista.area1TomarPedido.FormTomarPedido;
 import vista.area5Administracion.FormAdministracion;
 import vista.area4Caja.FormCaja;
@@ -17,24 +12,18 @@ import vista.area4Caja.FormCaja;
 public class FormLogin extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FormLogin.class.getName());
-    private final EmpleadoController empleadoController;
-    private final CajaController cajaController;
 
     FondoPanel fondo = new FondoPanel();
 
     public FormLogin() {
-        // Controlador del empleado
-        this.empleadoController = new EmpleadoController();
-        this.cajaController = new CajaController();
         
         this.setContentPane(fondo);
 
         initComponents();
 
-        this.setLocationRelativeTo(null); //Para centrar el Jframe
+        this.setLocationRelativeTo(null); 
         this.requestFocusInWindow();
 
-        System.out.println(getClass().getResource("/vista/imagenes/FLORES4.png"));
         
         
         txtDniLogin.setText("Usuario");
@@ -350,58 +339,22 @@ public class FormLogin extends javax.swing.JFrame {
 
     private void btnIniciarSesiónActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesiónActionPerformed
       
-        String dni = txtDniLogin.getText();
-        String contrasenia = new String(txtContraseniaLogin.getPassword());
         
         //Para que el boton de Iniciar Sesión permanezca de color rojo
         btnIniciarSesionLogin.setContentAreaFilled(false);
         btnIniciarSesionLogin.setOpaque(true);
         btnIniciarSesionLogin.setBackground(new Color(182,22,20));
         
-        try {
-            Empleado empleado = empleadoController.iniciarSesionEmpleado(dni, contrasenia);
-            Caja caja = cajaController.buscarCajaAbierta();
-            
-            switch (empleado.getRol()) {
-                case "Administrador" -> {
-                    new FormAdministracion(empleado).setVisible(true);
-                    this.dispose();
-                    
-                    if (caja == null) {
-                        Mensajes.aviso("No hay caja Abierta");
-                    }
-                    
-                }
-                case "Empleado" -> {
-                    
-                    
-                    if (caja == null) {
-                        new FormCaja(empleado).setVisible(true);
-                        this.dispose();
-                        Mensajes.aviso("No hay caja Abierta");
-                    } else {
-                        new FormTomarPedido(empleado).setVisible(true);
-                        this.dispose();
-                    }
-                }
-                default -> {
-                    Mensajes.rolDesconocido();
-                }
-            }
             
             
-        } catch (Exception e) {
-            Mensajes.loginIncorrecto();
-            
-            txtDniLogin.setForeground(Color.decode("#666666"));
+        txtDniLogin.setForeground(Color.decode("#666666"));
 
-            txtContraseniaLogin.setForeground(Color.decode("#666666"));
-            
-            btnIniciarSesionLogin.setFocusable(false);
-            btnIniciarSesionLogin.setBackground(new Color(182,22,20));
+        txtContraseniaLogin.setForeground(Color.decode("#666666"));
+
+        btnIniciarSesionLogin.setFocusable(false);
+        btnIniciarSesionLogin.setBackground(new Color(182,22,20));
 
             // txtContraseniaLogin.setEchoChar((char) 0);
-        }
         
     }//GEN-LAST:event_btnIniciarSesiónActionPerformed
 
