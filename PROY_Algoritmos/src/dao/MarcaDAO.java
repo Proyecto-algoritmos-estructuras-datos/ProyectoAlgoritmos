@@ -38,9 +38,10 @@ public class MarcaDAO implements IMarcaDAO{
                      INSERT INTO marca
                      (
                      nombre_marca,
-                     descripcion
+                     descripcion,
+                     pais_origen
                      )
-                     VALUES (?, ?)
+                     VALUES (?, ?, ?)
                      """;
         
         try (Connection conn = new Conexion().conectar();
@@ -48,6 +49,7 @@ public class MarcaDAO implements IMarcaDAO{
             ) {
             ps.setString(1, marca.getNombreMarca());
             ps.setString(2, marca.getDescripcion());
+            ps.setString(3, marca.getPaisOrigen());
             
             int filas = ps.executeUpdate();
             
@@ -66,7 +68,8 @@ public class MarcaDAO implements IMarcaDAO{
                      UPDATE marca
                      SET
                      nombre_marca = ?,
-                     descripcion = ?
+                     descripcion = ?,
+                     pais_origen = ?
                      WHERE id_marca = ?
                      """;
         
@@ -75,7 +78,8 @@ public class MarcaDAO implements IMarcaDAO{
             ) {
             ps.setString(1, marca.getNombreMarca());
             ps.setString(2, marca.getDescripcion());
-            ps.setInt(3, marca.getIdMarca());
+            ps.setString(3, marca.getPaisOrigen());
+            ps.setInt(4, marca.getIdMarca());
             
             int filas = ps.executeUpdate();
             
