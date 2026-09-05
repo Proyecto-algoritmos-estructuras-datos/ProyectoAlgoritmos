@@ -200,6 +200,9 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Inter SemiBold" size="12" style="0"/>
             </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Salir"/>
           </Properties>
           <Events>
@@ -298,8 +301,8 @@
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="cbxOrdenar" pref="199" max="32767" attributes="0"/>
-                                  <Component id="cbxMetodo" max="32767" attributes="0"/>
+                                  <Component id="cbxOrdenar" max="32767" attributes="0"/>
+                                  <Component id="cbxMetodo" pref="199" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <Component id="btnOrdenar" alignment="0" max="32767" attributes="0"/>
@@ -476,7 +479,7 @@
                 <Component class="javax.swing.JTable" name="tblMatriz">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="9c" green="3f" red="0" type="rgb"/>
+                      <Color blue="e6" green="de" red="d7" type="rgb"/>
                     </Property>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Inter SemiBold" size="12" style="0"/>
@@ -710,7 +713,7 @@
                           </Group>
                           <Group type="102" attributes="0">
                               <Component id="txtNombre" min="-2" pref="152" max="-2" attributes="0"/>
-                              <EmptySpace pref="32" max="32767" attributes="0"/>
+                              <EmptySpace pref="62" max="32767" attributes="0"/>
                               <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="txtPais" min="-2" pref="152" max="-2" attributes="0"/>
@@ -901,7 +904,7 @@
                 <Component class="javax.swing.JTable" name="tblMarcas">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="9c" green="3f" red="0" type="rgb"/>
+                      <Color blue="e6" green="de" red="d7" type="rgb"/>
                     </Property>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Inter SemiBold" size="12" style="0"/>

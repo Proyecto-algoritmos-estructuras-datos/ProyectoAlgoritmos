@@ -107,7 +107,7 @@ public class FormMarcas extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(1, 91, 187));
 
-        jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/apla.png"))); // NOI18N
+        jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/apla.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -129,7 +129,7 @@ public class FormMarcas extends javax.swing.JFrame {
         btnProductos.setBackground(new java.awt.Color(0, 29, 63));
         btnProductos.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnProductos.setForeground(new java.awt.Color(255, 255, 255));
-        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/productos.png"))); // NOI18N
+        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/productos.png"))); // NOI18N
         btnProductos.setText("   Productos      ");
         btnProductos.setBorder(null);
         btnProductos.setBorderPainted(false);
@@ -144,7 +144,7 @@ public class FormMarcas extends javax.swing.JFrame {
         btnMarcas.setBackground(new java.awt.Color(0, 29, 63));
         btnMarcas.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnMarcas.setForeground(new java.awt.Color(255, 255, 255));
-        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/marcas.png"))); // NOI18N
+        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/marcas.png"))); // NOI18N
         btnMarcas.setText("  Marcas             ");
         btnMarcas.setBorder(null);
         btnMarcas.setBorderPainted(false);
@@ -158,7 +158,7 @@ public class FormMarcas extends javax.swing.JFrame {
         btnCategorias.setBackground(new java.awt.Color(0, 29, 63));
         btnCategorias.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnCategorias.setForeground(new java.awt.Color(255, 255, 255));
-        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/categorias.png"))); // NOI18N
+        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/categorias.png"))); // NOI18N
         btnCategorias.setText("  Categorias      ");
         btnCategorias.setBorder(null);
         btnCategorias.setBorderPainted(false);
@@ -172,6 +172,7 @@ public class FormMarcas extends javax.swing.JFrame {
 
         btnSalir.setBackground(new java.awt.Color(0, 63, 156));
         btnSalir.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
+        btnSalir.setForeground(new java.awt.Color(255, 255, 255));
         btnSalir.setText("Salir");
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -258,8 +259,8 @@ public class FormMarcas extends javax.swing.JFrame {
                             .addComponent(jLabel15))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cbxOrdenar, 0, 199, Short.MAX_VALUE)
-                            .addComponent(cbxMetodo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(cbxOrdenar, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cbxMetodo, 0, 199, Short.MAX_VALUE)))
                     .addComponent(btnOrdenar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -288,7 +289,7 @@ public class FormMarcas extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(44, 44, 44));
         jLabel3.setText("Matriz de País de Origen por Estado");
 
-        tblMatriz.setBackground(new java.awt.Color(0, 63, 156));
+        tblMatriz.setBackground(new java.awt.Color(215, 222, 230));
         tblMatriz.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         tblMatriz.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -463,7 +464,7 @@ public class FormMarcas extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
                         .addComponent(jLabel13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtPais, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -502,7 +503,7 @@ public class FormMarcas extends javax.swing.JFrame {
         jLabel10.setForeground(new java.awt.Color(44, 44, 44));
         jLabel10.setText("Tabla de Marcas");
 
-        tblMarcas.setBackground(new java.awt.Color(0, 63, 156));
+        tblMarcas.setBackground(new java.awt.Color(215, 222, 230));
         tblMarcas.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         tblMarcas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
