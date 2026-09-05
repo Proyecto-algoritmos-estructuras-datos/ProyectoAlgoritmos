@@ -4,10 +4,14 @@ import controlador.MarcaController;
 import vista.area2Categorias.*;
 import vista.area1Productos.*;
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 import javax.swing.table.DefaultTableModel;
 import modelo.Marca;
+import util.AlgoritmoOrdenamientoDirecto;
 import util.Mensajes;
 import vista.area0Login.FormLogin;
 
@@ -18,6 +22,7 @@ public class FormMarcas extends javax.swing.JFrame {
 
     // Inicialización del modelo de la tabla de productos
     private final DefaultTableModel modelo = new DefaultTableModel();
+    List<Marca> listaMarcas = new ArrayList<>();
     
     // Controladores
     private final MarcaController marcaControl;
@@ -87,6 +92,7 @@ public class FormMarcas extends javax.swing.JFrame {
         txtPais = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         txtDescripcion = new javax.swing.JTextField();
+        btnMostrarDetalles = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
@@ -198,7 +204,7 @@ public class FormMarcas extends javax.swing.JFrame {
                 .addComponent(btnMarcas, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(86, 86, 86)
                 .addComponent(btnSalir)
-                .addGap(0, 185, Short.MAX_VALUE))
+                .addGap(0, 198, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -215,6 +221,11 @@ public class FormMarcas extends javax.swing.JFrame {
         btnOrdenar.setForeground(new java.awt.Color(255, 255, 255));
         btnOrdenar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/logoOrdenar.png"))); // NOI18N
         btnOrdenar.setText("   Ordenar      ");
+        btnOrdenar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOrdenarActionPerformed(evt);
+            }
+        });
 
         jLabel14.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         jLabel14.setText("Ordenar por:");
@@ -223,10 +234,10 @@ public class FormMarcas extends javax.swing.JFrame {
         jLabel15.setText("Método:");
 
         cbxMetodo.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
-        cbxMetodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxMetodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Burbuja", "Selección", "Inserción" }));
 
         cbxOrdenar.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
-        cbxOrdenar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxOrdenar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ID" }));
         cbxOrdenar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxOrdenarActionPerformed(evt);
@@ -325,12 +336,22 @@ public class FormMarcas extends javax.swing.JFrame {
         btnAgregar.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/logoGUARDAR.png"))); // NOI18N
         btnAgregar.setText("  Agregar   ");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         btnActualizar.setBackground(new java.awt.Color(25, 23, 22));
         btnActualizar.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnActualizar.setForeground(new java.awt.Color(255, 255, 255));
         btnActualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/LogoACTUALIZAR2.png"))); // NOI18N
         btnActualizar.setText("Actualizar");
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarActionPerformed(evt);
+            }
+        });
 
         btnEliminar.setBackground(new java.awt.Color(25, 23, 22));
         btnEliminar.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
@@ -385,7 +406,7 @@ public class FormMarcas extends javax.swing.JFrame {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRecorrer, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
@@ -410,6 +431,16 @@ public class FormMarcas extends javax.swing.JFrame {
 
         txtDescripcion.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
 
+        btnMostrarDetalles.setBackground(new java.awt.Color(0, 63, 156));
+        btnMostrarDetalles.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
+        btnMostrarDetalles.setForeground(new java.awt.Color(255, 255, 255));
+        btnMostrarDetalles.setText("Mostrar Detalle");
+        btnMostrarDetalles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMostrarDetallesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -417,7 +448,9 @@ public class FormMarcas extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(jLabel7)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnMostrarDetalles, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -427,20 +460,22 @@ public class FormMarcas extends javax.swing.JFrame {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                         .addComponent(jLabel13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtPais, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30))))
+                        .addComponent(txtPais, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(30, 30, 30))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(jLabel7)
+                .addGap(7, 7, 7)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(btnMostrarDetalles, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -451,7 +486,7 @@ public class FormMarcas extends javax.swing.JFrame {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
                     .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
 
         jLabel4.setFont(new java.awt.Font("Inter SemiBold", 0, 24)); // NOI18N
@@ -626,13 +661,114 @@ public class FormMarcas extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        Marca marcaAgregar = new Marca();
+        
+        try {
+            String nombre = txtNombre.getText();
+            String descripcion = txtDescripcion.getText();
+            String pais = txtPais.getText();
+
+            marcaAgregar.setNombreMarca(nombre);
+            marcaAgregar.setDescripcion(descripcion);
+            marcaAgregar.setPaisOrigen(pais);
+        
+            marcaControl.registrarMarca(marcaAgregar);
+            Mensajes.exito("Se ha guardado la marca exitosamente!");
+            cargarTablaMarcas();
+            
+            txtNombre.setText("");
+            txtDescripcion.setText("");
+            txtPais.setText("");
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnMostrarDetallesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarDetallesActionPerformed
+        int fila = tblMarcas.getSelectedRow();
+                
+        if (fila == -1){
+            Mensajes.error("Seleccione una marca de la tabla.");
+            return;
+        }
+                        
+        try {
+            Marca marcaAgregar = listaMarcas.get(fila);
+            txtNombre.setText(marcaAgregar.getNombreMarca());
+            txtDescripcion.setText(marcaAgregar.getDescripcion());
+            txtPais.setText(marcaAgregar.getPaisOrigen());
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+    }//GEN-LAST:event_btnMostrarDetallesActionPerformed
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        int fila = tblMarcas.getSelectedRow();
+                
+        if (fila == -1){
+            Mensajes.error("Seleccione una marca de la tabla.");
+            return;
+        }
+                        
+        try {
+            Marca marcaActualizar = listaMarcas.get(fila);
+            
+            String nombreMarca = txtNombre.getText();
+            String descripcionMarca = txtDescripcion.getText();
+            String paisMarca = txtPais.getText();
+            
+            marcaActualizar.setNombreMarca(nombreMarca);
+            marcaActualizar.setDescripcion(descripcionMarca);
+            marcaActualizar.setPaisOrigen(paisMarca);
+            
+            marcaControl.actualizarMarca(marcaActualizar);
+            Mensajes.exito("La marca ha sido actualizada exitosamente!");
+            limpiarTextsAreas();
+            cargarTablaMarcas();
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnOrdenarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrdenarActionPerformed
+        if (listaMarcas == null || listaMarcas.isEmpty()) {
+            Mensajes.error("No hay marcas cargadas para ordenar.");
+            return;
+        }
+
+        Marca[] arreglo = listaMarcas.toArray(new Marca[0]);
+        Comparator<Marca> comparador = obtenerComparadorMarca();
+        String metodo = (String) cbxMetodo.getSelectedItem();
+
+        switch (metodo) {
+            case "Burbuja" ->
+                AlgoritmoOrdenamientoDirecto.burbuja(arreglo, comparador);
+            case "Selección" ->
+                AlgoritmoOrdenamientoDirecto.seleccion(arreglo, comparador);
+            case "Inserción" ->
+                AlgoritmoOrdenamientoDirecto.insercion(arreglo, comparador);
+            default -> {
+                Mensajes.error("Seleccione un método de ordenamiento válido.");
+                return;
+            }
+        }
+
+        actualizarTablaConArreglo(arreglo);
+    }//GEN-LAST:event_btnOrdenarActionPerformed
+
+    private void limpiarTextsAreas() {
+        txtNombre.setText("");
+        txtDescripcion.setText("");
+        txtPais.setText("");
+    }
+    
     private void cargarTablaMarcas() {
         modelo.setRowCount(0);
         
         try {
-            List<Marca> listaMarcas;
-            
             listaMarcas = marcaControl.verTodasLasMarcas();
+            
             for (Marca marca : listaMarcas) {
                 Object[] fila = new Object[]{
                     marca.getIdMarca(),
@@ -650,12 +786,38 @@ public class FormMarcas extends javax.swing.JFrame {
         }
     }
     
+    private void actualizarTablaConArreglo(Marca[] arreglo) {
+        modelo.setRowCount(0);
+        for (Marca marca : arreglo) {
+            Object[] fila = new Object[]{
+                marca.getIdMarca(),
+                marca.getNombreMarca(),
+                marca.getDescripcion(),
+                marca.getPaisOrigen(),
+                marca.isEstado(),
+                marca.getFechaCreacion(),
+                marca.getFechaModificacion()
+            };
+            modelo.addRow(fila);
+        }
+        listaMarcas = new ArrayList<>(Arrays.asList(arreglo));
+    }
+    
+    private Comparator<Marca> obtenerComparadorMarca() {
+        String campo = (String) cbxOrdenar.getSelectedItem();
+        return switch (campo) {
+            default ->
+                Comparator.comparingInt(Marca::getIdMarca); // "ID"
+        };
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCategorias;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnMarcas;
+    private javax.swing.JButton btnMostrarDetalles;
     private javax.swing.JButton btnOrdenar;
     private javax.swing.JButton btnProductos;
     private javax.swing.JButton btnRecorrer;
