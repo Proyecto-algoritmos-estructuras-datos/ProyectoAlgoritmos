@@ -130,7 +130,7 @@ public class FormProductos extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(1, 91, 187));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/apla.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/apla.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -152,7 +152,7 @@ public class FormProductos extends javax.swing.JFrame {
         btnProductos.setBackground(new java.awt.Color(0, 29, 63));
         btnProductos.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnProductos.setForeground(new java.awt.Color(255, 255, 255));
-        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/productos.png"))); // NOI18N
+        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/productos.png"))); // NOI18N
         btnProductos.setText("   Productos      ");
         btnProductos.setBorder(null);
         btnProductos.setBorderPainted(false);
@@ -166,7 +166,7 @@ public class FormProductos extends javax.swing.JFrame {
         btnMarcas.setBackground(new java.awt.Color(0, 29, 63));
         btnMarcas.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnMarcas.setForeground(new java.awt.Color(255, 255, 255));
-        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/marcas.png"))); // NOI18N
+        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/marcas.png"))); // NOI18N
         btnMarcas.setText("  Marcas             ");
         btnMarcas.setBorder(null);
         btnMarcas.setBorderPainted(false);
@@ -181,7 +181,7 @@ public class FormProductos extends javax.swing.JFrame {
         btnCategorias.setBackground(new java.awt.Color(0, 29, 63));
         btnCategorias.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnCategorias.setForeground(new java.awt.Color(255, 255, 255));
-        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/categorias.png"))); // NOI18N
+        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/categorias.png"))); // NOI18N
         btnCategorias.setText("  Categorias      ");
         btnCategorias.setBorder(null);
         btnCategorias.setBorderPainted(false);
@@ -705,26 +705,6 @@ public class FormProductos extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
-    private void btnMostrarDetallesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarDetallesActionPerformed
-        int fila = tblProductos.getSelectedRow();
-
-        if (fila == -1){
-            Mensajes.error("Seleccione un producto de la tabla.");
-            return;
-        }
-
-        try {
-            Producto prodAgregar = listaProductos.get(fila);
-            txtNombre.setText(prodAgregar.getNombreProducto());
-            cbxCategoria.setSelectedItem(prodAgregar.getCategoria().getNombreCategoria());
-            cbxMarca.setSelectedItem(prodAgregar.getMarca().getNombreMarca());
-            txtPrecio.setText(prodAgregar.getPrecio().toString());
-            txtStock.setText(String.valueOf(prodAgregar.getStock()));
-        } catch (Exception e) {
-            Mensajes.error(e.getMessage());
-        }
-    }//GEN-LAST:event_btnMostrarDetallesActionPerformed
-
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         int fila = tblProductos.getSelectedRow();
                 
@@ -806,6 +786,26 @@ public class FormProductos extends javax.swing.JFrame {
 
         actualizarTablaConArreglo(arreglo);
     }//GEN-LAST:event_btnOrdenarActionPerformed
+
+    private void btnMostrarDetallesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarDetallesActionPerformed
+        int fila = tblProductos.getSelectedRow();
+
+        if (fila == -1){
+            Mensajes.error("Seleccione un producto de la tabla.");
+            return;
+        }
+
+        try {
+            Producto prodAgregar = listaProductos.get(fila);
+            txtNombre.setText(prodAgregar.getNombreProducto());
+            cbxCategoria.setSelectedItem(prodAgregar.getCategoria().getNombreCategoria());
+            cbxMarca.setSelectedItem(prodAgregar.getMarca().getNombreMarca());
+            txtPrecio.setText(prodAgregar.getPrecio().toString());
+            txtStock.setText(String.valueOf(prodAgregar.getStock()));
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+    }//GEN-LAST:event_btnMostrarDetallesActionPerformed
 
     private void cargarComboCategorias() {
         cbxCategoria.removeAllItems();
