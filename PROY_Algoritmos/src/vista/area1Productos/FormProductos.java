@@ -1,12 +1,22 @@
 package vista.area1Productos;
 
+import controlador.CategoriaController;
+import controlador.MarcaController;
 import controlador.ProductoController;
 import java.awt.Color;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 import javax.swing.table.DefaultTableModel;
+import modelo.Categoria;
+import modelo.Marca;
 import modelo.Producto;
+import util.AlgoritmoOrdenamientoIndirecto;
 import util.Mensajes;
+import util.Validaciones;
 import vista.area0Login.FormLogin;
 import vista.area2Categorias.FormCategorias;
 import vista.area3Marcas.FormMarcas;
@@ -21,6 +31,13 @@ public class FormProductos extends javax.swing.JFrame {
     
     // Controladores
     private final ProductoController prodControl;
+    private final CategoriaController catControl;
+    private final MarcaController marControl;
+    
+    // Listas
+    private List<Producto> listaProductos;
+    private List<Categoria> listaCategorias;
+    private List<Marca> listaMarcas;
 
     public FormProductos() {
         initComponents();
@@ -28,6 +45,8 @@ public class FormProductos extends javax.swing.JFrame {
         
         // Se inicializa los controladores
         prodControl = new ProductoController();
+        catControl = new CategoriaController();
+        marControl = new MarcaController();
         
         // Tabla
         tblProductos.setModel(modelo);
@@ -50,7 +69,8 @@ public class FormProductos extends javax.swing.JFrame {
         tblProductos.setDefaultEditor(Object.class, null);
         
         cargarTablaProductos();
-        
+        cargarComboCategorias();
+        cargarComboMarcas();
     }
 
     
@@ -95,6 +115,7 @@ public class FormProductos extends javax.swing.JFrame {
         txtStock = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         txtPrecio = new javax.swing.JTextField();
+        btnMostrarDetalles = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
@@ -223,6 +244,11 @@ public class FormProductos extends javax.swing.JFrame {
         btnOrdenar.setForeground(new java.awt.Color(255, 255, 255));
         btnOrdenar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/logoOrdenar.png"))); // NOI18N
         btnOrdenar.setText("   Ordenar      ");
+        btnOrdenar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOrdenarActionPerformed(evt);
+            }
+        });
 
         jLabel14.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         jLabel14.setText("Ordenar por:");
@@ -231,10 +257,10 @@ public class FormProductos extends javax.swing.JFrame {
         jLabel15.setText("Método:");
 
         cbxMetodo.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
-        cbxMetodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxMetodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "QuickSort", "MergeSort", "ShellSort" }));
 
         cbxOrdenar.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
-        cbxOrdenar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxOrdenar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ID", "Precio", "Stock" }));
         cbxOrdenar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxOrdenarActionPerformed(evt);
@@ -333,12 +359,22 @@ public class FormProductos extends javax.swing.JFrame {
         btnAgregar.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/logoGUARDAR.png"))); // NOI18N
         btnAgregar.setText("  Agregar   ");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         btnActualizar.setBackground(new java.awt.Color(25, 23, 22));
         btnActualizar.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnActualizar.setForeground(new java.awt.Color(255, 255, 255));
         btnActualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/LogoACTUALIZAR2.png"))); // NOI18N
         btnActualizar.setText("Actualizar");
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarActionPerformed(evt);
+            }
+        });
 
         btnEliminar.setBackground(new java.awt.Color(25, 23, 22));
         btnEliminar.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
@@ -428,6 +464,16 @@ public class FormProductos extends javax.swing.JFrame {
 
         txtPrecio.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
 
+        btnMostrarDetalles.setBackground(new java.awt.Color(0, 63, 156));
+        btnMostrarDetalles.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
+        btnMostrarDetalles.setForeground(new java.awt.Color(255, 255, 255));
+        btnMostrarDetalles.setText("Mostrar Detalle");
+        btnMostrarDetalles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMostrarDetallesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -447,16 +493,20 @@ public class FormProductos extends javax.swing.JFrame {
                     .addComponent(cbxCategoria, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtNombre)
                     .addComponent(cbxMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(jLabel11)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtStock, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addComponent(jLabel13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(btnMostrarDetalles, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtStock, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(30, 30, 30))
         );
         jPanel7Layout.setVerticalGroup(
@@ -481,7 +531,8 @@ public class FormProductos extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(cbxMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnMostrarDetalles, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
 
@@ -573,7 +624,7 @@ public class FormProductos extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -654,13 +705,182 @@ public class FormProductos extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
+    private void btnMostrarDetallesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarDetallesActionPerformed
+        int fila = tblProductos.getSelectedRow();
+
+        if (fila == -1){
+            Mensajes.error("Seleccione un producto de la tabla.");
+            return;
+        }
+
+        try {
+            Producto prodAgregar = listaProductos.get(fila);
+            txtNombre.setText(prodAgregar.getNombreProducto());
+            cbxCategoria.setSelectedItem(prodAgregar.getCategoria().getNombreCategoria());
+            cbxMarca.setSelectedItem(prodAgregar.getMarca().getNombreMarca());
+            txtPrecio.setText(prodAgregar.getPrecio().toString());
+            txtStock.setText(String.valueOf(prodAgregar.getStock()));
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+    }//GEN-LAST:event_btnMostrarDetallesActionPerformed
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        int fila = tblProductos.getSelectedRow();
+                
+        if (fila == -1){
+            Mensajes.error("Seleccione un producto de la tabla.");
+            return;
+        }
+                        
+        try {
+            Producto prodActualizar = listaProductos.get(fila);
+            
+            String nombre = txtNombre.getText();
+            Categoria categoria = obtenerCategoriaSeleccionada();
+            Marca marca = obtenerMarcaSeleccionada();
+            BigDecimal precio = Validaciones.parsearPrecio(txtPrecio.getText());
+            int stock = Validaciones.parsearStock(txtStock.getText());
+            
+            prodActualizar.setNombreProducto(nombre);
+            prodActualizar.setCategoria(categoria);
+            prodActualizar.setMarca(marca);
+            prodActualizar.setPrecio(precio);
+            prodActualizar.setStock(stock);
+            
+            prodControl.actualizarProducto(prodActualizar);
+            Mensajes.exito("El producto ha sido actualizado exitosamente!");
+            limpiarTextsAreas();
+            cargarTablaProductos();
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        Producto prodAgregar = new Producto();
+        
+        try {
+            String nombre = txtNombre.getText();
+            Categoria categoria = obtenerCategoriaSeleccionada();
+            Marca marca = obtenerMarcaSeleccionada();
+            BigDecimal precio = Validaciones.parsearPrecio(txtPrecio.getText());
+            int stock = Validaciones.parsearStock(txtStock.getText());
+
+            prodAgregar.setNombreProducto(nombre);
+            prodAgregar.setCategoria(categoria);
+            prodAgregar.setMarca(marca);
+            prodAgregar.setPrecio(precio);
+            prodAgregar.setStock(stock);
+        
+            prodControl.registrarProducto(prodAgregar);
+            Mensajes.exito("Se ha guardado el producto exitosamente!");
+            cargarTablaProductos();
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnOrdenarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrdenarActionPerformed
+        if (listaProductos == null || listaProductos.isEmpty()) {
+            Mensajes.error("No hay productos cargados para ordenar.");
+            return;
+        }
+
+        Producto[] arreglo = listaProductos.toArray(new Producto[0]);
+        Comparator<Producto> comparador = obtenerComparador();
+        String metodo = (String) cbxMetodo.getSelectedItem();
+
+        switch (metodo) {
+            case "QuickSort" ->
+                AlgoritmoOrdenamientoIndirecto.quickSort(arreglo, comparador);
+            case "MergeSort" ->
+                AlgoritmoOrdenamientoIndirecto.mergeSort(arreglo, comparador);
+            case "ShellSort" ->
+                AlgoritmoOrdenamientoIndirecto.shellSort(arreglo, comparador);
+            default -> {
+                Mensajes.error("Seleccione un método de ordenamiento válido.");
+                return;
+            }
+        }
+
+        actualizarTablaConArreglo(arreglo);
+    }//GEN-LAST:event_btnOrdenarActionPerformed
+
+    private void cargarComboCategorias() {
+        cbxCategoria.removeAllItems();
+        try {
+            listaCategorias = catControl.verTodasLasCategorias();
+            
+            listaCategorias.sort(Comparator.comparing(Categoria::getNombreCategoria, String.CASE_INSENSITIVE_ORDER));
+            
+            for (Categoria c : listaCategorias) {
+                if (c.isEstado()) {
+                    cbxCategoria.addItem(c.getNombreCategoria());
+                }
+            }
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+    }
+
+    private void cargarComboMarcas() {
+        cbxMarca.removeAllItems();
+        try {
+            listaMarcas = marControl.verTodasLasMarcas();
+            
+            listaMarcas.sort(Comparator.comparing(Marca::getNombreMarca, String.CASE_INSENSITIVE_ORDER));
+            
+            for (Marca m : listaMarcas) {
+                if (m.isEstado()) {
+                    cbxMarca.addItem(m.getNombreMarca());
+                }
+            }
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+    }
+    
+    private Categoria obtenerCategoriaSeleccionada() {
+        String nombre = (String) cbxCategoria.getSelectedItem();
+        if (nombre == null || listaCategorias == null) {
+            return null;
+        }
+        for (Categoria c : listaCategorias) {
+            if (c.getNombreCategoria().equals(nombre)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    private Marca obtenerMarcaSeleccionada() {
+        String nombre = (String) cbxMarca.getSelectedItem();
+        if (nombre == null || listaMarcas == null) {
+            return null;
+        }
+        for (Marca m : listaMarcas) {
+            if (m.getNombreMarca().equals(nombre)) {
+                return m;
+            }
+        }
+        return null;
+    }
+    
+    private void limpiarTextsAreas() {
+        txtNombre.setText("");
+        txtPrecio.setText("");
+        txtStock.setText("");
+        if (cbxCategoria.getItemCount() > 0) cbxCategoria.setSelectedIndex(0);
+        if (cbxMarca.getItemCount() > 0) cbxMarca.setSelectedIndex(0);
+    }
+    
     private void cargarTablaProductos() {
         modelo.setRowCount(0);
         
         try {
-            List<Producto> listaProductos;
-            
             listaProductos = prodControl.verTodosLosProductos();
+            
             for (Producto prod : listaProductos) {
                 Object[] fila = new Object[]{
                     prod.getIdProducto(),
@@ -680,12 +900,44 @@ public class FormProductos extends javax.swing.JFrame {
         }
     }
     
+    private void actualizarTablaConArreglo(Producto[] arreglo) {
+        modelo.setRowCount(0);
+        for (Producto prod : arreglo) {
+            Object[] fila = new Object[]{
+                prod.getIdProducto(),
+                prod.getNombreProducto(),
+                prod.getCategoria().getNombreCategoria(),
+                prod.getMarca().getNombreMarca(),
+                prod.getPrecio(),
+                prod.getStock(),
+                prod.isEstado(),
+                prod.getFechaCreacion(),
+                prod.getFechaModificacion()
+            };
+            modelo.addRow(fila);
+        }
+        listaProductos = new ArrayList<>(Arrays.asList(arreglo));
+    }
+    
+    private Comparator<Producto> obtenerComparador() {
+        String campo = (String) cbxOrdenar.getSelectedItem();
+        return switch (campo) {
+            case "Precio" ->
+                Comparator.comparing(Producto::getPrecio);
+            case "Stock" ->
+                Comparator.comparingInt(Producto::getStock);
+            default ->
+                Comparator.comparingInt(Producto::getIdProducto);
+        };
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCategorias;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnMarcas;
+    private javax.swing.JButton btnMostrarDetalles;
     private javax.swing.JButton btnOrdenar;
     private javax.swing.JButton btnProductos;
     private javax.swing.JButton btnRecorrer;
