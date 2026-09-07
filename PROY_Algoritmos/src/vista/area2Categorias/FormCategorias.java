@@ -1,6 +1,9 @@
 package vista.area2Categorias;
 
 import controlador.CategoriaController;
+import controlador.ProductoController;
+import modelo.Producto;
+import util.MatrizInventario;
 import vista.area1Productos.*;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -15,28 +18,31 @@ import util.Mensajes;
 import vista.area0Login.FormLogin;
 import vista.area3Marcas.FormMarcas;
 
-
 public class FormCategorias extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FormCategorias.class.getName());
 
     // Inicialización del modelo de la tabla de productos
     private final DefaultTableModel modelo = new DefaultTableModel();
     List<Categoria> listaCategorias = new ArrayList<>();
-    
+    private List<Producto> listaProductos;
+    private MatrizInventario matrizInventario;
+
     // Controladores
     private final CategoriaController cateControl;
-    
+    private final ProductoController prodControl;
+
     public FormCategorias() {
         initComponents();
         btnCategorias.setBackground(Color.decode("#015BBB"));
-        
+
         // Se inicializa los controladores
         cateControl = new CategoriaController();
-        
+        prodControl = new ProductoController();
+
         // Tabla
         tblCategorias.setModel(modelo);
-        
+
         Object[] columnas = new Object[]{
             "ID",
             "Nombre",
@@ -45,16 +51,17 @@ public class FormCategorias extends javax.swing.JFrame {
             "Fecha de Creación",
             "Fecha de Modificación"
         };
-        
+
         modelo.setColumnIdentifiers(columnas);
-        
+
         tblCategorias.setSelectionMode(SINGLE_SELECTION);
         tblCategorias.setDefaultEditor(Object.class, null);
-        
+
         cargarTablaCategorias();
+        cargarListaProductos();
+        cargarMatrizInventario();
     }
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -105,7 +112,7 @@ public class FormCategorias extends javax.swing.JFrame {
 
         jPanel16.setBackground(new java.awt.Color(1, 91, 187));
 
-        jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/apla.png"))); // NOI18N
+        jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/apla.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
@@ -127,7 +134,7 @@ public class FormCategorias extends javax.swing.JFrame {
         btnProductos.setBackground(new java.awt.Color(0, 29, 63));
         btnProductos.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnProductos.setForeground(new java.awt.Color(255, 255, 255));
-        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/productos.png"))); // NOI18N
+        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/productos.png"))); // NOI18N
         btnProductos.setText("   Productos      ");
         btnProductos.setBorder(null);
         btnProductos.setBorderPainted(false);
@@ -142,7 +149,7 @@ public class FormCategorias extends javax.swing.JFrame {
         btnMarcas.setBackground(new java.awt.Color(0, 29, 63));
         btnMarcas.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnMarcas.setForeground(new java.awt.Color(255, 255, 255));
-        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/marcas.png"))); // NOI18N
+        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/marcas.png"))); // NOI18N
         btnMarcas.setText("  Marcas             ");
         btnMarcas.setBorder(null);
         btnMarcas.setBorderPainted(false);
@@ -157,7 +164,7 @@ public class FormCategorias extends javax.swing.JFrame {
         btnCategorias.setBackground(new java.awt.Color(0, 29, 63));
         btnCategorias.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnCategorias.setForeground(new java.awt.Color(255, 255, 255));
-        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/categorias.png"))); // NOI18N
+        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/categorias.png"))); // NOI18N
         btnCategorias.setText("  Categorias      ");
         btnCategorias.setBorder(null);
         btnCategorias.setBorderPainted(false);
@@ -236,7 +243,7 @@ public class FormCategorias extends javax.swing.JFrame {
         cbxMetodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Burbuja", "Selección", "Inserción" }));
 
         cbxOrdenar.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
-        cbxOrdenar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ID" }));
+        cbxOrdenar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ID", "Nombre" }));
         cbxOrdenar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxOrdenarActionPerformed(evt);
@@ -587,7 +594,7 @@ public class FormCategorias extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCategoriasActionPerformed
-        
+
     }//GEN-LAST:event_btnCategoriasActionPerformed
 
     private void btnMarcasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMarcasActionPerformed
@@ -607,7 +614,7 @@ public class FormCategorias extends javax.swing.JFrame {
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         new FormLogin().setVisible(true);
         this.dispose();
-                
+
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnRecorrerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecorrerActionPerformed
@@ -616,24 +623,24 @@ public class FormCategorias extends javax.swing.JFrame {
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         int fila = tblCategorias.getSelectedRow();
-        
+
         if (fila == -1) {
             Mensajes.error("Selecciona una categoria de la tabla.");
             return;
         }
-        
+
         int id = (int) modelo.getValueAt(fila, 0);
         Categoria categoria = new Categoria();
         categoria.setIdCategoria(id);
         boolean activo = (boolean) modelo.getValueAt(fila, 3);
-        
+
         if (!activo) {
             Mensajes.error("El registro ya está eliminado (inactivo).");
             return;
         }
-        
+
         boolean confirmacion = Mensajes.confirmacion("¿Está seguro que desea eliminar la categoria?", "Eliminación de Categoria");
-        
+
         if (confirmacion) {
             try {
                 cateControl.eliminarCategoria(categoria);
@@ -647,7 +654,7 @@ public class FormCategorias extends javax.swing.JFrame {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         Categoria cateAgregar = new Categoria();
-        
+
         try {
             String nombre = txtNombre.getText();
             String descripcion = txtDescripcion.getText();
@@ -658,7 +665,9 @@ public class FormCategorias extends javax.swing.JFrame {
             cateControl.registrarCategoria(cateAgregar);
             Mensajes.exito("Se ha guardado la categoria exitosamente!");
             cargarTablaCategorias();
-            
+            cargarMatrizInventario();
+            cargarMatrizInventario();
+
             txtNombre.setText("");
             txtDescripcion.setText("");
         } catch (Exception e) {
@@ -668,12 +677,12 @@ public class FormCategorias extends javax.swing.JFrame {
 
     private void btnMostrarDetallesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarDetallesActionPerformed
         int fila = tblCategorias.getSelectedRow();
-                
-        if (fila == -1){
+
+        if (fila == -1) {
             Mensajes.error("Seleccione una categoria de la tabla.");
             return;
         }
-                        
+
         try {
             Categoria cateAgregar = listaCategorias.get(fila);
             txtNombre.setText(cateAgregar.getNombreCategoria());
@@ -685,25 +694,26 @@ public class FormCategorias extends javax.swing.JFrame {
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         int fila = tblCategorias.getSelectedRow();
-                
-        if (fila == -1){
+
+        if (fila == -1) {
             Mensajes.error("Seleccione una categoria de la tabla.");
             return;
         }
-                        
+
         try {
             Categoria cateActualizar = listaCategorias.get(fila);
-            
+
             String nombreCate = txtNombre.getText();
             String descripcionCate = txtDescripcion.getText();
-            
+
             cateActualizar.setNombreCategoria(nombreCate);
             cateActualizar.setDescripcion(descripcionCate);
-            
+
             cateControl.actualizarCategoria(cateActualizar);
             Mensajes.exito("La categoria ha sido actualizada exitosamente!");
             limpiarTextsAreas();
             cargarTablaCategorias();
+            cargarMatrizInventario();
         } catch (Exception e) {
             Mensajes.error(e.getMessage());
         }
@@ -733,19 +743,20 @@ public class FormCategorias extends javax.swing.JFrame {
         }
 
         actualizarTablaConArreglo(arreglo);
+        cargarMatrizInventario();
     }//GEN-LAST:event_btnOrdenarActionPerformed
 
     private void limpiarTextsAreas() {
         txtNombre.setText("");
         txtDescripcion.setText("");
     }
-    
+
     private void cargarTablaCategorias() {
         modelo.setRowCount(0);
-        
-        try {            
+
+        try {
             listaCategorias = cateControl.verTodasLasCategorias();
-            
+
             for (Categoria cate : listaCategorias) {
                 Object[] fila = new Object[]{
                     cate.getIdCategoria(),
@@ -762,6 +773,65 @@ public class FormCategorias extends javax.swing.JFrame {
         }
     }
     
+        private void cargarListaProductos() {
+        try {
+            listaProductos = prodControl.verTodosLosProductos();
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+    }
+
+    private void cargarMatrizInventario() {
+
+        if (listaProductos == null || listaCategorias == null) {
+            return;
+        }
+
+        Producto[] productos = listaProductos.toArray(new Producto[0]);
+        Categoria[] categorias = listaCategorias.toArray(new Categoria[0]);
+
+        if (categorias.length == 0) {
+            return;
+        }
+
+        matrizInventario = new MatrizInventario(categorias.length);
+        matrizInventario.generarMatriz(productos, categorias);
+
+        DefaultTableModel modeloMatriz = new DefaultTableModel();
+        modeloMatriz.addColumn("Categoría");
+        modeloMatriz.addColumn("Activo");
+        modeloMatriz.addColumn("Inactivo");
+        modeloMatriz.addColumn("Total");
+
+        int totalActivos = 0;
+        int totalInactivos = 0;
+
+        for (int i = 0; i < categorias.length; i++) {
+            int activos = matrizInventario.obtenerActivos(i);
+            int inactivos = matrizInventario.obtenerInactivos(i);
+            int total = matrizInventario.obtenerTotal(i);
+
+            totalActivos += activos;
+            totalInactivos += inactivos;
+
+            modeloMatriz.addRow(new Object[]{
+                categorias[i].getNombreCategoria(),
+                activos,
+                inactivos,
+                total
+            });
+        }
+
+        modeloMatriz.addRow(new Object[]{
+            "Total",
+            totalActivos,
+            totalInactivos,
+            totalActivos + totalInactivos
+        });
+
+        tblMatriz.setModel(modeloMatriz);
+    }
+
     private void actualizarTablaConArreglo(Categoria[] arreglo) {
         modelo.setRowCount(0);
         for (Categoria cate : arreglo) {
@@ -777,15 +847,17 @@ public class FormCategorias extends javax.swing.JFrame {
         }
         listaCategorias = new ArrayList<>(Arrays.asList(arreglo));
     }
-    
+
     private Comparator<Categoria> obtenerComparadorCategoria() {
         String campo = (String) cbxOrdenar.getSelectedItem();
-        return switch (campo) {
-            default ->
-                Comparator.comparingInt(Categoria::getIdCategoria);
-        };
+
+    return switch (campo) {
+        case "ID" -> Comparator.comparingInt(Categoria::getIdCategoria);
+        case "Nombre" -> Comparator.comparing(Categoria::getNombreCategoria);
+        default -> Comparator.comparingInt(Categoria::getIdCategoria);
+    };
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnAgregar;

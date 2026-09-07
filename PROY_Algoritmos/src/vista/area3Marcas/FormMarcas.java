@@ -10,10 +10,12 @@ import java.util.Comparator;
 import java.util.List;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 import javax.swing.table.DefaultTableModel;
+import modelo.Categoria;
 import modelo.Marca;
 import util.AlgoritmoOrdenamientoDirecto;
 import util.Mensajes;
 import vista.area0Login.FormLogin;
+import util.MatrizPaisEstado;
 
 
 public class FormMarcas extends javax.swing.JFrame {
@@ -23,7 +25,7 @@ public class FormMarcas extends javax.swing.JFrame {
     // Inicialización del modelo de la tabla de productos
     private final DefaultTableModel modelo = new DefaultTableModel();
     List<Marca> listaMarcas = new ArrayList<>();
-    
+    private MatrizPaisEstado matrizPaisEstado;
     // Controladores
     private final MarcaController marcaControl;
     
@@ -53,6 +55,7 @@ public class FormMarcas extends javax.swing.JFrame {
         tblMarcas.setDefaultEditor(Object.class, null);
         
         cargarTablaMarcas();
+        cargarMatrizInventario();
     }
 
     @SuppressWarnings("unchecked")
@@ -107,7 +110,7 @@ public class FormMarcas extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(1, 91, 187));
 
-        jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/apla.png"))); // NOI18N
+        jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/apla.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -129,7 +132,7 @@ public class FormMarcas extends javax.swing.JFrame {
         btnProductos.setBackground(new java.awt.Color(0, 29, 63));
         btnProductos.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnProductos.setForeground(new java.awt.Color(255, 255, 255));
-        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/productos.png"))); // NOI18N
+        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/productos.png"))); // NOI18N
         btnProductos.setText("   Productos      ");
         btnProductos.setBorder(null);
         btnProductos.setBorderPainted(false);
@@ -144,7 +147,7 @@ public class FormMarcas extends javax.swing.JFrame {
         btnMarcas.setBackground(new java.awt.Color(0, 29, 63));
         btnMarcas.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnMarcas.setForeground(new java.awt.Color(255, 255, 255));
-        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/marcas.png"))); // NOI18N
+        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/marcas.png"))); // NOI18N
         btnMarcas.setText("  Marcas             ");
         btnMarcas.setBorder(null);
         btnMarcas.setBorderPainted(false);
@@ -158,7 +161,7 @@ public class FormMarcas extends javax.swing.JFrame {
         btnCategorias.setBackground(new java.awt.Color(0, 29, 63));
         btnCategorias.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnCategorias.setForeground(new java.awt.Color(255, 255, 255));
-        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/categorias.png"))); // NOI18N
+        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/categorias.png"))); // NOI18N
         btnCategorias.setText("  Categorias      ");
         btnCategorias.setBorder(null);
         btnCategorias.setBorderPainted(false);
@@ -238,7 +241,7 @@ public class FormMarcas extends javax.swing.JFrame {
         cbxMetodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Burbuja", "Selección", "Inserción" }));
 
         cbxOrdenar.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
-        cbxOrdenar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ID" }));
+        cbxOrdenar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ID", "Nombre" }));
         cbxOrdenar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxOrdenarActionPerformed(evt);
@@ -656,6 +659,7 @@ public class FormMarcas extends javax.swing.JFrame {
                 marcaControl.eliminarMarca(marca);
                 Mensajes.exito("La marca ha sido eliminado correctamente!");
                 cargarTablaMarcas();
+                cargarMatrizInventario();
             } catch (Exception e) {
                 Mensajes.error(e.getMessage());
             }
@@ -677,6 +681,7 @@ public class FormMarcas extends javax.swing.JFrame {
             marcaControl.registrarMarca(marcaAgregar);
             Mensajes.exito("Se ha guardado la marca exitosamente!");
             cargarTablaMarcas();
+            cargarMatrizInventario();
             
             txtNombre.setText("");
             txtDescripcion.setText("");
@@ -727,6 +732,7 @@ public class FormMarcas extends javax.swing.JFrame {
             Mensajes.exito("La marca ha sido actualizada exitosamente!");
             limpiarTextsAreas();
             cargarTablaMarcas();
+            cargarMatrizInventario();
         } catch (Exception e) {
             Mensajes.error(e.getMessage());
         }
@@ -756,6 +762,7 @@ public class FormMarcas extends javax.swing.JFrame {
         }
 
         actualizarTablaConArreglo(arreglo);
+        cargarMatrizInventario();
     }//GEN-LAST:event_btnOrdenarActionPerformed
 
     private void limpiarTextsAreas() {
@@ -787,6 +794,62 @@ public class FormMarcas extends javax.swing.JFrame {
         }
     }
     
+        private void cargarMatrizInventario() {
+
+        if (listaMarcas == null || listaMarcas.isEmpty()) {
+            return;
+        }
+
+        List<String> paisesUnicos = new ArrayList<>();
+        for (Marca m : listaMarcas) {
+            String pais = m.getPaisOrigen();
+            if (pais != null && !paisesUnicos.contains(pais)) {
+                paisesUnicos.add(pais);
+            }
+        }
+        paisesUnicos.sort(String.CASE_INSENSITIVE_ORDER);
+
+        String[] paises = paisesUnicos.toArray(new String[0]);
+        Marca[] marcas = listaMarcas.toArray(new Marca[0]);
+
+        matrizPaisEstado = new MatrizPaisEstado(paises);
+        matrizPaisEstado.generarMatriz(marcas);
+
+        DefaultTableModel modeloMatriz = new DefaultTableModel();
+        modeloMatriz.addColumn("País de Origen");
+        modeloMatriz.addColumn("Activo");
+        modeloMatriz.addColumn("Inactivo");
+        modeloMatriz.addColumn("Total");
+
+        int totalActivos = 0;
+        int totalInactivos = 0;
+
+        for (int i = 0; i < paises.length; i++) {
+            int activos = matrizPaisEstado.obtenerActivos(i);
+            int inactivos = matrizPaisEstado.obtenerInactivos(i);
+            int total = matrizPaisEstado.obtenerTotal(i);
+
+            totalActivos += activos;
+            totalInactivos += inactivos;
+
+            modeloMatriz.addRow(new Object[]{
+                paises[i],
+                activos,
+                inactivos,
+                total
+            });
+        }
+
+        modeloMatriz.addRow(new Object[]{
+            "Total",
+            totalActivos,
+            totalInactivos,
+            totalActivos + totalInactivos
+        });
+
+        tblMatriz.setModel(modeloMatriz);
+    }
+    
     private void actualizarTablaConArreglo(Marca[] arreglo) {
         modelo.setRowCount(0);
         for (Marca marca : arreglo) {
@@ -806,10 +869,12 @@ public class FormMarcas extends javax.swing.JFrame {
     
     private Comparator<Marca> obtenerComparadorMarca() {
         String campo = (String) cbxOrdenar.getSelectedItem();
-        return switch (campo) {
-            default ->
-                Comparator.comparingInt(Marca::getIdMarca); // "ID"
-        };
+
+    return switch (campo) {
+        case "ID" -> Comparator.comparingInt(Marca::getIdMarca);
+        case "Nombre" -> Comparator.comparing(Marca::getNombreMarca);
+        default -> Comparator.comparingInt(Marca::getIdMarca);
+    };
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

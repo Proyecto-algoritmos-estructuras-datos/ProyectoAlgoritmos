@@ -20,37 +20,38 @@ import util.Validaciones;
 import vista.area0Login.FormLogin;
 import vista.area2Categorias.FormCategorias;
 import vista.area3Marcas.FormMarcas;
-
+import util.MatrizInventario;
 
 public class FormProductos extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FormProductos.class.getName());
-    
+
     // Inicialización del modelo de la tabla de productos
     private final DefaultTableModel modelo = new DefaultTableModel();
-    
+
     // Controladores
     private final ProductoController prodControl;
     private final CategoriaController catControl;
     private final MarcaController marControl;
-    
+
     // Listas
     private List<Producto> listaProductos;
     private List<Categoria> listaCategorias;
     private List<Marca> listaMarcas;
+    private MatrizInventario matrizInventario;
 
     public FormProductos() {
         initComponents();
         btnProductos.setBackground(Color.decode("#015BBB"));
-        
+
         // Se inicializa los controladores
         prodControl = new ProductoController();
         catControl = new CategoriaController();
         marControl = new MarcaController();
-        
+
         // Tabla
         tblProductos.setModel(modelo);
-        
+
         Object[] columnas = new Object[]{
             "ID",
             "Nombre",
@@ -62,18 +63,18 @@ public class FormProductos extends javax.swing.JFrame {
             "Fecha de Creación",
             "Fecha de Modificación"
         };
-        
+
         modelo.setColumnIdentifiers(columnas);
-        
+
         tblProductos.setSelectionMode(SINGLE_SELECTION);
         tblProductos.setDefaultEditor(Object.class, null);
-        
+
         cargarTablaProductos();
         cargarComboCategorias();
         cargarComboMarcas();
+        cargarMatrizInventario();
     }
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -130,7 +131,7 @@ public class FormProductos extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(1, 91, 187));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/apla.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/apla.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -152,7 +153,7 @@ public class FormProductos extends javax.swing.JFrame {
         btnProductos.setBackground(new java.awt.Color(0, 29, 63));
         btnProductos.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnProductos.setForeground(new java.awt.Color(255, 255, 255));
-        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/productos.png"))); // NOI18N
+        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/productos.png"))); // NOI18N
         btnProductos.setText("   Productos      ");
         btnProductos.setBorder(null);
         btnProductos.setBorderPainted(false);
@@ -166,7 +167,7 @@ public class FormProductos extends javax.swing.JFrame {
         btnMarcas.setBackground(new java.awt.Color(0, 29, 63));
         btnMarcas.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnMarcas.setForeground(new java.awt.Color(255, 255, 255));
-        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/marcas.png"))); // NOI18N
+        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/marcas.png"))); // NOI18N
         btnMarcas.setText("  Marcas             ");
         btnMarcas.setBorder(null);
         btnMarcas.setBorderPainted(false);
@@ -181,7 +182,7 @@ public class FormProductos extends javax.swing.JFrame {
         btnCategorias.setBackground(new java.awt.Color(0, 29, 63));
         btnCategorias.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnCategorias.setForeground(new java.awt.Color(255, 255, 255));
-        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/categorias.png"))); // NOI18N
+        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/categorias.png"))); // NOI18N
         btnCategorias.setText("  Categorias      ");
         btnCategorias.setBorder(null);
         btnCategorias.setBorderPainted(false);
@@ -672,7 +673,7 @@ public class FormProductos extends javax.swing.JFrame {
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         new FormLogin().setVisible(true);
         this.dispose();
-                
+
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnRecorrerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecorrerActionPerformed
@@ -681,29 +682,30 @@ public class FormProductos extends javax.swing.JFrame {
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         int fila = tblProductos.getSelectedRow();
-        
+
         if (fila == -1) {
             Mensajes.error("Selecciona un producto de la tabla.");
             return;
         }
-        
+
         int id = (int) modelo.getValueAt(fila, 0);
         Producto producto = new Producto();
         producto.setIdProducto(id);
         boolean activo = (boolean) modelo.getValueAt(fila, 6);
-        
+
         if (!activo) {
             Mensajes.error("El registro ya está eliminado (inactivo).");
             return;
         }
-        
+
         boolean confirmacion = Mensajes.confirmacion("¿Está seguro que desea eliminar el producto?", "Eliminación de Producto");
-        
+
         if (confirmacion) {
             try {
                 prodControl.eliminarProducto(producto);
                 Mensajes.exito("El producto ha sido eliminado correctamente!");
                 cargarTablaProductos();
+                cargarMatrizInventario();      // aquí, no en el catch
             } catch (Exception e) {
                 Mensajes.error(e.getMessage());
             }
@@ -712,31 +714,32 @@ public class FormProductos extends javax.swing.JFrame {
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         int fila = tblProductos.getSelectedRow();
-                
-        if (fila == -1){
+
+        if (fila == -1) {
             Mensajes.error("Seleccione un producto de la tabla.");
             return;
         }
-                        
+
         try {
             Producto prodActualizar = listaProductos.get(fila);
-            
+
             String nombre = txtNombre.getText();
             Categoria categoria = obtenerCategoriaSeleccionada();
             Marca marca = obtenerMarcaSeleccionada();
             BigDecimal precio = Validaciones.parsearPrecio(txtPrecio.getText());
             int stock = Validaciones.parsearStock(txtStock.getText());
-            
+
             prodActualizar.setNombreProducto(nombre);
             prodActualizar.setCategoria(categoria);
             prodActualizar.setMarca(marca);
             prodActualizar.setPrecio(precio);
             prodActualizar.setStock(stock);
-            
+
             prodControl.actualizarProducto(prodActualizar);
             Mensajes.exito("El producto ha sido actualizado exitosamente!");
             limpiarTextsAreas();
             cargarTablaProductos();
+            cargarMatrizInventario();      // agregar esta línea
         } catch (Exception e) {
             Mensajes.error(e.getMessage());
         }
@@ -744,7 +747,7 @@ public class FormProductos extends javax.swing.JFrame {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         Producto prodAgregar = new Producto();
-        
+
         try {
             String nombre = txtNombre.getText();
             Categoria categoria = obtenerCategoriaSeleccionada();
@@ -757,10 +760,11 @@ public class FormProductos extends javax.swing.JFrame {
             prodAgregar.setMarca(marca);
             prodAgregar.setPrecio(precio);
             prodAgregar.setStock(stock);
-        
+
             prodControl.registrarProducto(prodAgregar);
             Mensajes.exito("Se ha guardado el producto exitosamente!");
             cargarTablaProductos();
+            cargarMatrizInventario();      // aquí, no en el catch
         } catch (Exception e) {
             Mensajes.error(e.getMessage());
         }
@@ -790,12 +794,14 @@ public class FormProductos extends javax.swing.JFrame {
         }
 
         actualizarTablaConArreglo(arreglo);
+        cargarMatrizInventario();
+
     }//GEN-LAST:event_btnOrdenarActionPerformed
 
     private void btnMostrarDetallesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarDetallesActionPerformed
         int fila = tblProductos.getSelectedRow();
 
-        if (fila == -1){
+        if (fila == -1) {
             Mensajes.error("Seleccione un producto de la tabla.");
             return;
         }
@@ -816,9 +822,9 @@ public class FormProductos extends javax.swing.JFrame {
         cbxCategoria.removeAllItems();
         try {
             listaCategorias = catControl.verTodasLasCategorias();
-            
+
             listaCategorias.sort(Comparator.comparing(Categoria::getNombreCategoria, String.CASE_INSENSITIVE_ORDER));
-            
+
             for (Categoria c : listaCategorias) {
                 if (c.isEstado()) {
                     cbxCategoria.addItem(c.getNombreCategoria());
@@ -833,9 +839,9 @@ public class FormProductos extends javax.swing.JFrame {
         cbxMarca.removeAllItems();
         try {
             listaMarcas = marControl.verTodasLasMarcas();
-            
+
             listaMarcas.sort(Comparator.comparing(Marca::getNombreMarca, String.CASE_INSENSITIVE_ORDER));
-            
+
             for (Marca m : listaMarcas) {
                 if (m.isEstado()) {
                     cbxMarca.addItem(m.getNombreMarca());
@@ -845,7 +851,7 @@ public class FormProductos extends javax.swing.JFrame {
             Mensajes.error(e.getMessage());
         }
     }
-    
+
     private Categoria obtenerCategoriaSeleccionada() {
         String nombre = (String) cbxCategoria.getSelectedItem();
         if (nombre == null || listaCategorias == null) {
@@ -871,21 +877,25 @@ public class FormProductos extends javax.swing.JFrame {
         }
         return null;
     }
-    
+
     private void limpiarTextsAreas() {
         txtNombre.setText("");
         txtPrecio.setText("");
         txtStock.setText("");
-        if (cbxCategoria.getItemCount() > 0) cbxCategoria.setSelectedIndex(0);
-        if (cbxMarca.getItemCount() > 0) cbxMarca.setSelectedIndex(0);
+        if (cbxCategoria.getItemCount() > 0) {
+            cbxCategoria.setSelectedIndex(0);
+        }
+        if (cbxMarca.getItemCount() > 0) {
+            cbxMarca.setSelectedIndex(0);
+        }
     }
-    
+
     private void cargarTablaProductos() {
         modelo.setRowCount(0);
-        
+
         try {
             listaProductos = prodControl.verTodosLosProductos();
-            
+
             for (Producto prod : listaProductos) {
                 Object[] fila = new Object[]{
                     prod.getIdProducto(),
@@ -904,7 +914,59 @@ public class FormProductos extends javax.swing.JFrame {
             Mensajes.error(e.getMessage());
         }
     }
-    
+
+    private void cargarMatrizInventario() {
+
+        if (listaProductos == null || listaCategorias == null) {
+            return;
+        }
+
+        Producto[] productos = listaProductos.toArray(new Producto[0]);
+        Categoria[] categorias = listaCategorias.toArray(new Categoria[0]);
+
+        if (categorias.length == 0) {
+            return;
+        }
+
+        matrizInventario = new MatrizInventario(categorias.length);
+        matrizInventario.generarMatriz(productos, categorias);
+
+        DefaultTableModel modeloMatriz = new DefaultTableModel();
+        modeloMatriz.addColumn("Categoría");
+        modeloMatriz.addColumn("Activo");
+        modeloMatriz.addColumn("Inactivo");
+        modeloMatriz.addColumn("Total");
+
+        int totalActivos = 0;
+        int totalInactivos = 0;
+
+        for (int i = 0; i < categorias.length; i++) {
+            int activos = matrizInventario.obtenerActivos(i);
+            int inactivos = matrizInventario.obtenerInactivos(i);
+            int total = matrizInventario.obtenerTotal(i);
+
+            totalActivos += activos;
+            totalInactivos += inactivos;
+
+            modeloMatriz.addRow(new Object[]{
+                categorias[i].getNombreCategoria(),
+                activos,
+                inactivos,
+                total
+            });
+        }
+
+        // Fila de totales, como en tu diseño
+        modeloMatriz.addRow(new Object[]{
+            "Total",
+            totalActivos,
+            totalInactivos,
+            totalActivos + totalInactivos
+        });
+
+        tblMatriz.setModel(modeloMatriz);
+    }
+
     private void actualizarTablaConArreglo(Producto[] arreglo) {
         modelo.setRowCount(0);
         for (Producto prod : arreglo) {
@@ -923,7 +985,7 @@ public class FormProductos extends javax.swing.JFrame {
         }
         listaProductos = new ArrayList<>(Arrays.asList(arreglo));
     }
-    
+
     private Comparator<Producto> obtenerComparador() {
         String campo = (String) cbxOrdenar.getSelectedItem();
         return switch (campo) {
@@ -935,7 +997,7 @@ public class FormProductos extends javax.swing.JFrame {
                 Comparator.comparingInt(Producto::getIdProducto);
         };
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnAgregar;
