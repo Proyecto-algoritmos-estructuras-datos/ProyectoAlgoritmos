@@ -69,6 +69,7 @@ public class FormProductos extends javax.swing.JFrame {
         tblProductos.setSelectionMode(SINGLE_SELECTION);
         tblProductos.setDefaultEditor(Object.class, null);
 
+        // Carga de las tablas
         cargarTablaProductos();
         cargarComboCategorias();
         cargarComboMarcas();
@@ -262,7 +263,7 @@ public class FormProductos extends javax.swing.JFrame {
         cbxMetodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "QuickSort", "MergeSort", "ShellSort" }));
 
         cbxOrdenar.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
-        cbxOrdenar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ID", "Precio", "Stock" }));
+        cbxOrdenar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ID", "Nombre", "Categoria", "Marca", "Precio", "Stock" }));
         cbxOrdenar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxOrdenarActionPerformed(evt);
@@ -705,7 +706,7 @@ public class FormProductos extends javax.swing.JFrame {
                 prodControl.eliminarProducto(producto);
                 Mensajes.exito("El producto ha sido eliminado correctamente!");
                 cargarTablaProductos();
-                cargarMatrizInventario();      // aquí, no en el catch
+                cargarMatrizInventario();
             } catch (Exception e) {
                 Mensajes.error(e.getMessage());
             }
@@ -739,7 +740,7 @@ public class FormProductos extends javax.swing.JFrame {
             Mensajes.exito("El producto ha sido actualizado exitosamente!");
             limpiarTextsAreas();
             cargarTablaProductos();
-            cargarMatrizInventario();      // agregar esta línea
+            cargarMatrizInventario();
         } catch (Exception e) {
             Mensajes.error(e.getMessage());
         }
@@ -764,7 +765,7 @@ public class FormProductos extends javax.swing.JFrame {
             prodControl.registrarProducto(prodAgregar);
             Mensajes.exito("Se ha guardado el producto exitosamente!");
             cargarTablaProductos();
-            cargarMatrizInventario();      // aquí, no en el catch
+            cargarMatrizInventario();
         } catch (Exception e) {
             Mensajes.error(e.getMessage());
         }
@@ -956,7 +957,6 @@ public class FormProductos extends javax.swing.JFrame {
             });
         }
 
-        // Fila de totales, como en tu diseño
         modeloMatriz.addRow(new Object[]{
             "Total",
             totalActivos,
@@ -989,6 +989,12 @@ public class FormProductos extends javax.swing.JFrame {
     private Comparator<Producto> obtenerComparador() {
         String campo = (String) cbxOrdenar.getSelectedItem();
         return switch (campo) {
+            case "Nombre" ->
+                Comparator.comparing(Producto::getNombreProducto);
+            case "Categoria" ->
+                Comparator.comparing(p -> p.getCategoria().getNombreCategoria());
+            case "Marca" ->
+                Comparator.comparing(p -> p.getMarca().getNombreMarca());
             case "Precio" ->
                 Comparator.comparing(Producto::getPrecio);
             case "Stock" ->

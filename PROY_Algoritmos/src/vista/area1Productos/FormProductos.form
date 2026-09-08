@@ -404,10 +404,13 @@
                   <Font name="Inter SemiBold" size="12" style="0"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="3">
+                  <StringArray count="6">
                     <StringItem index="0" value="ID"/>
-                    <StringItem index="1" value="Precio"/>
-                    <StringItem index="2" value="Stock"/>
+                    <StringItem index="1" value="Nombre"/>
+                    <StringItem index="2" value="Categoria"/>
+                    <StringItem index="3" value="Marca"/>
+                    <StringItem index="4" value="Precio"/>
+                    <StringItem index="5" value="Stock"/>
                   </StringArray>
                 </Property>
               </Properties>
