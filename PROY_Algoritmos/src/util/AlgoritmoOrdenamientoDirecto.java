@@ -8,7 +8,15 @@ public class AlgoritmoOrdenamientoDirecto {
 
     // Métodos para Categoria
     public static void burbuja(Categoria[] arreglo, Comparator<Categoria> comparador) {
-        // Implementación de codigo
+        for (int i = 0; i < arreglo.length - 1; i++) {
+            for (int j = 0; j < arreglo.length - 1 - i; j++) {
+                if (comparador.compare(arreglo[j], arreglo[j + 1]) > 0) {
+                    Categoria temp = arreglo[j];
+                    arreglo[j] = arreglo[j + 1];
+                    arreglo[j + 1] = temp;
+                }
+            }
+        }
     }
 
     public static void seleccion(Categoria[] arreglo, Comparator<Categoria> comparador) {
@@ -34,12 +42,30 @@ public class AlgoritmoOrdenamientoDirecto {
     }
 
     public static void insercion(Categoria[] arreglo, Comparator<Categoria> comparador) {
-        // Implementación de codigo
+        for (int i = 1; i < arreglo.length; i++) {
+            Categoria actual = arreglo[i];
+            int j = i - 1;
+
+            while (j >= 0 && comparador.compare(arreglo[j], actual) > 0) {
+                arreglo[j + 1] = arreglo[j];
+                j--;
+            }
+
+            arreglo[j + 1] = actual;
+        }
     }
 
     // Métodos para Marca
     public static void burbuja(Marca[] arreglo, Comparator<Marca> comparador) {
-        // Implementación de codigo
+        for (int i = 0; i < arreglo.length - 1; i++) {
+            for (int j = 0; j < arreglo.length - 1 - i; j++) {
+                if (comparador.compare(arreglo[j], arreglo[j + 1]) > 0) {
+                    Marca temp = arreglo[j];
+                    arreglo[j] = arreglo[j + 1];
+                    arreglo[j + 1] = temp;
+                }
+            }
+        }
     }
 
     public static void seleccion(Marca[] arreglo, Comparator<Marca> comparador) {
@@ -64,6 +90,16 @@ public class AlgoritmoOrdenamientoDirecto {
     }
 
     public static void insercion(Marca[] arreglo, Comparator<Marca> comparador) {
-        // Implementación de codigo
+        for (int i = 1; i < arreglo.length; i++) {
+            Marca actual = arreglo[i];
+            int j = i - 1;
+
+            while (j >= 0 && comparador.compare(arreglo[j], actual) > 0) {
+                arreglo[j + 1] = arreglo[j];
+                j--;
+            }
+
+            arreglo[j + 1] = actual;
+        }
     }
 }

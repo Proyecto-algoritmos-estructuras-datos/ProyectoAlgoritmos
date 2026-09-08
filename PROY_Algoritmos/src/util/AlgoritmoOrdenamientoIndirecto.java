@@ -6,7 +6,6 @@ import modelo.Producto;
 
 public class AlgoritmoOrdenamientoIndirecto {
         
-
     public static void quickSort(Producto[] arreglo, Comparator<Producto> comparador) {
         if (arreglo == null || arreglo.length < 2) {
             return;
@@ -63,10 +62,8 @@ public class AlgoritmoOrdenamientoIndirecto {
         if (izquierda < fin) {
             quickSortRecursivo(arreglo, izquierda, fin, comparador);
         }
-    
-}
+    }
 
-    // MergeSort - Bryan
     public static void mergeSort(Producto[] arreglo, Comparator<Producto> comparador) {
         if (arreglo == null || arreglo.length < 2) {
             return;
@@ -88,14 +85,13 @@ public class AlgoritmoOrdenamientoIndirecto {
     }
 
     private static void mezclar(Producto[] arreglo, Producto[] temporal, int inicio, int medio, int fin, Comparator<Producto> comparador) {
-        // Copiamos el rango actual al arreglo temporal
         for (int i = inicio; i <= fin; i++) {
             temporal[i] = arreglo[i];
         }
 
-        int i = inicio;      // puntero mitad izquierda
-        int j = medio + 1;    // puntero mitad derecha
-        int k = inicio;       // puntero de escritura en el arreglo original
+        int i = inicio;
+        int j = medio + 1;
+        int k = inicio;
 
         while (i <= medio && j <= fin) {
             if (comparador.compare(temporal[i], temporal[j]) <= 0) {
@@ -108,51 +104,45 @@ public class AlgoritmoOrdenamientoIndirecto {
             k++;
         }
 
-        // Si sobraron elementos en la mitad izquierda
         while (i <= medio) {
             arreglo[k] = temporal[i];
             i++;
             k++;
         }
 
-        // Si sobraron elementos en la mitad derecha
         while (j <= fin) {
             arreglo[k] = temporal[j];
             j++;
             k++;
         }
     }
-
     
-    
-    // Shell Sort
-    
-public static void shellSort(Producto[] arreglo, Comparator<Producto> comparador) {
+    public static void shellSort(Producto[] arreglo, Comparator<Producto> comparador) {
 
-    if (arreglo == null || arreglo.length < 2) {
-        return;
-    }
+        if (arreglo == null || arreglo.length < 2) {
+            return;
+        }
 
-    // Empezamos con la mitad del tamaño del arreglo
-    for (int gap = arreglo.length / 2; gap > 0; gap /= 2) {
+        // Empezamos con la mitad del tamaño del arreglo
+        for (int gap = arreglo.length / 2; gap > 0; gap /= 2) {
 
-        // Recorremos los elementos
-        for (int i = gap; i < arreglo.length; i++) {
+            // Recorremos los elementos
+            for (int i = gap; i < arreglo.length; i++) {
 
-            Producto temporal = arreglo[i];
+                Producto temporal = arreglo[i];
 
-            int j = i;
+                int j = i;
 
-            // Movemos elementos mientras sean mayores
-            while (j >= gap &&
-                   comparador.compare(arreglo[j - gap], temporal) > 0) {
+                // Movemos elementos mientras sean mayores
+                while (j >= gap &&
+                       comparador.compare(arreglo[j - gap], temporal) > 0) {
 
-                arreglo[j] = arreglo[j - gap];
-                j -= gap;
-            }
+                    arreglo[j] = arreglo[j - gap];
+                    j -= gap;
+                }
 
-            // Colocamos el elemento en su posición
-            arreglo[j] = temporal;
+                // Colocamos el elemento en su posición
+                arreglo[j] = temporal;
             }
         }
     }
