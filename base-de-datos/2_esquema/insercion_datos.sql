@@ -58,12 +58,12 @@ INSERT INTO marca (id_marca, nombre_marca, descripcion, pais_origen) VALUES
 -- Contraseña de todos: 1234  (almacenada como hash SHA-256)
 -- ==========================================================================
 INSERT INTO empleado (id_empleado, dni, nombres, apellidos, correo, telefono, rol, usuario, contrasena) VALUES
-(1, '11111111', 'Carlos',   'Ramírez Soto',      'admin@alphatech.pe',     '987654321', 'ADMINISTRADOR', 'admin',     SHA2('1234', 256)),
-(2, '22222222', 'Jorge',    'Vargas Lujan',      'jvargas@alphatech.pe',   '987654322', 'VENDEDOR',      'jvargas',   SHA2('1234', 256)),
-(3, '33333333', 'María',    'Fernández Ríos',    'mfernandez@alphatech.pe','987654323', 'VENDEDOR',      'mfernandez',SHA2('1234', 256)),
-(4, '44444444', 'Lucía',    'Paredes Chávez',    'lparedes@alphatech.pe',  '987654324', 'VENDEDOR',      'lparedes',  SHA2('1234', 256)),
-(5, '55555555', 'Ricardo',  'Salas Mendoza',     'rsalas@alphatech.pe',    '987654325', 'ALMACENERO',    'rsalas',    SHA2('1234', 256)),
-(6, '66666666', 'Patricia', 'Núñez Cabrera',     'pnunez@alphatech.pe',    '987654326', 'ALMACENERO',    'pnunez',    SHA2('1234', 256));
+(1, '11111111', 'Carlos',   'Ramírez Soto',      'admin@alphatech.pe',     '987654321', 'ADMINISTRADOR', 'admin',     '1234'),
+(2, '22222222', 'Jorge',    'Vargas Lujan',      'jvargas@alphatech.pe',   '987654322', 'EMPLEADO',      'jvargas',   '1234'),
+(3, '33333333', 'María',    'Fernández Ríos',    'mfernandez@alphatech.pe','987654323', 'EMPLEADO',      'mfernandez','1234'),
+(4, '44444444', 'Lucía',    'Paredes Chávez',    'lparedes@alphatech.pe',  '987654324', 'EMPLEADO',      'lparedes',  '1234'),
+(5, '55555555', 'Ricardo',  'Salas Mendoza',     'rsalas@alphatech.pe',    '987654325', 'EMPLEADO',    'rsalas',    '1234'),
+(6, '66666666', 'Patricia', 'Núñez Cabrera',     'pnunez@alphatech.pe',    '987654326', 'EMPLEADO',    'pnunez',    '1234');
 
 -- ==========================================================================
 -- 4. PROVEEDOR (10 registros)

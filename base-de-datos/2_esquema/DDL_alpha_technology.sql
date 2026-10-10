@@ -56,7 +56,7 @@ CREATE TABLE empleado (
     apellidos VARCHAR(80) NOT NULL,
     correo VARCHAR(100) NULL,
     telefono VARCHAR(15) NULL,
-    rol VARCHAR(20) NOT NULL DEFAULT 'VENDEDOR',
+    rol VARCHAR(20) NOT NULL DEFAULT 'EMPLEADO',
     usuario VARCHAR(30) NOT NULL,
     contrasena VARCHAR(255) NOT NULL COMMENT 'Hash de la contrasena, nunca texto plano',
     estado TINYINT(1) NOT NULL DEFAULT 1,
@@ -65,7 +65,7 @@ CREATE TABLE empleado (
     CONSTRAINT uq_empleado_dni UNIQUE (dni),
     CONSTRAINT uq_empleado_usuario UNIQUE (usuario),
     CONSTRAINT chk_empleado_dni CHECK (dni REGEXP '^[0-9]{8}$'),
-    CONSTRAINT chk_empleado_rol CHECK (rol IN ('ADMINISTRADOR', 'VENDEDOR', 'ALMACENERO'))
+    CONSTRAINT chk_empleado_rol CHECK (rol IN ('ADMINISTRADOR', 'EMPLEADO'))
 ) ENGINE=InnoDB;
 
 -- Tabla proveedor: Empresas a las que la tienda les compra mercadería

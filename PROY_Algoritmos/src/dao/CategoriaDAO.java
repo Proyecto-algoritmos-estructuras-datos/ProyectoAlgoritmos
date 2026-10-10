@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import conexion.Conexion;
 import interfaces.ICategoriaDAO;
 import java.util.ArrayList;
@@ -37,17 +38,20 @@ public class CategoriaDAO implements ICategoriaDAO{
         String sql = """
                      INSERT INTO categoria
                      (
+                     id_categoria_padre,
                      nombre_categoria,
                      descripcion
                      )
-                     VALUES (?, ?)
+                     VALUES (?, ?, ?)
                      """;
         
         try (Connection conn = new Conexion().conectar();
              PreparedStatement ps = conn.prepareStatement(sql);
             ) {
-            ps.setString(1, categoria.getNombreCategoria());
-            ps.setString(2, categoria.getDescripcion());
+            // setObject con Types.INTEGER permite enviar NULL cuando no hay padre
+            ps.setObject(1, categoria.getIdCategoriaPadre(), Types.INTEGER);
+            ps.setString(2, categoria.getNombreCategoria());
+            ps.setString(3, categoria.getDescripcion());
             
             int filas = ps.executeUpdate();
             
@@ -65,6 +69,7 @@ public class CategoriaDAO implements ICategoriaDAO{
         String sql = """
                      UPDATE categoria
                      SET
+                     id_categoria_padre = ?,
                      nombre_categoria = ?,
                      descripcion = ?
                      WHERE id_categoria = ?
@@ -73,9 +78,10 @@ public class CategoriaDAO implements ICategoriaDAO{
         try (Connection conn = new Conexion().conectar();
              PreparedStatement ps = conn.prepareStatement(sql);
             ) {
-            ps.setString(1, categoria.getNombreCategoria());
-            ps.setString(2, categoria.getDescripcion());
-            ps.setInt(3, categoria.getIdCategoria());
+            ps.setObject(1, categoria.getIdCategoriaPadre(), Types.INTEGER);
+            ps.setString(2, categoria.getNombreCategoria());
+            ps.setString(3, categoria.getDescripcion());
+            ps.setInt(4, categoria.getIdCategoria());
             
             int filas = ps.executeUpdate();
             
@@ -115,6 +121,8 @@ public class CategoriaDAO implements ICategoriaDAO{
     private Categoria mapearCategoria(ResultSet rs) throws SQLException {
         Categoria categoria = new Categoria();
         categoria.setIdCategoria(rs.getInt("id_categoria"));
+        int idPadre = rs.getInt("id_categoria_padre");
+        categoria.setIdCategoriaPadre(rs.wasNull() ? null : idPadre);
         categoria.setNombreCategoria(rs.getString("nombre_categoria"));
         categoria.setDescripcion(rs.getString("descripcion"));
         categoria.setEstado(rs.getBoolean("estado"));

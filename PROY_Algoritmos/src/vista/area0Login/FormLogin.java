@@ -5,11 +5,16 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import vista.area1Productos.FormProductos;
+import controlador.EmpleadoController;
+import modelo.Empleado;
+import util.Mensajes;
+import util.SesionActual;
 
 public class FormLogin extends javax.swing.JFrame {
     
     
     FondoPanel fondo = new FondoPanel();
+    private final EmpleadoController empControl = new EmpleadoController();
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FormLogin.class.getName());
 
@@ -31,7 +36,7 @@ public class FormLogin extends javax.swing.JFrame {
         jLabel28 = new javax.swing.JLabel();
         btnIniciarSesion = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        txtUsuario = new javax.swing.JTextField();
+        txtDni = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         txtPassword = new javax.swing.JPasswordField();
@@ -78,9 +83,14 @@ public class FormLogin extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
 
-        txtUsuario.setBackground(new java.awt.Color(255, 255, 255));
-        txtUsuario.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
-        txtUsuario.setBorder(null);
+        txtDni.setBackground(new java.awt.Color(255, 255, 255));
+        txtDni.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
+        txtDni.setBorder(null);
+        txtDni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDniActionPerformed(evt);
+            }
+        });
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/user.png"))); // NOI18N
 
@@ -92,11 +102,11 @@ public class FormLogin extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel2)
                 .addGap(9, 9, 9)
-                .addComponent(txtUsuario))
+                .addComponent(txtDni))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(txtUsuario)
+            .addComponent(txtDni)
             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
         );
 
@@ -232,13 +242,37 @@ public class FormLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
-        // TODO add your handling code here:
+        // Enter en el campo de contraseña inicia sesión
+        btnIniciarSesion.doClick();
     }//GEN-LAST:event_txtPasswordActionPerformed
 
     private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
-        new FormProductos().setVisible(true);
-        this.dispose();
+        String dni = txtDni.getText().trim();
+        String contrasena = new String(txtPassword.getPassword());
+
+        try {
+            // El controller valida campos vacíos; devuelve null si las credenciales
+            // son incorrectas o si el empleado está inactivo
+            Empleado empleado = empControl.autenticarEmpleado(dni, contrasena);
+
+            if (empleado == null) {
+                Mensajes.error("DNI o contraseña incorrectos, o el empleado está inactivo.");
+                txtPassword.setText("");
+                txtPassword.requestFocus();
+                return;
+            }
+
+            SesionActual.iniciarSesion(empleado);
+            new FormProductos().setVisible(true);
+            this.dispose();
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
     }//GEN-LAST:event_btnIniciarSesionActionPerformed
+
+    private void txtDniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDniActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDniActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnIniciarSesion;
@@ -254,8 +288,8 @@ public class FormLogin extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JTextField txtDni;
     private javax.swing.JPasswordField txtPassword;
-    private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 
     class FondoPanel extends JPanel{
