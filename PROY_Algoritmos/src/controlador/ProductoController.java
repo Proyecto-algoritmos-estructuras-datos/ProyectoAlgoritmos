@@ -65,7 +65,12 @@ public class ProductoController {
         if (producto.getMarca() == null || producto.getMarca().getIdMarca() <= 0) {
             throw new Exception("Debe seleccionar una marca válida.");
         }
-        if (producto.getPrecioCompra() == null || producto.getPrecioCompra().compareTo(BigDecimal.ZERO) < 0) {
+        
+        // Modificar luego y unificar esta condicional con la que le sigue
+        if (producto.getPrecioCompra() == null) {
+            producto.setPrecioCompra(BigDecimal.ZERO);
+        }
+        if (producto.getPrecioCompra().compareTo(BigDecimal.ZERO) < 0) {
             throw new Exception("El precio de compra no puede ser negativo.");
         }
         if (producto.getPrecio() == null || producto.getPrecio().compareTo(BigDecimal.ZERO) < 0) {
