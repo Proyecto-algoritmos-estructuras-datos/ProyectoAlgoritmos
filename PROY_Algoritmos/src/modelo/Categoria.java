@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public class Categoria {
     private int idCategoria;
+    private Integer idCategoriaPadre; // null = categoría raíz (sin padre)
     private String nombreCategoria;
     private String descripcion;
     private boolean estado;
@@ -13,14 +14,16 @@ public class Categoria {
     public Categoria() {
     }
 
-    public Categoria(String nombreCategoria, String descripcion, boolean estado) {
+    public Categoria(Integer idCategoriaPadre, String nombreCategoria, String descripcion, boolean estado) {
+        this.idCategoriaPadre = idCategoriaPadre;
         this.nombreCategoria = nombreCategoria;
         this.descripcion = descripcion;
         this.estado = estado;
     }
 
-    public Categoria(int idCategoria, String nombreCategoria, String descripcion, boolean estado, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion) {
+    public Categoria(int idCategoria, Integer idCategoriaPadre, String nombreCategoria, String descripcion, boolean estado, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion) {
         this.idCategoria = idCategoria;
+        this.idCategoriaPadre = idCategoriaPadre;
         this.nombreCategoria = nombreCategoria;
         this.descripcion = descripcion;
         this.estado = estado;
@@ -34,6 +37,14 @@ public class Categoria {
 
     public void setIdCategoria(int idCategoria) {
         this.idCategoria = idCategoria;
+    }
+
+    public Integer getIdCategoriaPadre() {
+        return idCategoriaPadre;
+    }
+
+    public void setIdCategoriaPadre(Integer idCategoriaPadre) {
+        this.idCategoriaPadre = idCategoriaPadre;
     }
 
     public String getNombreCategoria() {
@@ -78,7 +89,7 @@ public class Categoria {
 
     @Override
     public String toString() {
-        return "Categoria{" + "idCategoria=" + idCategoria + ", nombreCategoria=" + nombreCategoria + ", descripcion=" + descripcion + ", estado=" + estado + ", fechaCreacion=" + fechaCreacion + ", fechaModificacion=" + fechaModificacion + '}';
+        return "Categoria{" + "idCategoria=" + idCategoria + ", idCategoriaPadre=" + idCategoriaPadre + ", nombreCategoria=" + nombreCategoria + ", descripcion=" + descripcion + ", estado=" + estado + ", fechaCreacion=" + fechaCreacion + ", fechaModificacion=" + fechaModificacion + '}';
     }
-    
+
 }

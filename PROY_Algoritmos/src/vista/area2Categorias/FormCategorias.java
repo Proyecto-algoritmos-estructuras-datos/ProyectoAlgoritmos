@@ -20,6 +20,8 @@ import vista.area3Marcas.FormMarcas;
 import vista.area4Historial.FormHistorial;
 import vista.area5AjusteStock.FormAjusteStock;
 import vista.area6Administracion.FormAdministracion;
+import util.ControlAcceso;
+import util.SesionActual;
 
 public class FormCategorias extends javax.swing.JFrame {
 
@@ -37,6 +39,9 @@ public class FormCategorias extends javax.swing.JFrame {
 
     public FormCategorias() {
         initComponents();
+        
+        ControlAcceso.configurarVentana(this, btnAjusteStock, btnAdministracion);
+        
         btnCategorias.setBackground(Color.decode("#015BBB"));
 
         // Se inicializa los controladores
@@ -479,7 +484,7 @@ public class FormCategorias extends javax.swing.JFrame {
 
         jPanel10.setBackground(new java.awt.Color(1, 91, 187));
 
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/apla.png"))); // NOI18N
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/apla.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
@@ -501,7 +506,7 @@ public class FormCategorias extends javax.swing.JFrame {
         btnProductos.setBackground(new java.awt.Color(0, 29, 63));
         btnProductos.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnProductos.setForeground(new java.awt.Color(255, 255, 255));
-        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/productos.png"))); // NOI18N
+        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/productos.png"))); // NOI18N
         btnProductos.setText("   Productos      ");
         btnProductos.setBorder(null);
         btnProductos.setBorderPainted(false);
@@ -515,7 +520,7 @@ public class FormCategorias extends javax.swing.JFrame {
         btnMarcas.setBackground(new java.awt.Color(0, 29, 63));
         btnMarcas.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnMarcas.setForeground(new java.awt.Color(255, 255, 255));
-        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/marcas.png"))); // NOI18N
+        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/marcas.png"))); // NOI18N
         btnMarcas.setText("   Marcas             ");
         btnMarcas.setBorder(null);
         btnMarcas.setBorderPainted(false);
@@ -530,7 +535,7 @@ public class FormCategorias extends javax.swing.JFrame {
         btnCategorias.setBackground(new java.awt.Color(0, 29, 63));
         btnCategorias.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnCategorias.setForeground(new java.awt.Color(255, 255, 255));
-        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/categorias.png"))); // NOI18N
+        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/categorias.png"))); // NOI18N
         btnCategorias.setText("  Categorias      ");
         btnCategorias.setBorder(null);
         btnCategorias.setBorderPainted(false);
@@ -801,6 +806,7 @@ public class FormCategorias extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCategoriasActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        SesionActual.cerrarSesion();
         new FormLogin().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
@@ -811,11 +817,18 @@ public class FormCategorias extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHistorialActionPerformed
 
     private void btnAdministracionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdministracionActionPerformed
+        if (!ControlAcceso.validarAdministracion()) {
+            return;
+        }
+        
         new FormAdministracion().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAdministracionActionPerformed
 
     private void btnAjusteStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAjusteStockActionPerformed
+        if (!ControlAcceso.validarAjusteStock()) {
+            return;
+        }
         new FormAjusteStock().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAjusteStockActionPerformed

@@ -1,24 +1,13 @@
 package vista.area6Administracion;
 
-import vista.area4Historial.*;
 import vista.area5AjusteStock.*;
-import controlador.MarcaController;
 import vista.area2Categorias.*;
 import vista.area1Productos.*;
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
-import javax.swing.table.DefaultTableModel;
-import modelo.Marca;
-import util.AlgoritmoOrdenamientoDirecto;
-import util.Mensajes;
 import vista.area0Login.FormLogin;
-import util.MatrizPaisEstado;
 import vista.area3Marcas.FormMarcas;
-import vista.area6Administracion.FormAdministracion;
+import util.ControlAcceso;
+import util.SesionActual;
 
 
 public class FormAdministracion extends javax.swing.JFrame {
@@ -30,6 +19,8 @@ public class FormAdministracion extends javax.swing.JFrame {
      */
     public FormAdministracion() {
         initComponents();
+        ControlAcceso.configurarVentana(this, btnAjusteStock, btnAdministracion);
+        btnAdministracion.setBackground(Color.decode("#015BBB"));
     }
 
     /**
@@ -372,7 +363,7 @@ public class FormAdministracion extends javax.swing.JFrame {
 
         jPanel13.setBackground(new java.awt.Color(1, 91, 187));
 
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/apla.png"))); // NOI18N
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/apla.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -394,7 +385,7 @@ public class FormAdministracion extends javax.swing.JFrame {
         btnProductos.setBackground(new java.awt.Color(0, 29, 63));
         btnProductos.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnProductos.setForeground(new java.awt.Color(255, 255, 255));
-        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/productos.png"))); // NOI18N
+        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/productos.png"))); // NOI18N
         btnProductos.setText("   Productos      ");
         btnProductos.setBorder(null);
         btnProductos.setBorderPainted(false);
@@ -408,7 +399,7 @@ public class FormAdministracion extends javax.swing.JFrame {
         btnMarcas.setBackground(new java.awt.Color(0, 29, 63));
         btnMarcas.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnMarcas.setForeground(new java.awt.Color(255, 255, 255));
-        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/marcas.png"))); // NOI18N
+        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/marcas.png"))); // NOI18N
         btnMarcas.setText("   Marcas             ");
         btnMarcas.setBorder(null);
         btnMarcas.setBorderPainted(false);
@@ -423,7 +414,7 @@ public class FormAdministracion extends javax.swing.JFrame {
         btnCategorias.setBackground(new java.awt.Color(0, 29, 63));
         btnCategorias.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnCategorias.setForeground(new java.awt.Color(255, 255, 255));
-        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/categorias.png"))); // NOI18N
+        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/categorias.png"))); // NOI18N
         btnCategorias.setText("  Categorias      ");
         btnCategorias.setBorder(null);
         btnCategorias.setBorderPainted(false);
@@ -562,6 +553,7 @@ public class FormAdministracion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCategoriasActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        SesionActual.cerrarSesion();
         new FormLogin().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
@@ -572,10 +564,19 @@ public class FormAdministracion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHistorialActionPerformed
 
     private void btnAdministracionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdministracionActionPerformed
+        if (!ControlAcceso.validarAdministracion()) {
+            return;
+        }
         
+        new FormAdministracion().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnAdministracionActionPerformed
 
     private void btnAjusteStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAjusteStockActionPerformed
+        if (!ControlAcceso.validarAjusteStock()) {
+            return;
+        }
+
         new FormAjusteStock().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAjusteStockActionPerformed
@@ -606,31 +607,6 @@ public class FormAdministracion extends javax.swing.JFrame {
     private void txtApellidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtApellidosActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtApellidosActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FormAdministracion().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
