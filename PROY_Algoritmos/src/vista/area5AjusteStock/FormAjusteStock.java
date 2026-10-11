@@ -1,13 +1,21 @@
 package vista.area5AjusteStock;
 
+import controlador.CategoriaController;
+import controlador.ProductoController;
 import vista.area2Categorias.*;
 import vista.area1Productos.*;
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import modelo.Categoria;
+import modelo.Producto;
 import vista.area0Login.FormLogin;
 import vista.area3Marcas.FormMarcas;
 import vista.area4Historial.FormHistorial;
 import vista.area6Administracion.FormAdministracion;
 import util.ControlAcceso;
+import util.Mensajes;
 import util.SesionActual;
 
 
@@ -15,13 +23,26 @@ public class FormAjusteStock extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FormAjusteStock.class.getName());
 
-    /**
-     * Creates new form FormAjustee
-     */
+    // Controladores
+    private final CategoriaController catControl;
+    private final ProductoController prodControl;
+    
+    private List<Categoria> listaCategorias;
+    
     public FormAjusteStock() {
         initComponents();
         ControlAcceso.configurarVentana(this, btnAjusteStock, btnAdministracion);
         btnAjusteStock.setBackground(Color.decode("#015BBB"));
+        
+        // Setea el texto de txtEmpleado al nombre del empleado en sesión
+        txtEmpleado.setText(SesionActual.getEmpleado().getNombreCompleto());
+        
+        // Se inicializa los controladores        
+        catControl = new CategoriaController();
+        prodControl = new ProductoController();
+        
+        // Carga de las categorias en el combobox
+        cargarComboCategorias();
     }
 
     /**
@@ -38,7 +59,7 @@ public class FormAjusteStock extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         cbxCategoria = new javax.swing.JComboBox<>();
-        btnOrdenar = new javax.swing.JButton();
+        btnIniciarConteo = new javax.swing.JButton();
         jLabel16 = new javax.swing.JLabel();
         txtEmpleado = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -78,20 +99,20 @@ public class FormAjusteStock extends javax.swing.JFrame {
             }
         });
 
-        btnOrdenar.setBackground(new java.awt.Color(0, 63, 156));
-        btnOrdenar.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
-        btnOrdenar.setForeground(new java.awt.Color(255, 255, 255));
-        btnOrdenar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/logoOrdenar.png"))); // NOI18N
-        btnOrdenar.setText("   Iniciar conteo      ");
-        btnOrdenar.addActionListener(new java.awt.event.ActionListener() {
+        btnIniciarConteo.setBackground(new java.awt.Color(0, 63, 156));
+        btnIniciarConteo.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
+        btnIniciarConteo.setForeground(new java.awt.Color(255, 255, 255));
+        btnIniciarConteo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/logoOrdenar.png"))); // NOI18N
+        btnIniciarConteo.setText("   Iniciar conteo      ");
+        btnIniciarConteo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnOrdenarActionPerformed(evt);
+                btnIniciarConteoActionPerformed(evt);
             }
         });
 
         jLabel16.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel16.setText("Almacenero:");
+        jLabel16.setText("Empleado:");
 
         txtEmpleado.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         txtEmpleado.setForeground(new java.awt.Color(102, 102, 102));
@@ -117,7 +138,7 @@ public class FormAjusteStock extends javax.swing.JFrame {
                             .addComponent(jLabel14)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(90, 90, 90)
-                        .addComponent(btnOrdenar, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnIniciarConteo, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(70, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -134,7 +155,7 @@ public class FormAjusteStock extends javax.swing.JFrame {
                     .addComponent(jLabel16)
                     .addComponent(txtEmpleado))
                 .addGap(30, 30, 30)
-                .addComponent(btnOrdenar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnIniciarConteo, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(60, 60, 60))
         );
 
@@ -183,7 +204,7 @@ public class FormAjusteStock extends javax.swing.JFrame {
         jPanel12Layout.setHorizontalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
-                .addContainerGap(38, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel7)
                 .addGap(35, 35, 35))
         );
@@ -350,9 +371,28 @@ public class FormAjusteStock extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnOrdenarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrdenarActionPerformed
-        new FormCategoria().setVisible(true);
-    }//GEN-LAST:event_btnOrdenarActionPerformed
+    private void btnIniciarConteoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarConteoActionPerformed
+        int indice = cbxCategoria.getSelectedIndex();
+        if (indice < 0) {
+            Mensajes.error("Debe seleccionar una categoría.");
+            return;
+        }
+        Categoria categoria = listaCategorias.get(indice);
+
+        try {
+            List<Producto> productos = prodControl.verProductosActivosPorCategoria(categoria.getIdCategoria());
+            if (productos.isEmpty()) {
+                Mensajes.error("La categoría \"" + categoria.getNombreCategoria()
+                        + "\" no tiene productos activos para contar.");
+                return;
+            }
+            
+            new FormCategoria(categoria, productos).setVisible(true);
+            this.dispose();
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+    }//GEN-LAST:event_btnIniciarConteoActionPerformed
 
     private void cbxCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxCategoriaActionPerformed
         // TODO add your handling code here:
@@ -402,38 +442,44 @@ public class FormAjusteStock extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnAjusteStockActionPerformed
 
+    private void cargarComboCategorias() {
+        cbxCategoria.removeAllItems();
+        listaCategorias = new ArrayList<>();
+        try {
+            List<Categoria> todas = catControl.verTodasLasCategorias();
+            todas.sort(Comparator.comparing(Categoria::getNombreCategoria, String.CASE_INSENSITIVE_ORDER));
+
+            for (Categoria c : todas) {
+                if (c.isEstado()) {
+                    listaCategorias.add(c);                       // misma posición que en el combo
+                    cbxCategoria.addItem(c.getNombreCategoria());
+                }
+            }
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdministracion;
     private javax.swing.JButton btnAjusteStock;
     private javax.swing.JButton btnCategorias;
     private javax.swing.JButton btnHistorial;
+    private javax.swing.JButton btnIniciarConteo;
     private javax.swing.JButton btnMarcas;
-    private javax.swing.JButton btnOrdenar;
     private javax.swing.JButton btnProductos;
     private javax.swing.JButton btnSalir;
     private javax.swing.JComboBox<String> cbxCategoria;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
     private javax.swing.JLabel txtEmpleado;
     // End of variables declaration//GEN-END:variables
 }
