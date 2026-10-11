@@ -1,5 +1,20 @@
 package vista.area5AjusteStock;
 
+import controlador.MovimientoInventarioController;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.swing.table.DefaultTableModel;
+import modelo.Categoria;
+import modelo.EstadoToma;
+import modelo.ItemTomaInventario;
+import modelo.MovimientoInventario;
+import util.ListaCircularDoble;
+import util.Mensajes;
+import util.SesionActual;
+
 /**
  *
  * @author Diego
@@ -8,11 +23,34 @@ public class FormResumen2 extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FormResumen2.class.getName());
 
-    /**
-     * Creates new form FormCategoria
-     */
-    public FormResumen2() {
+    private final Categoria categoria;
+    private final ListaCircularDoble<ItemTomaInventario> lista;
+    private final FormCategoria padre;
+    private final MovimientoInventarioController movControl = new MovimientoInventarioController();
+
+    // Totales del resumen
+    private int pendientes;
+    private int conDiferencia;
+    private int totalFaltante;  // queda negativo
+    private int totalSobrante;
+
+    public FormResumen2(Categoria categoria, ListaCircularDoble<ItemTomaInventario> lista, FormCategoria padre) {
         initComponents();
+        this.categoria = categoria;
+        this.lista = lista;
+        this.padre = padre;
+
+        // Mientras el resumen está abierto, la pantalla de conteo queda bloqueada
+        padre.setEnabled(false);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                padre.setEnabled(true);
+                padre.toFront();
+            }
+        });
+
+        cargarResumen();
     }
 
     /**
@@ -31,7 +69,7 @@ public class FormResumen2 extends javax.swing.JFrame {
         jTable2 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblResumen = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         txtProductosDiferencia = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -44,6 +82,7 @@ public class FormResumen2 extends javax.swing.JFrame {
         txtFaltante = new javax.swing.JLabel();
         txtSobrante = new javax.swing.JLabel();
         txtUn = new javax.swing.JLabel();
+        btnVolver = new javax.swing.JButton();
 
         jLabel13.setText("jLabel13");
 
@@ -64,13 +103,13 @@ public class FormResumen2 extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(jTable2);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setForeground(new java.awt.Color(153, 153, 153));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblResumen.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -81,13 +120,14 @@ public class FormResumen2 extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblResumen);
 
         jLabel2.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         jLabel2.setText("Productos con diferencia:");
 
         txtProductosDiferencia.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         txtProductosDiferencia.setForeground(new java.awt.Color(153, 153, 153));
+        txtProductosDiferencia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         txtProductosDiferencia.setText("3 ");
 
         jLabel5.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
@@ -139,15 +179,27 @@ public class FormResumen2 extends javax.swing.JFrame {
 
         txtFaltante.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         txtFaltante.setForeground(new java.awt.Color(153, 153, 153));
+        txtFaltante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         txtFaltante.setText("-3");
 
         txtSobrante.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         txtSobrante.setForeground(new java.awt.Color(153, 153, 153));
+        txtSobrante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         txtSobrante.setText("+1");
 
         txtUn.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         txtUn.setForeground(new java.awt.Color(153, 153, 153));
         txtUn.setText("unid");
+
+        btnVolver.setBackground(new java.awt.Color(255, 51, 51));
+        btnVolver.setFont(new java.awt.Font("Inter SemiBold", 0, 13)); // NOI18N
+        btnVolver.setForeground(new java.awt.Color(255, 255, 255));
+        btnVolver.setText("Volver a contar");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -155,34 +207,33 @@ public class FormResumen2 extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel2))
+                        .addGap(28, 28, 28)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtProductosDiferencia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtFaltante, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
+                            .addComponent(txtSobrante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel2))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(txtFaltante)
-                                            .addComponent(txtProductosDiferencia))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txt)
-                                            .addComponent(txtpd)))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(txtSobrante)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(txtUn))))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(173, 173, 173)
-                        .addComponent(btnAplicarAjustes, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txt)
+                            .addComponent(txtpd)
+                            .addComponent(txtUn)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(36, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(90, 90, 90)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(186, 186, 186)
+                        .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAplicarAjustes, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -205,9 +256,11 @@ public class FormResumen2 extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(txtSobrante)
                     .addComponent(txtUn))
-                .addGap(44, 44, 44)
-                .addComponent(btnAplicarAjustes, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addGap(58, 58, 58)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAplicarAjustes, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -228,11 +281,129 @@ public class FormResumen2 extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAplicarAjustesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAplicarAjustesActionPerformed
-        this.dispose();
+        String mensaje = "Se aplicarán " + conDiferencia + " ajuste(s).\n"
+                + pendientes + " producto(s) quedaron pendientes y NO se ajustarán.\n\n"
+                + "¿Desea continuar?";
+        if (!Mensajes.confirmacion(mensaje, "Aplicar ajustes")) {
+            return;
+        }
+
+        // idProducto -> conteo físico, solo de los productos contados
+        Map<Integer, Integer> conteos = new HashMap<>();
+        lista.recorrer(item -> {
+            if (item.estaContado()) {
+                conteos.put(item.getProducto().getIdProducto(), item.getConteoFisico());
+            }
+        });
+
+        try {
+            String motivo = "Toma de inventario - " + categoria.getNombreCategoria();
+            List<MovimientoInventario> ajustes = movControl.aplicarTomaInventario(
+                    conteos, SesionActual.getEmpleado(), motivo);
+
+            mostrarResultado(ajustes);
+
+            // Toma terminada: se limpia la lista y se vuelve al inicio
+            lista.vaciar();
+            padre.dispose();
+            new FormAjusteStock().setVisible(true);
+            this.dispose();
+        } catch (Exception e) {
+            // Si falló hubo rollback: no se aplicó nada y la toma sigue intacta
+            Mensajes.error(e.getMessage());
+        }
     }//GEN-LAST:event_btnAplicarAjustesActionPerformed
 
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnVolverActionPerformed
+
+    // Métodos auxiliares
+    // Llena la tabla con los productos contados y calcula los totales
+    private void cargarResumen() {
+        pendientes = 0;
+        conDiferencia = 0;
+        totalFaltante = 0;
+        totalSobrante = 0;
+
+        DefaultTableModel modelo = new DefaultTableModel(
+                new String[]{"Producto", "Stock sistema", "Conteo", "Diferencia", "Estado"}, 0) {
+            @Override
+            public boolean isCellEditable(int fila, int columna) {
+                return false;
+            }
+        };
+
+        lista.recorrer(item -> {
+            if (!item.estaContado()) {
+                pendientes++;
+                return;
+            }
+            int diferencia = item.calcularDiferencia();
+            if (diferencia < 0) {
+                conDiferencia++;
+                totalFaltante += diferencia;
+            } else if (diferencia > 0) {
+                conDiferencia++;
+                totalSobrante += diferencia;
+            }
+            modelo.addRow(new Object[]{
+                item.getProducto().getNombreProducto(),
+                item.getStockSistema(),
+                item.getConteoFisico(),
+                formatoDiferencia(diferencia),
+                textoEstado(item.getEstado())
+            });
+        });
+
+        tblResumen.setModel(modelo);
+        txtProductosDiferencia.setText(String.valueOf(conDiferencia));
+        txtFaltante.setText(String.valueOf(totalFaltante));
+        txtSobrante.setText(formatoDiferencia(totalSobrante));
+    }
+
+    private String formatoDiferencia(int diferencia) {
+        return diferencia > 0 ? "+" + diferencia : String.valueOf(diferencia);
+    }
+
+    private String textoEstado(EstadoToma estado) {
+        return switch (estado) {
+            case PENDIENTE ->
+                "Pendiente";
+            case COINCIDE ->
+                "Coincide";
+            case SOBRANTE ->
+                "Sobrante";
+            case FALTANTE ->
+                "Faltante";
+        };
+    }
+
+// Muestra los ajustes que realmente se aplicaron (los devuelve el controller)
+    private void mostrarResultado(List<MovimientoInventario> ajustes) {
+        if (ajustes.isEmpty()) {
+            Mensajes.exito("La toma se aplicó, pero no hubo diferencias: no se registró ningún ajuste.");
+            return;
+        }
+        int maximo = 10; // para que el mensaje no se salga de la pantalla
+        StringBuilder sb = new StringBuilder("Se aplicaron " + ajustes.size() + " ajuste(s):\n\n");
+        for (int i = 0; i < ajustes.size() && i < maximo; i++) {
+            MovimientoInventario a = ajustes.get(i);
+            sb.append(a.getProducto().getNombreProducto())
+                    .append(": ").append(a.getStockAnterior())
+                    .append(" -> ").append(a.getStockNuevo())
+                    .append(" (").append(formatoDiferencia(a.getStockNuevo() - a.getStockAnterior()))
+                    .append(")\n");
+        }
+        if (ajustes.size() > maximo) {
+            sb.append("... y ").append(ajustes.size() - maximo).append(" más");
+        }
+        Mensajes.exito(sb.toString());
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAplicarAjustes;
+    private javax.swing.JButton btnVolver;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel17;
@@ -244,8 +415,8 @@ public class FormResumen2 extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
+    private javax.swing.JTable tblResumen;
     private javax.swing.JLabel txt;
     private javax.swing.JLabel txtFaltante;
     private javax.swing.JLabel txtProductosDiferencia;
