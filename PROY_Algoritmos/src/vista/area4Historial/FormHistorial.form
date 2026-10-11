@@ -105,13 +105,13 @@
                       <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="btnActualizar" min="-2" pref="107" max="-2" attributes="0"/>
+                              <Component id="btnInicio" min="-2" pref="107" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
-                              <Component id="btnActualizar3" min="-2" pref="107" max="-2" attributes="0"/>
+                              <Component id="btnAnterior" min="-2" pref="107" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="btnActualizar2" min="-2" pref="107" max="-2" attributes="0"/>
+                              <Component id="btnSiguiente" min="-2" pref="107" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="86" max="-2" attributes="0"/>
-                              <Component id="btnActualizar1" min="-2" pref="107" max="-2" attributes="0"/>
+                              <Component id="btnFin" min="-2" pref="107" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="149" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane1" min="-2" pref="854" max="-2" attributes="0"/>
@@ -127,10 +127,10 @@
                       <Component id="jScrollPane1" pref="392" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="btnActualizar" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
-                          <Component id="btnActualizar1" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
-                          <Component id="btnActualizar3" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
-                          <Component id="btnActualizar2" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
+                          <Component id="btnInicio" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
+                          <Component id="btnFin" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
+                          <Component id="btnAnterior" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
+                          <Component id="btnSiguiente" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
                   </Group>
@@ -145,7 +145,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="jTable1">
+                <Component class="javax.swing.JTable" name="tblHistorial">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="4" rowCount="4">
@@ -159,7 +159,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="btnActualizar">
+            <Component class="javax.swing.JButton" name="btnInicio">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="cc" type="rgb"/>
@@ -173,7 +173,7 @@
                 <Property name="text" type="java.lang.String" value="Inicio"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnActualizar1">
+            <Component class="javax.swing.JButton" name="btnFin">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="cc" type="rgb"/>
@@ -187,7 +187,7 @@
                 <Property name="text" type="java.lang.String" value="Fin"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnActualizar2">
+            <Component class="javax.swing.JButton" name="btnSiguiente">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="66" green="ff" red="66" type="rgb"/>
@@ -201,7 +201,7 @@
                 <Property name="text" type="java.lang.String" value="Siguiente"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnActualizar3">
+            <Component class="javax.swing.JButton" name="btnAnterior">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="66" green="66" red="ff" type="rgb"/>
