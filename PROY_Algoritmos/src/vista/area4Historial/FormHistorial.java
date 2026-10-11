@@ -26,6 +26,10 @@ public class FormHistorial extends javax.swing.JFrame {
     private final MovimientoInventarioController movControl = new MovimientoInventarioController();
     private ListaEnlazadaDoble listaDoblePaginada;
     
+// Paginación 
+    
+    
+    
 private void cargarYPaginarMovimientos() {
     try {
         List<MovimientoInventario> todosLosMovimientos = movControl.verTodosLosMovimientos();
@@ -39,9 +43,11 @@ private void cargarYPaginarMovimientos() {
     }
 }
 
+
+
 private void actualizarTabla(List<MovimientoInventario> listaPagina) {
-    modeloHistorial.setRowCount(0);
     if (listaPagina == null) return;
+    modeloHistorial.setRowCount(0);
 
     for (MovimientoInventario m : listaPagina) {
         Integer idProd = (m.getProducto() != null) ? m.getProducto().getIdProducto() : null;
@@ -55,9 +61,9 @@ private void actualizarTabla(List<MovimientoInventario> listaPagina) {
             m.getCantidad(),
             m.getStockAnterior(),
             m.getStockNuevo(),
-            m.getMotivo(),
-            m.getIdCompra(),
-            m.getIdVenta(),
+            m.getMotivo() != null ? m.getMotivo() : "-",    
+            m.getIdCompra() != null ? m.getIdCompra() : "-",
+            m.getIdVenta() != null ? m.getIdVenta() : "-",
             m.getFechaMovimiento() != null ? m.getFechaMovimiento().toString() : ""
         };
         modeloHistorial.addRow(fila);
@@ -86,6 +92,16 @@ public FormHistorial() {
         tblHistorial.setSelectionMode(SINGLE_SELECTION);
         tblHistorial.setDefaultEditor(Object.class, null);
         cargarYPaginarMovimientos();
+        
+        int[] anchos = {40, 65, 70, 100, 65, 90, 85, 170, 65, 60, 130};
+        for (int i = 0; i < anchos.length; i++) {
+        tblHistorial.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
+}
+
+        btnInicio.addActionListener(this::btnInicioActionPerformed);
+        btnAnterior.addActionListener(this::btnAnteriorActionPerformed);
+        btnSiguiente.addActionListener(this::btnSiguienteActionPerformed);
+        btnFin.addActionListener(this::btnFinActionPerformed);
     }
 
     @SuppressWarnings("unchecked")
