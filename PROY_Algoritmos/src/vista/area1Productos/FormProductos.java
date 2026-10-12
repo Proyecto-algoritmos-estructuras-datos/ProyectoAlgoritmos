@@ -26,6 +26,7 @@ import vista.area5AjusteStock.FormAjusteStock;
 import vista.area6Administracion.FormAdministracion;
 import util.ControlAcceso;
 import util.SesionActual;
+import util.ListaCircularSimple;
 
 public class FormProductos extends javax.swing.JFrame {
 
@@ -45,11 +46,14 @@ public class FormProductos extends javax.swing.JFrame {
     private List<Marca> listaMarcas;
     private MatrizInventario matrizInventario;
 
+    private final ListaCircularSimple<Producto> alertasStock = new ListaCircularSimple<>();
+    private javax.swing.Timer timerAlertas;
+
     public FormProductos() {
         initComponents();
-        
+
         ControlAcceso.configurarVentana(this, btnAjusteStock, btnAdministracion);
-        
+
         btnProductos.setBackground(Color.decode("#015BBB"));
 
         // Se inicializa los controladores
@@ -82,6 +86,7 @@ public class FormProductos extends javax.swing.JFrame {
         cargarComboCategorias();
         cargarComboMarcas();
         cargarMatrizInventario();
+        configurarAlertasStock();
     }
 
     @SuppressWarnings("unchecked")
@@ -908,6 +913,7 @@ public class FormProductos extends javax.swing.JFrame {
             try {
                 prodControl.eliminarProducto(producto);
                 Mensajes.exito("El producto ha sido eliminado correctamente!");
+                quitarAlertaStock(id);
                 cargarTablaProductos();
                 cargarMatrizInventario();
             } catch (Exception e) {
@@ -940,6 +946,7 @@ public class FormProductos extends javax.swing.JFrame {
             prodActualizar.setStock(stock);
 
             prodControl.actualizarProducto(prodActualizar);
+            actualizarAlertaStock(prodActualizar);
             Mensajes.exito("El producto ha sido actualizado exitosamente!");
             limpiarTextsAreas();
             cargarTablaProductos();
@@ -966,6 +973,7 @@ public class FormProductos extends javax.swing.JFrame {
             prodAgregar.setStock(stock);
 
             prodControl.registrarProducto(prodAgregar);
+            cargarAlertasStock();
             Mensajes.exito("Se ha guardado el producto exitosamente!");
             cargarTablaProductos();
             cargarMatrizInventario();
@@ -1031,7 +1039,7 @@ public class FormProductos extends javax.swing.JFrame {
         if (!ControlAcceso.validarAdministracion()) {
             return;
         }
-        
+
         new FormAdministracion().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAdministracionActionPerformed
@@ -1040,7 +1048,7 @@ public class FormProductos extends javax.swing.JFrame {
         if (!ControlAcceso.validarAjusteStock()) {
             return;
         }
-        
+
         new FormAjusteStock().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAjusteStockActionPerformed
@@ -1236,6 +1244,61 @@ public class FormProductos extends javax.swing.JFrame {
             default ->
                 Comparator.comparingInt(Producto::getIdProducto);
         };
+    }
+
+    private void configurarAlertasStock() {
+        btnSiguiente.setVisible(false); // la rotación es automática
+        cargarAlertasStock();
+
+        timerAlertas = new javax.swing.Timer(4000, e -> mostrarAlerta(alertasStock.avanzar()));
+        timerAlertas.start();
+    }
+
+    private void cargarAlertasStock() {
+        alertasStock.vaciar();
+        try {
+            for (Producto prod : prodControl.verProductosConStockBajo()) {
+                alertasStock.insertarAlFinal(prod);
+            }
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+        mostrarAlerta(alertasStock.getActual());
+    }
+
+    private void mostrarAlerta(Producto prod) {
+        if (prod == null) {
+            txtNombreStock.setText("-");
+            txtCategoriaStock.setText("-");
+            txtMarcaStock.setText("-");
+            txtStockProducto.setText("-");
+            return;
+        }
+        txtNombreStock.setText(prod.getNombreProducto());
+        txtCategoriaStock.setText(prod.getCategoria().getNombreCategoria());
+        txtMarcaStock.setText(prod.getMarca().getNombreMarca());
+        txtStockProducto.setText(String.valueOf(prod.getStock()));
+    }
+
+    private void actualizarAlertaStock(Producto prod) {
+        alertasStock.eliminar(p -> p.getIdProducto() == prod.getIdProducto());
+        if (prod.isEstado() && prod.getStock() <= prod.getStockMinimo()) {
+            alertasStock.insertarAlFinal(prod);
+        }
+        mostrarAlerta(alertasStock.getActual());
+    }
+    
+    private void quitarAlertaStock(int idProducto) {
+    alertasStock.eliminar(p -> p.getIdProducto() == idProducto);
+    mostrarAlerta(alertasStock.getActual());
+    }
+
+    @Override
+    public void dispose() {
+        if (timerAlertas != null) {
+            timerAlertas.stop();
+        }
+        super.dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
