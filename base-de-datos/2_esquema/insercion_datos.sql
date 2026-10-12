@@ -310,58 +310,163 @@ INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario) VAL
 -- ==========================================================================
 INSERT INTO movimiento_inventario
 (id_producto, id_empleado, tipo_movimiento, cantidad, stock_anterior, stock_nuevo, motivo, id_compra, id_venta) VALUES
--- Entradas por recepción de compras
-(1,  5, 'ENTRADA', 5,   20,  25,  'Recepción de compra 1', 1,  NULL),
-(2,  5, 'ENTRADA', 4,   14,  18,  'Recepción de compra 1', 1,  NULL),
-(3,  6, 'ENTRADA', 5,   15,  20,  'Recepción de compra 2', 2,  NULL),
-(4,  6, 'ENTRADA', 4,   11,  15,  'Recepción de compra 2', 2,  NULL),
-(9,  5, 'ENTRADA', 10,  20,  30,  'Recepción de compra 3', 3,  NULL),
-(10, 5, 'ENTRADA', 8,   14,  22,  'Recepción de compra 3', 3,  NULL),
-(11, 5, 'ENTRADA', 5,    9,  14,  'Recepción de compra 3', 3,  NULL),
-(15, 5, 'ENTRADA', 30,  30,  60,  'Recepción de compra 4', 4,  NULL),
-(16, 5, 'ENTRADA', 15,  20,  35,  'Recepción de compra 4', 4,  NULL),
-(17, 5, 'ENTRADA', 20,  25,  45,  'Recepción de compra 4', 4,  NULL),
-(18, 6, 'ENTRADA', 10,  15,  25,  'Recepción de compra 5', 5,  NULL),
-(19, 6, 'ENTRADA', 8,   12,  20,  'Recepción de compra 5', 5,  NULL),
-(20, 6, 'ENTRADA', 100,  0, 100,  'Recepción de compra 5', 5,  NULL),
-(21, 5, 'ENTRADA', 25,  25,  50,  'Recepción de compra 6', 6,  NULL),
-(22, 5, 'ENTRADA', 30,  25,  55,  'Recepción de compra 6', 6,  NULL),
-(23, 5, 'ENTRADA', 15,  15,  30,  'Recepción de compra 6', 6,  NULL),
-(28, 6, 'ENTRADA', 12,  12,  24,  'Recepción de compra 7', 7,  NULL),
-(29, 6, 'ENTRADA', 10,  10,  20,  'Recepción de compra 7', 7,  NULL),
-(30, 6, 'ENTRADA', 8,    7,  15,  'Recepción de compra 7', 7,  NULL),
-(33, 6, 'ENTRADA', 8,    4,  12,  'Recepción de compra 9', 9,  NULL),
-(34, 6, 'ENTRADA', 10,   8,  18,  'Recepción de compra 9', 9,  NULL),
-(35, 6, 'ENTRADA', 8,    6,  14,  'Recepción de compra 9', 9,  NULL),
-(36, 5, 'ENTRADA', 6,    4,  10,  'Recepción de compra 10', 10, NULL),
-(43, 5, 'ENTRADA', 150, 50, 200,  'Recepción de compra 10', 10, NULL),
-(44, 5, 'ENTRADA', 50,  30,  80,  'Recepción de compra 10', 10, NULL),
-(6,  5, 'ENTRADA', 4,    6,  10,  'Recepción de compra 11', 11, NULL),
-(7,  5, 'ENTRADA', 3,    5,   8,  'Recepción de compra 11', 11, NULL),
-(5,  6, 'ENTRADA', 4,    8,  12,  'Recepción de compra 12', 12, NULL),
-(8,  6, 'ENTRADA', 2,    4,   6,  'Recepción de compra 12', 12, NULL),
-(12, 5, 'ENTRADA', 8,    8,  16,  'Recepción de compra 13', 13, NULL),
-(13, 5, 'ENTRADA', 6,    8,  14,  'Recepción de compra 13', 13, NULL),
-(14, 5, 'ENTRADA', 6,    6,  12,  'Recepción de compra 13', 13, NULL),
-(24, 6, 'ENTRADA', 6,    6,  12,  'Recepción de compra 14', 14, NULL),
-(25, 6, 'ENTRADA', 12,  13,  25,  'Recepción de compra 14', 14, NULL),
-(45, 6, 'ENTRADA', 5,    4,   9,  'Recepción de compra 16', 16, NULL),
-(46, 6, 'ENTRADA', 20,  20,  40,  'Recepción de compra 16', 16, NULL),
-(37, 5, 'ENTRADA', 80,  40, 120,  'Recepción de compra 17', 17, NULL),
-(38, 5, 'ENTRADA', 80,  50, 130,  'Recepción de compra 17', 17, NULL),
-(39, 5, 'ENTRADA', 25,  15,  40,  'Recepción de compra 17', 17, NULL),
-(40, 6, 'ENTRADA', 40,  20,  60,  'Recepción de compra 18', 18, NULL),
-(41, 6, 'ENTRADA', 30,  15,  45,  'Recepción de compra 18', 18, NULL),
-(42, 6, 'ENTRADA', 20,  15,  35,  'Recepción de compra 18', 18, NULL),
-(49, 6, 'ENTRADA', 30,  20,  50,  'Recepción de compra 20', 20, NULL),
-(50, 6, 'ENTRADA', 12,  10,  22,  'Recepción de compra 20', 20, NULL),
--- Salidas por ventas
-(20, 2, 'SALIDA',  2, 100,  98,  'Salida por venta V0001', NULL, 1),
-(37, 2, 'SALIDA',  3, 120, 117,  'Salida por venta V0001', NULL, 1),
-(1,  3, 'SALIDA',  1,  25,  24,  'Salida por venta V0002', NULL, 2),
-(22, 3, 'SALIDA',  1,  55,  54,  'Salida por venta V0002', NULL, 2),
-(9,  2, 'SALIDA',  2,  30,  28,  'Salida por venta V0003', NULL, 3),
-(21, 2, 'SALIDA',  1,  50,  49,  'Salida por venta V0003', NULL, 3),
--- Ajustes de inventario
-(15, 5, 'AJUSTE',  2,  60,  58,  'Ajuste por merma detectada en almacén', NULL, NULL),
-(43, 6, 'AJUSTE',  5, 200, 195,  'Ajuste por productos dañados en almacén', NULL, NULL);
+-- Producto 1
+(1, 5, 'ENTRADA', 6, 24, 30, 'Recepción de compra 21', 21, NULL),
+(1, 3, 'SALIDA', 2, 30, 28, 'Salida por venta V0009', NULL, 9),
+(1, 4, 'SALIDA', 1, 28, 27, 'Salida por venta V0013', NULL, 13),
+-- Producto 2
+(2, 2, 'SALIDA', 2, 18, 16, 'Salida por venta V0010', NULL, 10),
+(2, 5, 'ENTRADA', 4, 16, 20, 'Recepción de compra 23', 23, NULL),
+(2, 6, 'AJUSTE', 1, 20, 19, 'Ajuste por conteo físico', NULL, NULL),
+-- Producto 3
+(3, 4, 'SALIDA', 3, 20, 17, 'Salida por venta V0011', NULL, 11),
+(3, 6, 'ENTRADA', 5, 17, 22, 'Recepción de compra 21', 21, NULL),
+(3, 3, 'SALIDA', 2, 22, 20, 'Salida por venta V0016', NULL, 16),
+-- Producto 4
+(4, 5, 'ENTRADA', 5, 15, 20, 'Recepción de compra 23', 23, NULL),
+(4, 2, 'SALIDA', 3, 20, 17, 'Salida por venta V0017', NULL, 17),
+(4, 6, 'AJUSTE', 2, 17, 15, 'Ajuste por producto dañado', NULL, NULL),
+-- Producto 5
+(5, 6, 'ENTRADA', 6, 12, 18, 'Recepción de compra 20', 20, NULL),
+(5, 4, 'SALIDA', 4, 18, 14, 'Salida por venta V0018', NULL, 18),
+(5, 2, 'SALIDA', 1, 14, 13, 'Salida por venta V0019', NULL, 19),
+-- Producto 6
+(6, 5, 'ENTRADA', 4, 10, 14, 'Recepción de compra 21', 21, NULL),
+(6, 3, 'SALIDA', 2, 14, 12, 'Salida por venta V0012', NULL, 12),
+(6, 4, 'SALIDA', 2, 12, 10, 'Salida por venta V0014', NULL, 14),
+-- Producto 7
+(7, 6, 'ENTRADA', 5, 8, 13, 'Recepción de compra 23', 23, NULL),
+(7, 2, 'SALIDA', 3, 13, 10, 'Salida por venta V0009', NULL, 9),
+(7, 5, 'AJUSTE', 1, 10, 9, 'Ajuste por merma detectada', NULL, NULL),
+-- Producto 9
+(9, 2, 'SALIDA', 2, 28, 26, 'Salida por venta V0013', NULL, 13),
+(9, 6, 'ENTRADA', 6, 26, 32, 'Recepción de compra 21', 21, NULL),
+(9, 3, 'SALIDA', 3, 32, 29, 'Salida por venta V0017', NULL, 17),
+-- Producto 10
+(10, 4, 'SALIDA', 4, 22, 18, 'Salida por venta V0010', NULL, 10),
+(10, 5, 'ENTRADA', 6, 18, 24, 'Recepción de compra 23', 23, NULL),
+(10, 3, 'SALIDA', 2, 24, 22, 'Salida por venta V0019', NULL, 19),
+-- Producto 11
+(11, 5, 'ENTRADA', 5, 14, 19, 'Recepción de compra 20', 20, NULL),
+(11, 2, 'SALIDA', 3, 19, 16, 'Salida por venta V0011', NULL, 11),
+(11, 4, 'SALIDA', 2, 16, 14, 'Salida por venta V0016', NULL, 16),
+-- Producto 13
+(13, 3, 'SALIDA', 2, 14, 12, 'Salida por venta V0012', NULL, 12),
+(13, 6, 'ENTRADA', 4, 12, 16, 'Recepción de compra 21', 21, NULL),
+(13, 2, 'SALIDA', 3, 16, 13, 'Salida por venta V0018', NULL, 18),
+-- Producto 15
+(15, 2, 'SALIDA', 10, 58, 48, 'Salida por venta V0009', NULL, 9),
+(15, 5, 'ENTRADA', 20, 48, 68, 'Recepción de compra 23', 23, NULL),
+(15, 4, 'SALIDA', 12, 68, 56, 'Salida por venta V0013', NULL, 13),
+-- Producto 16
+(16, 3, 'SALIDA', 5, 35, 30, 'Salida por venta V0010', NULL, 10),
+(16, 6, 'ENTRADA', 10, 30, 40, 'Recepción de compra 21', 21, NULL),
+(16, 5, 'AJUSTE', 2, 40, 38, 'Ajuste por merma en almacén', NULL, NULL),
+-- Producto 17
+(17, 4, 'SALIDA', 8, 45, 37, 'Salida por venta V0011', NULL, 11),
+(17, 5, 'ENTRADA', 15, 37, 52, 'Recepción de compra 23', 23, NULL),
+(17, 2, 'SALIDA', 6, 52, 46, 'Salida por venta V0017', NULL, 17),
+-- Producto 18
+(18, 3, 'SALIDA', 4, 25, 21, 'Salida por venta V0012', NULL, 12),
+(18, 6, 'ENTRADA', 8, 21, 29, 'Recepción de compra 20', 20, NULL),
+(18, 4, 'SALIDA', 5, 29, 24, 'Salida por venta V0016', NULL, 16),
+-- Producto 19
+(19, 2, 'SALIDA', 3, 20, 17, 'Salida por venta V0014', NULL, 14),
+(19, 5, 'ENTRADA', 6, 17, 23, 'Recepción de compra 21', 21, NULL),
+(19, 3, 'SALIDA', 4, 23, 19, 'Salida por venta V0020', NULL, 20),
+-- Producto 20
+(20, 4, 'SALIDA', 10, 98, 88, 'Salida por venta V0009', NULL, 9),
+(20, 6, 'ENTRADA', 50, 88, 138, 'Recepción de compra 23', 23, NULL),
+(20, 2, 'SALIDA', 15, 138, 123, 'Salida por venta V0019', NULL, 19),
+-- Producto 21
+(21, 3, 'SALIDA', 3, 49, 46, 'Salida por venta V0010', NULL, 10),
+(21, 5, 'ENTRADA', 10, 46, 56, 'Recepción de compra 21', 21, NULL),
+(21, 2, 'SALIDA', 4, 56, 52, 'Salida por venta V0013', NULL, 13),
+-- Producto 22
+(22, 4, 'SALIDA', 5, 54, 49, 'Salida por venta V0011', NULL, 11),
+(22, 6, 'ENTRADA', 12, 49, 61, 'Recepción de compra 23', 23, NULL),
+(22, 3, 'SALIDA', 6, 61, 55, 'Salida por venta V0016', NULL, 16),
+-- Producto 23
+(23, 2, 'SALIDA', 4, 30, 26, 'Salida por venta V0012', NULL, 12),
+(23, 5, 'ENTRADA', 10, 26, 36, 'Recepción de compra 20', 20, NULL),
+(23, 6, 'AJUSTE', 2, 36, 34, 'Ajuste por producto vencido', NULL, NULL),
+-- Producto 24
+(24, 5, 'ENTRADA', 8, 12, 20, 'Recepción de compra 21', 21, NULL),
+(24, 4, 'SALIDA', 3, 20, 17, 'Salida por venta V0017', NULL, 17),
+(24, 3, 'SALIDA', 2, 17, 15, 'Salida por venta V0018', NULL, 18),
+-- Producto 25
+(25, 2, 'SALIDA', 5, 25, 20, 'Salida por venta V0009', NULL, 9),
+(25, 6, 'ENTRADA', 10, 20, 30, 'Recepción de compra 23', 23, NULL),
+(25, 3, 'SALIDA', 4, 30, 26, 'Salida por venta V0020', NULL, 20),
+-- Producto 28
+(28, 4, 'SALIDA', 3, 24, 21, 'Salida por venta V0010', NULL, 10),
+(28, 5, 'ENTRADA', 8, 21, 29, 'Recepción de compra 21', 21, NULL),
+(28, 2, 'SALIDA', 4, 29, 25, 'Salida por venta V0014', NULL, 14),
+-- Producto 29
+(29, 3, 'SALIDA', 2, 20, 18, 'Salida por venta V0011', NULL, 11),
+(29, 6, 'ENTRADA', 6, 18, 24, 'Recepción de compra 20', 20, NULL),
+(29, 4, 'SALIDA', 3, 24, 21, 'Salida por venta V0019', NULL, 19),
+-- Producto 30
+(30, 5, 'ENTRADA', 6, 15, 21, 'Recepción de compra 23', 23, NULL),
+(30, 2, 'SALIDA', 4, 21, 17, 'Salida por venta V0012', NULL, 12),
+(30, 6, 'AJUSTE', 1, 17, 16, 'Ajuste por producto dañado', NULL, NULL),
+-- Producto 33
+(33, 3, 'SALIDA', 2, 12, 10, 'Salida por venta V0013', NULL, 13),
+(33, 5, 'ENTRADA', 6, 10, 16, 'Recepción de compra 21', 21, NULL),
+(33, 4, 'SALIDA', 3, 16, 13, 'Salida por venta V0016', NULL, 16),
+-- Producto 34
+(34, 2, 'SALIDA', 3, 18, 15, 'Salida por venta V0009', NULL, 9),
+(34, 6, 'ENTRADA', 5, 15, 20, 'Recepción de compra 23', 23, NULL),
+(34, 3, 'SALIDA', 4, 20, 16, 'Salida por venta V0018', NULL, 18),
+-- Producto 35
+(35, 4, 'SALIDA', 2, 14, 12, 'Salida por venta V0010', NULL, 10),
+(35, 5, 'ENTRADA', 5, 12, 17, 'Recepción de compra 20', 20, NULL),
+(35, 2, 'SALIDA', 3, 17, 14, 'Salida por venta V0017', NULL, 17),
+-- Producto 36
+(36, 6, 'ENTRADA', 4, 10, 14, 'Recepción de compra 21', 21, NULL),
+(36, 3, 'SALIDA', 2, 14, 12, 'Salida por venta V0011', NULL, 11),
+(36, 4, 'SALIDA', 1, 12, 11, 'Salida por venta V0020', NULL, 20),
+-- Producto 37
+(37, 2, 'SALIDA', 10, 117, 107, 'Salida por venta V0012', NULL, 12),
+(37, 5, 'ENTRADA', 40, 107, 147, 'Recepción de compra 23', 23, NULL),
+(37, 4, 'SALIDA', 12, 147, 135, 'Salida por venta V0014', NULL, 14),
+-- Producto 38
+(38, 3, 'SALIDA', 15, 130, 115, 'Salida por venta V0009', NULL, 9),
+(38, 6, 'ENTRADA', 30, 115, 145, 'Recepción de compra 21', 21, NULL),
+(38, 2, 'SALIDA', 20, 145, 125, 'Salida por venta V0016', NULL, 16),
+-- Producto 39
+(39, 4, 'SALIDA', 6, 40, 34, 'Salida por venta V0010', NULL, 10),
+(39, 5, 'ENTRADA', 12, 34, 46, 'Recepción de compra 23', 23, NULL),
+(39, 3, 'SALIDA', 5, 46, 41, 'Salida por venta V0013', NULL, 13),
+-- Producto 40
+(40, 2, 'SALIDA', 8, 60, 52, 'Salida por venta V0011', NULL, 11),
+(40, 6, 'ENTRADA', 20, 52, 72, 'Recepción de compra 20', 20, NULL),
+(40, 4, 'SALIDA', 9, 72, 63, 'Salida por venta V0017', NULL, 17),
+-- Producto 41
+(41, 3, 'SALIDA', 5, 45, 40, 'Salida por venta V0012', NULL, 12),
+(41, 5, 'ENTRADA', 10, 40, 50, 'Recepción de compra 21', 21, NULL),
+(41, 2, 'SALIDA', 6, 50, 44, 'Salida por venta V0018', NULL, 18),
+-- Producto 42
+(42, 4, 'SALIDA', 4, 35, 31, 'Salida por venta V0014', NULL, 14),
+(42, 6, 'ENTRADA', 8, 31, 39, 'Recepción de compra 23', 23, NULL),
+(42, 5, 'AJUSTE', 2, 39, 37, 'Ajuste por merma detectada', NULL, NULL),
+-- Producto 43
+(43, 2, 'SALIDA', 15, 195, 180, 'Salida por venta V0010', NULL, 10),
+(43, 5, 'ENTRADA', 40, 180, 220, 'Recepción de compra 21', 21, NULL),
+(43, 3, 'SALIDA', 20, 220, 200, 'Salida por venta V0019', NULL, 19),
+-- Producto 45
+(45, 5, 'ENTRADA', 3, 9, 12, 'Recepción de compra 23', 23, NULL),
+(45, 4, 'SALIDA', 2, 12, 10, 'Salida por venta V0016', NULL, 16),
+(45, 2, 'SALIDA', 1, 10, 9, 'Salida por venta V0020', NULL, 20),
+-- Producto 46
+(46, 3, 'SALIDA', 6, 40, 34, 'Salida por venta V0009', NULL, 9),
+(46, 6, 'ENTRADA', 15, 34, 49, 'Recepción de compra 21', 21, NULL),
+(46, 4, 'SALIDA', 8, 49, 41, 'Salida por venta V0013', NULL, 13),
+-- Producto 49
+(49, 2, 'SALIDA', 7, 50, 43, 'Salida por venta V0011', NULL, 11),
+(49, 5, 'ENTRADA', 20, 43, 63, 'Recepción de compra 20', 20, NULL),
+(49, 3, 'SALIDA', 9, 63, 54, 'Salida por venta V0017', NULL, 17),
+-- Producto 50
+(50, 4, 'SALIDA', 3, 22, 19, 'Salida por venta V0010', NULL, 10),
+(50, 6, 'ENTRADA', 6, 19, 25, 'Recepción de compra 23', 23, NULL),
+(50, 5, 'AJUSTE', 1, 25, 24, 'Ajuste por conteo físico', NULL, NULL);

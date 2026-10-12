@@ -327,15 +327,13 @@ public FormHistorial() {
             }
         });
 
-        btnHistorial.setBackground(new java.awt.Color(0, 29, 63));
+        btnHistorial.setBackground(new java.awt.Color(1, 91, 187));
         btnHistorial.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnHistorial.setForeground(new java.awt.Color(255, 255, 255));
         btnHistorial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/historial.png"))); // NOI18N
         btnHistorial.setText("   Historial           ");
         btnHistorial.setBorder(null);
         btnHistorial.setBorderPainted(false);
-        btnHistorial.setContentAreaFilled(false);
-        btnHistorial.setFocusPainted(false);
         btnHistorial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHistorialActionPerformed(evt);
@@ -365,7 +363,6 @@ public FormHistorial() {
         btnAjusteStock.setBorder(null);
         btnAjusteStock.setBorderPainted(false);
         btnAjusteStock.setContentAreaFilled(false);
-        btnAjusteStock.setFocusPainted(false);
         btnAjusteStock.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAjusteStockActionPerformed(evt);
