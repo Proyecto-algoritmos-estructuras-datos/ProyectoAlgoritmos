@@ -170,6 +170,7 @@ public FormHistorial() {
 
         jPanel14.setBackground(new java.awt.Color(204, 204, 204));
 
+        tblHistorial.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         tblHistorial.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
