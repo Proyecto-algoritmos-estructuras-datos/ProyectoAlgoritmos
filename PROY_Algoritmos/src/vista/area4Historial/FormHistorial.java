@@ -101,7 +101,6 @@ public FormHistorial() {
         btnInicio.addActionListener(this::btnInicioActionPerformed);
         btnAnterior.addActionListener(this::btnAnteriorActionPerformed);
         btnSiguiente.addActionListener(this::btnSiguienteActionPerformed);
-        btnFin.addActionListener(this::btnFinActionPerformed);
     }
 
     @SuppressWarnings("unchecked")
@@ -143,7 +142,6 @@ public FormHistorial() {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblHistorial = new javax.swing.JTable();
         btnInicio = new javax.swing.JButton();
-        btnFin = new javax.swing.JButton();
         btnSiguiente = new javax.swing.JButton();
         btnAnterior = new javax.swing.JButton();
         jPanel12 = new javax.swing.JPanel();
@@ -189,11 +187,6 @@ public FormHistorial() {
         btnInicio.setForeground(new java.awt.Color(0, 0, 0));
         btnInicio.setText("Inicio");
 
-        btnFin.setBackground(new java.awt.Color(204, 255, 255));
-        btnFin.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
-        btnFin.setForeground(new java.awt.Color(0, 0, 0));
-        btnFin.setText("Fin");
-
         btnSiguiente.setBackground(new java.awt.Color(102, 255, 102));
         btnSiguiente.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnSiguiente.setForeground(new java.awt.Color(0, 0, 0));
@@ -210,16 +203,13 @@ public FormHistorial() {
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel14Layout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel14Layout.createSequentialGroup()
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel14Layout.createSequentialGroup()
                         .addComponent(btnInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(70, 70, 70)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnAnterior, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnSiguiente, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(86, 86, 86)
-                        .addComponent(btnFin, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(149, 149, 149))
+                        .addComponent(btnSiguiente, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 854, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(33, Short.MAX_VALUE))
         );
@@ -228,13 +218,12 @@ public FormHistorial() {
             .addGroup(jPanel14Layout.createSequentialGroup()
                 .addGap(31, 31, 31)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
-                .addGap(26, 26, 26)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnFin, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAnterior, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSiguiente, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(36, 36, 36))
+                .addGap(44, 44, 44))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -487,7 +476,6 @@ public FormHistorial() {
     private javax.swing.JButton btnAjusteStock;
     private javax.swing.JButton btnAnterior;
     private javax.swing.JButton btnCategorias;
-    private javax.swing.JButton btnFin;
     private javax.swing.JButton btnHistorial;
     private javax.swing.JButton btnInicio;
     private javax.swing.JButton btnMarcas;
