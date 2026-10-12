@@ -33,7 +33,7 @@ public class FormHistorial extends javax.swing.JFrame {
 private void cargarYPaginarMovimientos() {
     try {
         List<MovimientoInventario> todosLosMovimientos = movControl.verTodosLosMovimientos();
-        listaDoblePaginada = new ListaEnlazadaDoble(todosLosMovimientos, 15);
+        listaDoblePaginada = new ListaEnlazadaDoble(todosLosMovimientos, 20);
         
         if (listaDoblePaginada.getActual() != null) {
             actualizarTabla(listaDoblePaginada.getActual().getSubLista());
