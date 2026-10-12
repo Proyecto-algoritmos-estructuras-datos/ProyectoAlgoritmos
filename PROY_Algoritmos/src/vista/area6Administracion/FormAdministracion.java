@@ -302,7 +302,7 @@ public class FormAdministracion extends javax.swing.JFrame {
                 .addGap(17, 17, 17))
         );
 
-        tblEmpleado.setBackground(new java.awt.Color(191, 219, 252));
+        tblEmpleado.setBackground(new java.awt.Color(215, 233, 253));
         tblEmpleado.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         tblEmpleado.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

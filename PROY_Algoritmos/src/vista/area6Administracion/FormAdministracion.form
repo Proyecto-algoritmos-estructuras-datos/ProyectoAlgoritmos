@@ -437,7 +437,7 @@
             <Component class="javax.swing.JTable" name="tblEmpleado">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="fc" green="db" red="bf" type="rgb"/>
+                  <Color blue="fd" green="e9" red="d7" type="rgb"/>
                 </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Inter SemiBold" size="12" style="0"/>
