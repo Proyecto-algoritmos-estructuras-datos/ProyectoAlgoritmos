@@ -1,26 +1,75 @@
 package vista.area6Administracion;
 
+import controlador.EmpleadoController;
+import controlador.ProductoController;
 import vista.area5AjusteStock.*;
 import vista.area2Categorias.*;
 import vista.area1Productos.*;
+import java.util.ArrayList;
 import java.awt.Color;
+import java.util.List;
+import javax.swing.ListSelectionModel;
+import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
+import javax.swing.table.DefaultTableModel;
+import modelo.Empleado;
+import modelo.Producto;
 import vista.area0Login.FormLogin;
 import vista.area3Marcas.FormMarcas;
 import util.ControlAcceso;
+import util.Mensajes;
 import util.SesionActual;
+import vista.area4Historial.FormHistorial;
 
 
 public class FormAdministracion extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FormAdministracion.class.getName());
 
-    /**
-     * Creates new form FormAjustee
-     */
+    /* Tabla */
+    private final DefaultTableModel modelo = new DefaultTableModel();
+    
+    
+    /* Controlador de empleado */
+    private final EmpleadoController empControl;
+    
+    // Lista de Empleados
+    private List<Empleado> listaEmpleados;
+
+    
+    
+    
+    
     public FormAdministracion() {
         initComponents();
         ControlAcceso.configurarVentana(this, btnAjusteStock, btnAdministracion);
         btnAdministracion.setBackground(Color.decode("#015BBB"));
+        
+        //Instanciación del controlador de empleado
+        empControl = new EmpleadoController(); 
+        
+        
+        tblEmpleado.setModel(modelo);
+
+        Object[] columnas = new Object[]{
+            
+            "id",
+            "Nombres",
+            "Apellidos",
+            "Dni",
+            "Correo",
+            "Telefono",
+            "Estado"
+        };
+        
+        modelo.setColumnIdentifiers(columnas);
+        
+        tblEmpleado.setSelectionMode(SINGLE_SELECTION);
+        tblEmpleado.setDefaultEditor(Object.class,null);
+        
+        //Cargar las tablas de la base de datos
+        cargarTablaEmpleados();
+        
+        
     }
 
     /**
@@ -36,7 +85,7 @@ public class FormAdministracion extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblEmpleado = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -81,7 +130,7 @@ public class FormAdministracion extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         jLabel5.setText("Administra a todos los empleados y administradores");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblEmpleado.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -92,7 +141,7 @@ public class FormAdministracion extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblEmpleado);
 
         jPanel1.setBackground(new java.awt.Color(0, 51, 153));
 
@@ -339,23 +388,19 @@ public class FormAdministracion extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnRestaurar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnMostrarDetalles, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel5)
-                        .addGap(32, 32, 32)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(28, 28, 28))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel5)
+                .addGap(32, 32, 32)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRestaurar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnMostrarDetalles, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 10, Short.MAX_VALUE))
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -363,14 +408,14 @@ public class FormAdministracion extends javax.swing.JFrame {
 
         jPanel13.setBackground(new java.awt.Color(1, 91, 187));
 
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/apla.png"))); // NOI18N
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/apla.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
         jPanel13Layout.setHorizontalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-                .addContainerGap(38, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel7)
                 .addGap(35, 35, 35))
         );
@@ -385,7 +430,7 @@ public class FormAdministracion extends javax.swing.JFrame {
         btnProductos.setBackground(new java.awt.Color(0, 29, 63));
         btnProductos.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnProductos.setForeground(new java.awt.Color(255, 255, 255));
-        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/productos.png"))); // NOI18N
+        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/productos.png"))); // NOI18N
         btnProductos.setText("   Productos      ");
         btnProductos.setBorder(null);
         btnProductos.setBorderPainted(false);
@@ -399,7 +444,7 @@ public class FormAdministracion extends javax.swing.JFrame {
         btnMarcas.setBackground(new java.awt.Color(0, 29, 63));
         btnMarcas.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnMarcas.setForeground(new java.awt.Color(255, 255, 255));
-        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/marcas.png"))); // NOI18N
+        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/marcas.png"))); // NOI18N
         btnMarcas.setText("   Marcas             ");
         btnMarcas.setBorder(null);
         btnMarcas.setBorderPainted(false);
@@ -414,7 +459,7 @@ public class FormAdministracion extends javax.swing.JFrame {
         btnCategorias.setBackground(new java.awt.Color(0, 29, 63));
         btnCategorias.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnCategorias.setForeground(new java.awt.Color(255, 255, 255));
-        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/categorias.png"))); // NOI18N
+        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/categorias.png"))); // NOI18N
         btnCategorias.setText("  Categorias      ");
         btnCategorias.setBorder(null);
         btnCategorias.setBorderPainted(false);
@@ -511,7 +556,7 @@ public class FormAdministracion extends javax.swing.JFrame {
                 .addComponent(btnHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnAjusteStock, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnAdministracion, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(42, 42, 42)
                 .addComponent(btnSalir)
@@ -559,7 +604,7 @@ public class FormAdministracion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistorialActionPerformed
-        new FormLogin().setVisible(true);
+        new FormHistorial().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnHistorialActionPerformed
 
@@ -608,6 +653,31 @@ public class FormAdministracion extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtApellidosActionPerformed
 
+    private void cargarTablaEmpleados(){
+        modelo.setRowCount(0);
+        
+        try {
+            
+            listaEmpleados = empControl.verTodosLosEmpleados();
+            
+            for(Empleado emp : listaEmpleados){
+                Object[] fila = new Object[]{
+                    emp.getIdEmpleado(),
+                    emp.getNombres(),
+                    emp.getApellidos(),
+                    emp.getDni(),
+                    emp.getCorreo(),
+                    emp.getTelefono(),
+                    emp.isEstado()
+                       
+                };
+                modelo.addRow(fila);
+            }
+            
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnAdministracion;
@@ -639,7 +709,7 @@ public class FormAdministracion extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblEmpleado;
     private javax.swing.JTextField txtApellidos;
     private javax.swing.JTextField txtContraseña;
     private javax.swing.JTextField txtDNI;
