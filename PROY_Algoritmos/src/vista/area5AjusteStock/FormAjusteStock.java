@@ -17,6 +17,7 @@ import vista.area6Administracion.FormAdministracion;
 import util.ControlAcceso;
 import util.Mensajes;
 import util.SesionActual;
+import vista.area3Marcas.FormMarcas;
 
 
 public class FormAjusteStock extends javax.swing.JFrame {
