@@ -1,23 +1,29 @@
 package vista.area6Administracion;
 
 import controlador.EmpleadoController;
+import controlador.MarcaController;
 import controlador.ProductoController;
 import vista.area5AjusteStock.*;
 import vista.area2Categorias.*;
 import vista.area1Productos.*;
 import java.util.ArrayList;
 import java.awt.Color;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.swing.ListSelectionModel;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 import javax.swing.table.DefaultTableModel;
+import modelo.Categoria;
 import modelo.Empleado;
+import modelo.Marca;
 import modelo.Producto;
+import modelo.Rol;
 import vista.area0Login.FormLogin;
 import vista.area3Marcas.FormMarcas;
 import util.ControlAcceso;
 import util.Mensajes;
 import util.SesionActual;
+import util.Validaciones;
 import vista.area4Historial.FormHistorial;
 
 
@@ -92,16 +98,16 @@ public class FormAdministracion extends javax.swing.JFrame {
         jLabel20 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
-        jLabel21 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
         txtNombres = new javax.swing.JTextField();
         txtApellidos = new javax.swing.JTextField();
-        txtContraseña = new javax.swing.JTextField();
+        txtContrasena = new javax.swing.JTextField();
         txtDNI = new javax.swing.JTextField();
-        txtDirección = new javax.swing.JTextField();
-        txtTeléfono = new javax.swing.JTextField();
+        txtTelefono = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
         btnAgregar = new javax.swing.JButton();
+        jLabel24 = new javax.swing.JLabel();
+        txtCorreo = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblEmpleado = new javax.swing.JTable();
         jPanel12 = new javax.swing.JPanel();
@@ -155,10 +161,6 @@ public class FormAdministracion extends javax.swing.JFrame {
         jLabel23.setForeground(new java.awt.Color(255, 255, 255));
         jLabel23.setText("Rol:");
 
-        jLabel21.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
-        jLabel21.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel21.setText("Dirección:");
-
         jLabel22.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         jLabel22.setForeground(new java.awt.Color(255, 255, 255));
         jLabel22.setText("Teléfono:");
@@ -174,8 +176,8 @@ public class FormAdministracion extends javax.swing.JFrame {
             }
         });
 
-        txtContraseña.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
-        txtContraseña.setBorder(null);
+        txtContrasena.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
+        txtContrasena.setBorder(null);
 
         txtDNI.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         txtDNI.setBorder(null);
@@ -185,11 +187,8 @@ public class FormAdministracion extends javax.swing.JFrame {
             }
         });
 
-        txtDirección.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
-        txtDirección.setBorder(null);
-
-        txtTeléfono.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
-        txtTeléfono.setBorder(null);
+        txtTelefono.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
+        txtTelefono.setBorder(null);
 
         jComboBox1.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Empleado", "Administrador" }));
@@ -204,43 +203,57 @@ public class FormAdministracion extends javax.swing.JFrame {
             }
         });
 
+        jLabel24.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
+        jLabel24.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel24.setText("Correo:");
+
+        txtCorreo.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
+        txtCorreo.setBorder(null);
+        txtCorreo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCorreoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addGap(4, 4, 4)
+                            .addComponent(jLabel22)
+                            .addGap(18, 18, 18)
+                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addGap(23, 23, 23)
-                                    .addComponent(jLabel22))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                    .addContainerGap()
-                                    .addComponent(jLabel21)))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel23)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(38, 38, 38))
+                                .addGroup(jPanel3Layout.createSequentialGroup()
                                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel19))
-                                    .addComponent(jLabel18)
-                                    .addComponent(jLabel17))))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtTeléfono, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-                            .addComponent(txtDirección, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtContraseña, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtDNI, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtApellidos, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtNombres, javax.swing.GroupLayout.Alignment.LEADING)))
-                    .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel19))
+                                        .addComponent(jLabel18)
+                                        .addComponent(jLabel17))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(txtContrasena, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+                                        .addComponent(txtDNI, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(txtApellidos, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(txtNombres, javax.swing.GroupLayout.Alignment.LEADING)))
+                                .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel23)
+                        .addGap(33, 33, 33)
+                        .addComponent(jLabel24)
                         .addGap(18, 18, 18)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(38, 38, 38)))
+                        .addComponent(txtCorreo)))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -260,23 +273,23 @@ public class FormAdministracion extends javax.swing.JFrame {
                     .addComponent(jLabel19))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel20))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel24))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtDirección, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel21))
-                .addGap(19, 19, 19)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtTeléfono, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel22))
-                .addGap(33, 33, 33)
+                .addGap(65, 65, 65)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel23))
-                .addGap(41, 41, 41)
+                .addGap(18, 18, 18)
                 .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(154, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -568,12 +581,41 @@ public class FormAdministracion extends javax.swing.JFrame {
     }//GEN-LAST:event_txtDNIActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        
+            Empleado empAgregar = new Empleado();
+
+        try {
+            String nombres = txtNombres.getText();
+            String apellidos = txtApellidos.getText();
+            String dni = txtDNI.getText();
+            String contrasena = txtContrasena.getText();
+            String correo = txtCorreo.getText();   // ver nota 1
+            String telefono = txtTelefono.getText();
+            Rol rol = jComboBox1.getSelectedIndex() == 1 ? Rol.ADMINISTRADOR : Rol.EMPLEADO;
+
+            empAgregar.setNombres(nombres);
+            empAgregar.setApellidos(apellidos);
+            empAgregar.setDni(dni);
+            empAgregar.setContrasena(contrasena);
+            empAgregar.setCorreo(correo);
+            empAgregar.setTelefono(telefono);
+            empAgregar.setRol(rol);
+
+            empControl.registrarEmpleado(empAgregar);
+            Mensajes.exito("Se ha guardado el empleado exitosamente!");
+            cargarTablaEmpleados();
+            limpiarCampos();
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void txtApellidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtApellidosActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtApellidosActionPerformed
+
+    private void txtCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorreoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCorreoActionPerformed
 
     private void cargarTablaEmpleados(){
         modelo.setRowCount(0);
@@ -600,6 +642,16 @@ public class FormAdministracion extends javax.swing.JFrame {
             Mensajes.error(e.getMessage());
         }
     }
+    
+    private void limpiarCampos() {
+    txtNombres.setText("");
+    txtApellidos.setText("");
+    txtDNI.setText("");
+    txtContrasena.setText("");
+    txtTelefono.setText("");
+    jComboBox1.setSelectedIndex(0);
+    txtNombres.requestFocus();
+}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdministracion;
     private javax.swing.JButton btnAgregar;
@@ -615,9 +667,9 @@ public class FormAdministracion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
@@ -629,10 +681,10 @@ public class FormAdministracion extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblEmpleado;
     private javax.swing.JTextField txtApellidos;
-    private javax.swing.JTextField txtContraseña;
+    private javax.swing.JTextField txtContrasena;
+    private javax.swing.JTextField txtCorreo;
     private javax.swing.JTextField txtDNI;
-    private javax.swing.JTextField txtDirección;
     private javax.swing.JTextField txtNombres;
-    private javax.swing.JTextField txtTeléfono;
+    private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }
