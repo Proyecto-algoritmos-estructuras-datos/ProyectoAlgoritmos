@@ -24,4 +24,22 @@ public class Validaciones {
             throw new Exception("El stock ingresado no es válido.");
         }
     }
+    
+
+      public static int parsearId(String texto) throws Exception {
+        if (texto == null || texto.trim().isEmpty()) {
+            throw new Exception("Ingrese el ID de la marca.");
+        }
+        try {
+            int id = Integer.parseInt(texto.trim());
+            if (id <= 0) {
+                throw new Exception("El ID debe ser un número mayor que 0.");
+            }
+            return id;
+        } catch (NumberFormatException nfe) {
+            throw new Exception("El ID ingresado no es válido.");
+        }
+    }
+    
+    
 }
