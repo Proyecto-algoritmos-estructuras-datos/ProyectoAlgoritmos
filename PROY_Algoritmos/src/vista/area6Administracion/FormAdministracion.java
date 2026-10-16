@@ -648,6 +648,7 @@ public class FormAdministracion extends javax.swing.JFrame {
     txtApellidos.setText("");
     txtDNI.setText("");
     txtContrasena.setText("");
+    txtCorreo.setText("");
     txtTelefono.setText("");
     jComboBox1.setSelectedIndex(0);
     txtNombres.requestFocus();

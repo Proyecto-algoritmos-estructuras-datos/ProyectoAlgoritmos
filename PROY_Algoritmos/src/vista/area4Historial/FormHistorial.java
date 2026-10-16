@@ -103,16 +103,6 @@ public FormHistorial() {
         btnSiguiente.addActionListener(this::btnSiguienteActionPerformed);
     }
 
-    @SuppressWarnings("unchecked")
-    
-    
-
-    // Acciones de los botones de navegación de la lista doble
-    private void btnInicioActionPerformed(java.awt.event.ActionEvent evt) {                                        
-        if (listaDoblePaginada != null) {
-            actualizarTabla(listaDoblePaginada.irPrimero());
-        }
-    }                                       
 
     private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {                                          
         if (listaDoblePaginada != null) {
@@ -186,6 +176,11 @@ public FormHistorial() {
         btnInicio.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnInicio.setForeground(new java.awt.Color(0, 0, 0));
         btnInicio.setText("Inicio");
+        btnInicio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInicioActionPerformed(evt);
+            }
+        });
 
         btnSiguiente.setBackground(new java.awt.Color(102, 255, 102));
         btnSiguiente.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
@@ -467,6 +462,10 @@ public FormHistorial() {
         new FormAjusteStock().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAjusteStockActionPerformed
+
+    private void btnInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnInicioActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdministracion;
