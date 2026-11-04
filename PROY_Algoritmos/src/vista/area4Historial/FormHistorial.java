@@ -14,7 +14,9 @@ import vista.area2Categorias.*;
 import vista.area1Productos.*;
 import vista.area0Login.FormLogin;
 import vista.area3Marcas.FormMarcas;
-import vista.area6Administracion.FormAdministracion;
+import vista.area6Compras.FormCompras;
+import vista.area7ListaDeEspera.FormEnEspera;
+import vista.area8Administracion.FormAdministracion;
 
 
 public class FormHistorial extends javax.swing.JFrame {
@@ -149,6 +151,8 @@ public FormHistorial() {
         btnHistorial = new javax.swing.JButton();
         btnAdministracion = new javax.swing.JButton();
         btnAjusteStock = new javax.swing.JButton();
+        btnEnEspera = new javax.swing.JButton();
+        btnCompras = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -282,7 +286,7 @@ public FormHistorial() {
                     .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
                     .addComponent(jLabel5))
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -415,6 +419,36 @@ public FormHistorial() {
             }
         });
 
+        btnEnEspera.setBackground(new java.awt.Color(0, 29, 63));
+        btnEnEspera.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
+        btnEnEspera.setForeground(new java.awt.Color(255, 255, 255));
+        btnEnEspera.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/lista.png"))); // NOI18N
+        btnEnEspera.setText("   En espera      ");
+        btnEnEspera.setBorder(null);
+        btnEnEspera.setBorderPainted(false);
+        btnEnEspera.setContentAreaFilled(false);
+        btnEnEspera.setFocusPainted(false);
+        btnEnEspera.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnEsperaActionPerformed(evt);
+            }
+        });
+
+        btnCompras.setBackground(new java.awt.Color(1, 91, 187));
+        btnCompras.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
+        btnCompras.setForeground(new java.awt.Color(255, 255, 255));
+        btnCompras.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/compras.png"))); // NOI18N
+        btnCompras.setText("   Compras        ");
+        btnCompras.setBorder(null);
+        btnCompras.setBorderPainted(false);
+        btnCompras.setContentAreaFilled(false);
+        btnCompras.setFocusPainted(false);
+        btnCompras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnComprasActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
         jPanel12Layout.setHorizontalGroup(
@@ -429,7 +463,9 @@ public FormHistorial() {
             .addComponent(btnMarcas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnHistorial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnAjusteStock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnAdministracion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnAdministracion, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+            .addComponent(btnCompras, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnEnEspera, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -445,7 +481,11 @@ public FormHistorial() {
                 .addComponent(btnHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnAjusteStock, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(39, 39, 39)
+                .addComponent(btnCompras, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnEnEspera, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
                 .addComponent(btnAdministracion, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(39, 39, 39)
                 .addComponent(btnSalir)
@@ -518,11 +558,23 @@ public FormHistorial() {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnInicioActionPerformed
 
+    private void btnEnEsperaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnEsperaActionPerformed
+        new FormEnEspera().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnEnEsperaActionPerformed
+
+    private void btnComprasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprasActionPerformed
+        new FormCompras().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnComprasActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdministracion;
     private javax.swing.JButton btnAjusteStock;
     private javax.swing.JButton btnAnterior;
     private javax.swing.JButton btnCategorias;
+    private javax.swing.JButton btnCompras;
+    private javax.swing.JButton btnEnEspera;
     private javax.swing.JButton btnHistorial;
     private javax.swing.JButton btnInicio;
     private javax.swing.JButton btnMarcas;
