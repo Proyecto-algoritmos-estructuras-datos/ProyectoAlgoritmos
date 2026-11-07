@@ -74,6 +74,7 @@ private void actualizarTabla(List<MovimientoInventario> listaPagina) {
     
 public FormHistorial() {
         initComponents();
+        configurarFiltroFechas();
         ControlAcceso.configurarVentana(this, btnAjusteStock, btnAdministracion);
         btnHistorial.setBackground(Color.decode("#015BBB"));
         tblHistorial.setModel(modeloHistorial);
@@ -103,7 +104,41 @@ public FormHistorial() {
         btnInicio.addActionListener(this::btnInicioActionPerformed);
         btnAnterior.addActionListener(this::btnAnteriorActionPerformed);
         btnSiguiente.addActionListener(this::btnSiguienteActionPerformed);
+        btnFiltrar.addActionListener(this::btnFiltrarActionPerformed);     // NUEVA
+        btnLimpiar.addActionListener(this::btnLimpiarActionPerformed); 
     }
+
+// ===== Filtro por fechas =====
+
+// Pone los spinners en modo fecha (dd/MM/yyyy) con la fecha de hoy
+private void configurarFiltroFechas() {
+    spnDesde.setModel(new javax.swing.SpinnerDateModel());
+    spnDesde.setEditor(new javax.swing.JSpinner.DateEditor(spnDesde, "dd/MM/yyyy"));
+    spnHasta.setModel(new javax.swing.SpinnerDateModel());
+    spnHasta.setEditor(new javax.swing.JSpinner.DateEditor(spnHasta, "dd/MM/yyyy"));
+}
+
+// Convierte el valor del spinner (java.util.Date) en LocalDate
+private java.time.LocalDate obtenerFecha(javax.swing.JSpinner spinner) {
+    java.util.Date fecha = (java.util.Date) spinner.getValue();
+    return fecha.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+}
+
+// Igual que cargarYPaginarMovimientos(), pero con una lista ya filtrada
+private void mostrarPaginado(List<MovimientoInventario> lista) {
+    listaDoblePaginada = new ListaEnlazadaDoble(lista, 20);
+    if (listaDoblePaginada.getActual() != null) {
+        actualizarTabla(listaDoblePaginada.getActual().getSubLista());
+    } else {
+        modeloHistorial.setRowCount(0); // sin resultados: se vacía la tabla
+    }
+}
+
+private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {
+    spnDesde.setValue(new java.util.Date());
+    spnHasta.setValue(new java.util.Date());
+    cargarYPaginarMovimientos(); // tu método de siempre: vuelve a mostrar todo
+}
 
 
     private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {                                          
@@ -139,8 +174,10 @@ public FormHistorial() {
         btnAnterior = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnFiltrar = new javax.swing.JButton();
+        btnLimpiar = new javax.swing.JButton();
+        spnDesde = new javax.swing.JSpinner();
+        spnHasta = new javax.swing.JSpinner();
         jPanel12 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
@@ -213,15 +250,20 @@ public FormHistorial() {
         jLabel9.setForeground(new java.awt.Color(33, 29, 29));
         jLabel9.setText("Fecha de fin:");
 
-        jButton1.setBackground(new java.awt.Color(153, 204, 255));
-        jButton1.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(0, 0, 0));
-        jButton1.setText("Filtrar");
+        btnFiltrar.setBackground(new java.awt.Color(153, 204, 255));
+        btnFiltrar.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
+        btnFiltrar.setForeground(new java.awt.Color(0, 0, 0));
+        btnFiltrar.setText("Filtrar");
+        btnFiltrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFiltrarActionPerformed(evt);
+            }
+        });
 
-        jButton2.setBackground(new java.awt.Color(102, 102, 102));
-        jButton2.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(0, 0, 0));
-        jButton2.setText("Limpiar");
+        btnLimpiar.setBackground(new java.awt.Color(102, 102, 102));
+        btnLimpiar.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
+        btnLimpiar.setForeground(new java.awt.Color(0, 0, 0));
+        btnLimpiar.setText("Limpiar");
 
         javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
         jPanel14.setLayout(jPanel14Layout);
@@ -242,16 +284,20 @@ public FormHistorial() {
                         .addContainerGap(33, Short.MAX_VALUE))
                     .addGroup(jPanel14Layout.createSequentialGroup()
                         .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel14Layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addGap(211, 211, 211)
-                                .addComponent(jLabel9))
                             .addComponent(jLabel6)
                             .addGroup(jPanel14Layout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel14Layout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(spnDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(36, 36, 36)
+                                .addComponent(jLabel9)
+                                .addGap(18, 18, 18)
+                                .addComponent(spnHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 321, Short.MAX_VALUE))))
         );
         jPanel14Layout.setVerticalGroup(
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -259,13 +305,16 @@ public FormHistorial() {
                 .addGap(14, 14, 14)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(spnHasta)
+                    .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel8)
+                        .addComponent(jLabel9))
+                    .addComponent(spnDesde))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnFiltrar)
+                    .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
@@ -304,7 +353,7 @@ public FormHistorial() {
 
         jPanel13.setBackground(new java.awt.Color(1, 91, 187));
 
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/apla.png"))); // NOI18N
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/apla.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -326,7 +375,7 @@ public FormHistorial() {
         btnProductos.setBackground(new java.awt.Color(0, 29, 63));
         btnProductos.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnProductos.setForeground(new java.awt.Color(255, 255, 255));
-        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/productos.png"))); // NOI18N
+        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/productos.png"))); // NOI18N
         btnProductos.setText("   Productos      ");
         btnProductos.setBorder(null);
         btnProductos.setBorderPainted(false);
@@ -340,7 +389,7 @@ public FormHistorial() {
         btnMarcas.setBackground(new java.awt.Color(0, 29, 63));
         btnMarcas.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnMarcas.setForeground(new java.awt.Color(255, 255, 255));
-        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/marcas.png"))); // NOI18N
+        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/marcas.png"))); // NOI18N
         btnMarcas.setText("   Marcas             ");
         btnMarcas.setBorder(null);
         btnMarcas.setBorderPainted(false);
@@ -355,7 +404,7 @@ public FormHistorial() {
         btnCategorias.setBackground(new java.awt.Color(0, 29, 63));
         btnCategorias.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnCategorias.setForeground(new java.awt.Color(255, 255, 255));
-        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/categorias.png"))); // NOI18N
+        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/categorias.png"))); // NOI18N
         btnCategorias.setText("  Categorias      ");
         btnCategorias.setBorder(null);
         btnCategorias.setBorderPainted(false);
@@ -568,6 +617,23 @@ public FormHistorial() {
         this.dispose();
     }//GEN-LAST:event_btnComprasActionPerformed
 
+    private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
+   try {
+       java.time.LocalDate desde = obtenerFecha(spnDesde);
+       java.time.LocalDate hasta = obtenerFecha(spnHasta);
+
+       List<MovimientoInventario> filtrados = movControl.verMovimientosPorFechas(desde, hasta);
+       mostrarPaginado(filtrados);
+
+       if (filtrados.isEmpty()) {
+           java.time.format.DateTimeFormatter f = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+           javax.swing.JOptionPane.showMessageDialog(this,
+                   "No hay movimientos entre el " + desde.format(f) + " y el " + hasta.format(f) + ".");
+       }
+   } catch (Exception e) {
+       javax.swing.JOptionPane.showMessageDialog(this, e.getMessage());
+   }    }//GEN-LAST:event_btnFiltrarActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdministracion;
     private javax.swing.JButton btnAjusteStock;
@@ -575,14 +641,14 @@ public FormHistorial() {
     private javax.swing.JButton btnCategorias;
     private javax.swing.JButton btnCompras;
     private javax.swing.JButton btnEnEspera;
+    private javax.swing.JButton btnFiltrar;
     private javax.swing.JButton btnHistorial;
     private javax.swing.JButton btnInicio;
+    private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnMarcas;
     private javax.swing.JButton btnProductos;
     private javax.swing.JButton btnSalir;
     private javax.swing.JButton btnSiguiente;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -594,6 +660,8 @@ public FormHistorial() {
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSpinner spnDesde;
+    private javax.swing.JSpinner spnHasta;
     private javax.swing.JTable tblHistorial;
     // End of variables declaration//GEN-END:variables
 }

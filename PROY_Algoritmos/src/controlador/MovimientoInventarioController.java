@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 import modelo.Empleado;
 import modelo.MovimientoInventario;
+import java.time.LocalDate;
 
 public class MovimientoInventarioController {
+
     private final IMovimientoInventarioDAO dao = new MovimientoInventarioDAO();
 
     public List<MovimientoInventario> verTodosLosMovimientos() throws Exception {
@@ -19,6 +21,16 @@ public class MovimientoInventarioController {
             throw new Exception("Debe seleccionar un producto válido.");
         }
         return dao.verMovimientosPorProducto(idProducto);
+    }
+
+    public List<MovimientoInventario> verMovimientosPorFechas(LocalDate desde, LocalDate hasta) throws Exception {
+        if (desde == null || hasta == null) {
+            throw new Exception("Debe indicar la fecha inicial y la fecha final.");
+        }
+        if (desde.isAfter(hasta)) {
+            throw new Exception("La fecha inicial no puede ser mayor que la fecha final.");
+        }
+        return dao.verMovimientosPorFechas(desde, hasta);
     }
 
     public List<MovimientoInventario> aplicarTomaInventario(Map<Integer, Integer> conteos, Empleado empleado, String motivo) throws Exception {
