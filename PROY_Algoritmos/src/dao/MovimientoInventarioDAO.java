@@ -16,6 +16,7 @@ import modelo.MovimientoInventario;
 import modelo.Producto;
 import modelo.Rol;
 import modelo.TipoMovimiento;
+import java.time.LocalDate;
 
 public class MovimientoInventarioDAO implements IMovimientoInventarioDAO {
 
@@ -61,6 +62,29 @@ public class MovimientoInventarioDAO implements IMovimientoInventarioDAO {
                      ORDER BY m.fecha_movimiento DESC, m.id_movimiento DESC
                      """;
         return consultarMovimientos(sql, idProducto);
+    } 
+    
+
+    @Override
+    public List<MovimientoInventario> verMovimientosPorFechas(LocalDate desde, LocalDate hasta) throws Exception {
+        String sql = SQL_SELECT_MOVIMIENTO + """
+                 WHERE m.fecha_movimiento >= ?
+                   AND m.fecha_movimiento < ?
+                 ORDER BY m.fecha_movimiento DESC, m.id_movimiento DESC
+                 """;
+        List<MovimientoInventario> lista = new ArrayList<>();
+        try (Connection conn = new Conexion().conectar(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setTimestamp(1, Timestamp.valueOf(desde.atStartOfDay()));
+            ps.setTimestamp(2, Timestamp.valueOf(hasta.plusDays(1).atStartOfDay()));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapearMovimiento(rs));
+                }
+            }
+            return lista;
+        } catch (SQLException e) {
+            throw new Exception("Error al filtrar los movimientos por fecha: " + e.getMessage());
+        }
     }
 
     @Override
@@ -92,6 +116,7 @@ public class MovimientoInventarioDAO implements IMovimientoInventarioDAO {
                           WHERE id_producto = ?
                           """;
 
+
         // Aquí no se usa try-with-resources para la conexión porque hay que controlar
         // commit, rollback y restaurar el autoCommit a mano.
         Connection conn = null;
@@ -99,10 +124,7 @@ public class MovimientoInventarioDAO implements IMovimientoInventarioDAO {
             conn = new Conexion().conectar();
             conn.setAutoCommit(false);
 
-            try (PreparedStatement psBloquear = conn.prepareStatement(sqlBloquear);
-                 PreparedStatement psMovimiento = conn.prepareStatement(sqlMovimiento);
-                 PreparedStatement psStock = conn.prepareStatement(sqlStock);
-                ) {
+            try (PreparedStatement psBloquear = conn.prepareStatement(sqlBloquear); PreparedStatement psMovimiento = conn.prepareStatement(sqlMovimiento); PreparedStatement psStock = conn.prepareStatement(sqlStock);) {
                 // TreeMap: se recorre en orden de id para bloquear siempre en el mismo orden
                 for (Map.Entry<Integer, Integer> entrada : new TreeMap<>(conteos).entrySet()) {
                     int idProducto = entrada.getKey();
@@ -186,9 +208,7 @@ public class MovimientoInventarioDAO implements IMovimientoInventarioDAO {
     // Ejecuta el SELECT del kardex; idProducto es null cuando no hay filtro
     private List<MovimientoInventario> consultarMovimientos(String sql, Integer idProducto) throws Exception {
         List<MovimientoInventario> listaMovimientos = new ArrayList<>();
-        try (Connection conn = new Conexion().conectar();
-             PreparedStatement ps = conn.prepareStatement(sql);
-            ) {
+        try (Connection conn = new Conexion().conectar(); PreparedStatement ps = conn.prepareStatement(sql);) {
             if (idProducto != null) {
                 ps.setInt(1, idProducto);
             }

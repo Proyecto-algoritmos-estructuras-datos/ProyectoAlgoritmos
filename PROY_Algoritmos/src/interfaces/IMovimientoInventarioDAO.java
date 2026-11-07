@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import modelo.Empleado;
 import modelo.MovimientoInventario;
+import java.time.LocalDate;
 
 public interface IMovimientoInventarioDAO {
     List<MovimientoInventario> verTodosLosMovimientos() throws Exception;
@@ -11,4 +12,5 @@ public interface IMovimientoInventarioDAO {
 
     // conteos: idProducto -> conteo físico. Devuelve los ajustes realmente aplicados.
     List<MovimientoInventario> aplicarTomaInventario(Map<Integer, Integer> conteos, Empleado empleado, String motivo) throws Exception;
+    List<MovimientoInventario> verMovimientosPorFechas(LocalDate desde, LocalDate hasta) throws Exception;
 }
