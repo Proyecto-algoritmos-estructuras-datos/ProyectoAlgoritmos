@@ -10,7 +10,8 @@ import vista.area4Historial.FormHistorial;
 import vista.area5AjusteStock.FormAjusteStock;
 import vista.area6Compras.FormCompras;
 import vista.area7ListaDeEspera.FormEnEspera;
-import vista.area8Administracion.FormAdministracion;
+import vista.area8Garantia.FormGarantia;
+import vista.area9Administracion.FormAdministracion;
 
 /**
  *
@@ -25,6 +26,9 @@ public class FormEnEspera extends javax.swing.JFrame {
      */
     public FormEnEspera() {
         initComponents();
+        
+        ControlAcceso.configurarVentana(this, btnAjusteStock, btnAdministracion);
+
     }
 
     /**
@@ -69,6 +73,7 @@ public class FormEnEspera extends javax.swing.JFrame {
         btnAjusteStock = new javax.swing.JButton();
         btnCompras = new javax.swing.JButton();
         btnEnEspera = new javax.swing.JButton();
+        btnGarantia = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -273,7 +278,7 @@ public class FormEnEspera extends javax.swing.JFrame {
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 1113, Short.MAX_VALUE))
-                .addGap(19, 19, 19))
+                .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -442,6 +447,21 @@ public class FormEnEspera extends javax.swing.JFrame {
             }
         });
 
+        btnGarantia.setBackground(new java.awt.Color(1, 91, 187));
+        btnGarantia.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
+        btnGarantia.setForeground(new java.awt.Color(255, 255, 255));
+        btnGarantia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/marcas.png"))); // NOI18N
+        btnGarantia.setText("   Garantia        ");
+        btnGarantia.setBorder(null);
+        btnGarantia.setBorderPainted(false);
+        btnGarantia.setContentAreaFilled(false);
+        btnGarantia.setFocusPainted(false);
+        btnGarantia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGarantiaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -461,6 +481,7 @@ public class FormEnEspera extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(btnGarantia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -480,6 +501,8 @@ public class FormEnEspera extends javax.swing.JFrame {
                 .addComponent(btnCompras, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnEnEspera, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnGarantia, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnAdministracion, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
@@ -578,6 +601,11 @@ public class FormEnEspera extends javax.swing.JFrame {
    
     }//GEN-LAST:event_btnEnEsperaActionPerformed
 
+    private void btnGarantiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGarantiaActionPerformed
+        new FormGarantia().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnGarantiaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -610,6 +638,7 @@ public class FormEnEspera extends javax.swing.JFrame {
     private javax.swing.JButton btnCategorias;
     private javax.swing.JButton btnCompras;
     private javax.swing.JButton btnEnEspera;
+    private javax.swing.JButton btnGarantia;
     private javax.swing.JButton btnHistorial;
     private javax.swing.JButton btnMarcas;
     private javax.swing.JButton btnProductos;

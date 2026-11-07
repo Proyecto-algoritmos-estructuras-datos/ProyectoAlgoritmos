@@ -13,13 +13,14 @@ import modelo.Producto;
 import vista.area0Login.FormLogin;
 import vista.area3Marcas.FormMarcas;
 import vista.area4Historial.FormHistorial;
-import vista.area8Administracion.FormAdministracion;
+import vista.area9Administracion.FormAdministracion;
 import util.ControlAcceso;
 import util.Mensajes;
 import util.SesionActual;
 import vista.area3Marcas.FormMarcas;
 import vista.area6Compras.FormCompras;
 import vista.area7ListaDeEspera.FormEnEspera;
+import vista.area8Garantia.FormGarantia;
 
 
 public class FormAjusteStock extends javax.swing.JFrame {
@@ -80,6 +81,7 @@ public class FormAjusteStock extends javax.swing.JFrame {
         btnAjusteStock = new javax.swing.JButton();
         btnCompras = new javax.swing.JButton();
         btnEnEspera = new javax.swing.JButton();
+        btnGarantia = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -194,7 +196,7 @@ public class FormAjusteStock extends javax.swing.JFrame {
                 .addComponent(jLabel5)
                 .addGap(99, 99, 99)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(199, Short.MAX_VALUE))
+                .addContainerGap(247, Short.MAX_VALUE))
         );
 
         jPanel5.setBackground(new java.awt.Color(0, 30, 66));
@@ -352,6 +354,21 @@ public class FormAjusteStock extends javax.swing.JFrame {
             }
         });
 
+        btnGarantia.setBackground(new java.awt.Color(1, 91, 187));
+        btnGarantia.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
+        btnGarantia.setForeground(new java.awt.Color(255, 255, 255));
+        btnGarantia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/marcas.png"))); // NOI18N
+        btnGarantia.setText("   Garantia        ");
+        btnGarantia.setBorder(null);
+        btnGarantia.setBorderPainted(false);
+        btnGarantia.setContentAreaFilled(false);
+        btnGarantia.setFocusPainted(false);
+        btnGarantia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGarantiaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -371,6 +388,7 @@ public class FormAjusteStock extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(btnGarantia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -390,7 +408,9 @@ public class FormAjusteStock extends javax.swing.JFrame {
                 .addComponent(btnCompras, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnEnEspera, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnGarantia, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnAdministracion, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
                 .addComponent(btnSalir)
@@ -497,6 +517,11 @@ public class FormAjusteStock extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnEnEsperaActionPerformed
 
+    private void btnGarantiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGarantiaActionPerformed
+        new FormGarantia().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnGarantiaActionPerformed
+
     private void cargarComboCategorias() {
         cbxCategoria.removeAllItems();
         listaCategorias = new ArrayList<>();
@@ -521,6 +546,7 @@ public class FormAjusteStock extends javax.swing.JFrame {
     private javax.swing.JButton btnCategorias;
     private javax.swing.JButton btnCompras;
     private javax.swing.JButton btnEnEspera;
+    private javax.swing.JButton btnGarantia;
     private javax.swing.JButton btnHistorial;
     private javax.swing.JButton btnIniciarConteo;
     private javax.swing.JButton btnMarcas;
