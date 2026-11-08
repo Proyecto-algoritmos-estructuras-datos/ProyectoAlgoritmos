@@ -1,18 +1,23 @@
 package vista.area6Compras;
 
-/**
- *
- * @author Diego
- */
+import controlador.ProveedorController;
+import java.util.function.Consumer;
+import modelo.Proveedor;
+import util.Mensajes;
+
 public class FormNuevoProveedor extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FormNuevoProveedor.class.getName());
 
-    /**
-     * Creates new form FormNuevoProveedor
-     */
-    public FormNuevoProveedor() {
+    private final ProveedorController provControl = new ProveedorController();
+    private final Consumer<Proveedor> alRegistrar;
+    
+    public FormNuevoProveedor(Consumer<Proveedor> alRegistrar) {
+        this.alRegistrar = alRegistrar;
         initComponents();
+        
+        // El diseñador deja EXIT_ON_CLOSE: con la X se cerraría toda la aplicación
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -32,12 +37,14 @@ public class FormNuevoProveedor extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         txtNumeroDocumento = new javax.swing.JTextField();
-        txtNombre = new javax.swing.JTextField();
+        txtRazonSocial = new javax.swing.JTextField();
+        txtContacto = new javax.swing.JTextField();
         txtTelefono = new javax.swing.JTextField();
         txtCorreo = new javax.swing.JTextField();
-        txtDireccion = new javax.swing.JTextField();
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        txtDireccion = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -49,7 +56,8 @@ public class FormNuevoProveedor extends javax.swing.JFrame {
         jLabel1.setText("Nuevo proveedor");
 
         jLabel3.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
-        jLabel3.setText("Nro. de Documento:");
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel3.setText("RUC:");
 
         jLabel4.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         jLabel4.setText("Razón social:");
@@ -58,18 +66,22 @@ public class FormNuevoProveedor extends javax.swing.JFrame {
         jLabel5.setText("Contacto:");
 
         jLabel6.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
-        jLabel6.setText("Correo:");
+        jLabel6.setText("Teléfono:");
 
         jLabel7.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
-        jLabel7.setText("Dirección:");
+        jLabel7.setText("Correo:");
 
         txtNumeroDocumento.setBackground(new java.awt.Color(233, 233, 233));
         txtNumeroDocumento.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         txtNumeroDocumento.setForeground(new java.awt.Color(51, 51, 51));
 
-        txtNombre.setBackground(new java.awt.Color(233, 233, 233));
-        txtNombre.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
-        txtNombre.setForeground(new java.awt.Color(51, 51, 51));
+        txtRazonSocial.setBackground(new java.awt.Color(233, 233, 233));
+        txtRazonSocial.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
+        txtRazonSocial.setForeground(new java.awt.Color(51, 51, 51));
+
+        txtContacto.setBackground(new java.awt.Color(233, 233, 233));
+        txtContacto.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
+        txtContacto.setForeground(new java.awt.Color(51, 51, 51));
 
         txtTelefono.setBackground(new java.awt.Color(233, 233, 233));
         txtTelefono.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
@@ -78,13 +90,9 @@ public class FormNuevoProveedor extends javax.swing.JFrame {
         txtCorreo.setBackground(new java.awt.Color(233, 233, 233));
         txtCorreo.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         txtCorreo.setForeground(new java.awt.Color(51, 51, 51));
-
-        txtDireccion.setBackground(new java.awt.Color(233, 233, 233));
-        txtDireccion.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
-        txtDireccion.setForeground(new java.awt.Color(51, 51, 51));
-        txtDireccion.addActionListener(new java.awt.event.ActionListener() {
+        txtCorreo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDireccionActionPerformed(evt);
+                txtCorreoActionPerformed(evt);
             }
         });
 
@@ -104,18 +112,30 @@ public class FormNuevoProveedor extends javax.swing.JFrame {
             }
         });
 
+        jLabel8.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
+        jLabel8.setText("Dirección:");
+
+        txtDireccion.setBackground(new java.awt.Color(233, 233, 233));
+        txtDireccion.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
+        txtDireccion.setForeground(new java.awt.Color(51, 51, 51));
+        txtDireccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDireccionActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(137, Short.MAX_VALUE)
                         .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addGap(16, 16, 16)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -123,21 +143,21 @@ public class FormNuevoProveedor extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel3)
-                                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))
-                                    .addComponent(jLabel7))
-                                .addGap(9, 9, 9)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel5)
+                                        .addComponent(jLabel6)
+                                        .addComponent(jLabel7)
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtDireccion)
+                                    .addComponent(txtContacto)
                                     .addComponent(txtTelefono)
                                     .addComponent(txtCorreo)
-                                    .addComponent(txtDireccion)
-                                    .addComponent(txtNombre)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(txtNumeroDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE)))))))
+                                    .addComponent(txtRazonSocial)
+                                    .addComponent(txtNumeroDocumento))))))
                 .addGap(18, 18, 18))
         );
         jPanel1Layout.setVerticalGroup(
@@ -152,33 +172,35 @@ public class FormNuevoProveedor extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtRazonSocial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtContacto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(13, 13, 13)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
+                    .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
                     .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(39, 39, 39)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(125, Short.MAX_VALUE))
+                .addGap(39, 39, 39))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -189,45 +211,38 @@ public class FormNuevoProveedor extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtDireccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDireccionActionPerformed
+    private void txtCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorreoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtDireccionActionPerformed
+    }//GEN-LAST:event_txtCorreoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-
-        new FormCompras().setVisible(true);
-        this.dispose();
+        Proveedor proveedor = new Proveedor();
+        proveedor.setRuc(txtNumeroDocumento.getText());
+        proveedor.setRazonSocial(txtRazonSocial.getText());
+        proveedor.setContacto(txtContacto.getText());
+        proveedor.setTelefono(txtTelefono.getText());
+        proveedor.setCorreo(txtCorreo.getText());
+        proveedor.setDireccion(txtDireccion.getText());
+ 
+        try {
+            Proveedor registrado = provControl.registrarProveedor(proveedor);
+            Mensajes.exito("El proveedor ha sido registrado exitosamente!");
+            if (alRegistrar != null) {
+                alRegistrar.accept(registrado);
+            }
+            this.dispose();
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        new FormCompras().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FormNuevoProveedor().setVisible(true));
-    }
+    private void txtDireccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDireccionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDireccionActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
@@ -238,11 +253,13 @@ public class FormNuevoProveedor extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField txtContacto;
     private javax.swing.JTextField txtCorreo;
     private javax.swing.JTextField txtDireccion;
-    private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtNumeroDocumento;
+    private javax.swing.JTextField txtRazonSocial;
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }
