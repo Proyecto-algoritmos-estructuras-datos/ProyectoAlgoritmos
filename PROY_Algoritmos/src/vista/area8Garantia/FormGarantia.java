@@ -1,5 +1,6 @@
 package vista.area8Garantia;
 
+import controlador.GarantiaController;
 import util.ControlAcceso;
 import util.SesionActual;
 import vista.area0Login.FormLogin;
@@ -11,24 +12,28 @@ import vista.area5AjusteStock.FormAjusteStock;
 import vista.area6Compras.FormCompras;
 import vista.area7ListaDeEspera.FormEnEspera;
 import vista.area9Administracion.FormAdministracion;
+import java.awt.Color;
+import modelo.DecisionGarantia;
 
 /**
  *
  * @author Diego
  */
 public class FormGarantia extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FormGarantia.class.getName());
+    private final GarantiaController controller = new GarantiaController();
 
     /**
      * Creates new form FormGarantia
      */
     public FormGarantia() {
         initComponents();
-        
         ControlAcceso.configurarVentana(this, btnAjusteStock, btnAdministracion);
-
-        
+        btnGarantia.setBackground(Color.decode("#015BBB"));
+        configurarControles();
+        mostrarEstadisticas();
+        refrescar();
     }
 
     /**
@@ -61,15 +66,15 @@ public class FormGarantia extends javax.swing.JFrame {
         jPanel22 = new javax.swing.JPanel();
         jLabel27 = new javax.swing.JLabel();
         jPanel21 = new javax.swing.JPanel();
-        jLabel28 = new javax.swing.JLabel();
+        lblPregunta = new javax.swing.JLabel();
         btnNo = new javax.swing.JButton();
         btnSi = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtRuta = new javax.swing.JTextArea();
         jPanel9 = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
+        lblResultado = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         btnReiniciar = new javax.swing.JButton();
         jPanel23 = new javax.swing.JPanel();
@@ -80,11 +85,11 @@ public class FormGarantia extends javax.swing.JFrame {
         jLabel33 = new javax.swing.JLabel();
         jLabel34 = new javax.swing.JLabel();
         jLabel35 = new javax.swing.JLabel();
-        txtHojas2 = new javax.swing.JLabel();
-        txtHojas3 = new javax.swing.JLabel();
+        lblHojas = new javax.swing.JLabel();
+        lblAltura = new javax.swing.JLabel();
         jLabel36 = new javax.swing.JLabel();
         jLabel53 = new javax.swing.JLabel();
-        txtHojas6 = new javax.swing.JLabel();
+        lblLongitud = new javax.swing.JLabel();
         jLabel54 = new javax.swing.JLabel();
         jLabel55 = new javax.swing.JLabel();
         jPanel25 = new javax.swing.JPanel();
@@ -337,9 +342,9 @@ public class FormGarantia extends javax.swing.JFrame {
         jPanel21.setBackground(new java.awt.Color(153, 204, 255));
         jPanel21.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 153)));
 
-        jLabel28.setFont(new java.awt.Font("Inter SemiBold", 0, 16)); // NOI18N
-        jLabel28.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel28.setText("                       ¿Tiene comprobante ?");
+        lblPregunta.setFont(new java.awt.Font("Inter SemiBold", 0, 16)); // NOI18N
+        lblPregunta.setForeground(new java.awt.Color(0, 0, 0));
+        lblPregunta.setText("                       ¿Tiene comprobante ?");
 
         javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
         jPanel21.setLayout(jPanel21Layout);
@@ -347,14 +352,14 @@ public class FormGarantia extends javax.swing.JFrame {
             jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel21Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel28, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+                .addComponent(lblPregunta, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel21Layout.setVerticalGroup(
             jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel21Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel28, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                .addComponent(lblPregunta, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -418,16 +423,16 @@ public class FormGarantia extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setText("Ruta de recorrido");
 
-        jTextArea1.setBackground(new java.awt.Color(204, 204, 204));
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txtRuta.setBackground(new java.awt.Color(204, 204, 204));
+        txtRuta.setColumns(20);
+        txtRuta.setRows(5);
+        jScrollPane1.setViewportView(txtRuta);
 
         jPanel9.setBackground(new java.awt.Color(204, 204, 204));
 
-        jLabel9.setFont(new java.awt.Font("Inter SemiBold", 0, 24)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel9.setText("Se acepta el cambio o devolución.");
+        lblResultado.setFont(new java.awt.Font("Inter SemiBold", 0, 24)); // NOI18N
+        lblResultado.setForeground(new java.awt.Color(0, 0, 0));
+        lblResultado.setText("Se acepta el cambio o devolución.");
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -435,14 +440,14 @@ public class FormGarantia extends javax.swing.JFrame {
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addGap(85, 85, 85)
-                .addComponent(jLabel9)
+                .addComponent(lblResultado)
                 .addContainerGap(91, Short.MAX_VALUE))
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addComponent(jLabel9)
+                .addComponent(lblResultado)
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
@@ -542,13 +547,13 @@ public class FormGarantia extends javax.swing.JFrame {
         jLabel35.setForeground(new java.awt.Color(0, 29, 63));
         jLabel35.setText("Cantidad de nodos hojas:");
 
-        txtHojas2.setFont(new java.awt.Font("Inter", 0, 14)); // NOI18N
-        txtHojas2.setForeground(new java.awt.Color(0, 0, 0));
-        txtHojas2.setText("7");
+        lblHojas.setFont(new java.awt.Font("Inter", 0, 14)); // NOI18N
+        lblHojas.setForeground(new java.awt.Color(0, 0, 0));
+        lblHojas.setText("7");
 
-        txtHojas3.setFont(new java.awt.Font("Inter", 0, 14)); // NOI18N
-        txtHojas3.setForeground(new java.awt.Color(0, 0, 0));
-        txtHojas3.setText("5");
+        lblAltura.setFont(new java.awt.Font("Inter", 0, 14)); // NOI18N
+        lblAltura.setForeground(new java.awt.Color(0, 0, 0));
+        lblAltura.setText("5");
 
         jLabel36.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         jLabel36.setForeground(new java.awt.Color(0, 29, 63));
@@ -558,9 +563,9 @@ public class FormGarantia extends javax.swing.JFrame {
         jLabel53.setForeground(new java.awt.Color(0, 29, 63));
         jLabel53.setText("Longitud:");
 
-        txtHojas6.setFont(new java.awt.Font("Inter", 0, 14)); // NOI18N
-        txtHojas6.setForeground(new java.awt.Color(0, 0, 0));
-        txtHojas6.setText("4");
+        lblLongitud.setFont(new java.awt.Font("Inter", 0, 14)); // NOI18N
+        lblLongitud.setForeground(new java.awt.Color(0, 0, 0));
+        lblLongitud.setText("4");
 
         jLabel54.setFont(new java.awt.Font("Inter", 0, 12)); // NOI18N
         jLabel54.setForeground(new java.awt.Color(0, 0, 0));
@@ -603,9 +608,9 @@ public class FormGarantia extends javax.swing.JFrame {
                     .addGroup(jPanel23Layout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addGroup(jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtHojas3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtHojas2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtHojas6, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(lblAltura, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblLongitud, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel23Layout.setVerticalGroup(
@@ -626,19 +631,19 @@ public class FormGarantia extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel35)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtHojas2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel36)
                     .addComponent(jLabel54))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtHojas3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblAltura, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel53)
                     .addComponent(jLabel55))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtHojas6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblLongitud, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -822,21 +827,87 @@ public class FormGarantia extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEnEsperaActionPerformed
 
     private void btnGarantiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGarantiaActionPerformed
-        
+
     }//GEN-LAST:event_btnGarantiaActionPerformed
 
     private void btnReiniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReiniciarActionPerformed
-        // TODO add your handling code here:
+        controller.reiniciar();
+        refrescar();
     }//GEN-LAST:event_btnReiniciarActionPerformed
 
     private void btnSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiActionPerformed
-        // TODO add your handling code here:
+        responder(true);
     }//GEN-LAST:event_btnSiActionPerformed
 
     private void btnNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNoActionPerformed
-        // TODO add your handling code here:
+        responder(false);
     }//GEN-LAST:event_btnNoActionPerformed
+    private void configurarControles() {
+    txtRuta.setEditable(false);
+    txtRuta.setLineWrap(true);
+    txtRuta.setWrapStyleWord(true);
+    txtRuta.setBackground(new Color(204, 204, 204));
+    lblResultado.setOpaque(true);
+    lblResultado.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+}
 
+// Los números del panel derecho salen del árbol, no son texto fijo
+private void mostrarEstadisticas() {
+    lblHojas.setText(String.valueOf(controller.contarHojas()));
+    lblAltura.setText(String.valueOf(controller.altura()));
+    lblLongitud.setText(String.valueOf(controller.longitudMaxima()));
+}
+
+private void responder(boolean si) {
+    try {
+        controller.responder(si);
+        refrescar();
+    } catch (Exception e) {
+        javax.swing.JOptionPane.showMessageDialog(this, e.getMessage());
+    }
+}
+
+private void refrescar() {
+    DecisionGarantia actual = controller.getActual();
+    boolean fin = controller.hayDecision();
+    btnSi.setEnabled(!fin);
+    btnNo.setEnabled(!fin);
+
+    // Ruta recorrida, una respuesta por línea
+    StringBuilder ruta = new StringBuilder();
+    int n = 1;
+    for (String paso : controller.getRuta()) {
+        ruta.append(n++).append(". ").append(paso).append("\n");
+    }
+    txtRuta.setText(ruta.toString());
+
+    if (!fin) {
+        lblPregunta.setText(actual.getTexto());
+        lblResultado.setBackground(new Color(204, 204, 204));
+        lblResultado.setText("Responde las preguntas para ver la decisión.");
+        return;
+    }
+
+    lblPregunta.setText("Evaluación terminada");
+    String sentencia;
+    Color fondo;
+    switch (actual.getResultado()) {
+        case ACEPTAR_CAMBIO:
+            sentencia = "Se acepta el cambio o devolución.";
+            fondo = new Color(198, 239, 206);
+            break;
+        case GARANTIA_FABRICANTE:
+            sentencia = "Se envía a garantía del fabricante.";
+            fondo = new Color(255, 224, 178);
+            break;
+        default:
+            sentencia = "Se rechaza el reclamo.";
+            fondo = new Color(255, 205, 210);
+    }
+    lblResultado.setBackground(fondo);
+    lblResultado.setText("<html><div style='text-align:center'>" + sentencia
+            + "<br><span style='font-size:11px'>" + actual.getTexto() + "</span></div></html>");
+}
     /**
      * @param args the command line arguments
      */
@@ -878,28 +949,9 @@ public class FormGarantia extends javax.swing.JFrame {
     private javax.swing.JButton btnSi;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
@@ -907,21 +959,12 @@ public class FormGarantia extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
-    private javax.swing.JLabel jLabel37;
-    private javax.swing.JLabel jLabel38;
-    private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel40;
-    private javax.swing.JLabel jLabel41;
-    private javax.swing.JLabel jLabel42;
-    private javax.swing.JLabel jLabel43;
-    private javax.swing.JLabel jLabel44;
     private javax.swing.JLabel jLabel45;
     private javax.swing.JLabel jLabel46;
     private javax.swing.JLabel jLabel47;
     private javax.swing.JLabel jLabel48;
     private javax.swing.JLabel jLabel49;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel50;
     private javax.swing.JLabel jLabel51;
     private javax.swing.JLabel jLabel52;
@@ -929,41 +972,23 @@ public class FormGarantia extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel54;
     private javax.swing.JLabel jLabel55;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel13;
-    private javax.swing.JPanel jPanel14;
-    private javax.swing.JPanel jPanel15;
-    private javax.swing.JPanel jPanel16;
-    private javax.swing.JPanel jPanel17;
-    private javax.swing.JPanel jPanel18;
-    private javax.swing.JPanel jPanel19;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel20;
     private javax.swing.JPanel jPanel21;
     private javax.swing.JPanel jPanel22;
     private javax.swing.JPanel jPanel23;
-    private javax.swing.JPanel jPanel24;
     private javax.swing.JPanel jPanel25;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JLabel txtHojas;
-    private javax.swing.JLabel txtHojas1;
-    private javax.swing.JLabel txtHojas2;
-    private javax.swing.JLabel txtHojas3;
-    private javax.swing.JLabel txtHojas4;
-    private javax.swing.JLabel txtHojas5;
-    private javax.swing.JLabel txtHojas6;
+    private javax.swing.JLabel lblAltura;
+    private javax.swing.JLabel lblHojas;
+    private javax.swing.JLabel lblLongitud;
+    private javax.swing.JLabel lblPregunta;
+    private javax.swing.JLabel lblResultado;
+    private javax.swing.JTextArea txtRuta;
     // End of variables declaration//GEN-END:variables
 }
