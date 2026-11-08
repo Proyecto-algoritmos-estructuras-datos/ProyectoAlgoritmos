@@ -9,7 +9,8 @@ import vista.area3Marcas.FormMarcas;
 import vista.area4Historial.FormHistorial;
 import vista.area5AjusteStock.FormAjusteStock;
 import vista.area7ListaDeEspera.FormEnEspera;
-import vista.area8Administracion.FormAdministracion;
+import vista.area8Garantia.FormGarantia;
+import vista.area9Administracion.FormAdministracion;
 
 /**
  *
@@ -24,6 +25,8 @@ public class FormCompras extends javax.swing.JFrame {
      */
     public FormCompras() {
         initComponents();
+        
+        ControlAcceso.configurarVentana(this, btnAjusteStock, btnAdministracion);
     }
 
     /**
@@ -94,6 +97,7 @@ public class FormCompras extends javax.swing.JFrame {
         btnAjusteStock = new javax.swing.JButton();
         btnCompras = new javax.swing.JButton();
         btnEnEspera = new javax.swing.JButton();
+        btnGarantia = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -733,6 +737,21 @@ public class FormCompras extends javax.swing.JFrame {
             }
         });
 
+        btnGarantia.setBackground(new java.awt.Color(1, 91, 187));
+        btnGarantia.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
+        btnGarantia.setForeground(new java.awt.Color(255, 255, 255));
+        btnGarantia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/marcas.png"))); // NOI18N
+        btnGarantia.setText("   Garantia        ");
+        btnGarantia.setBorder(null);
+        btnGarantia.setBorderPainted(false);
+        btnGarantia.setContentAreaFilled(false);
+        btnGarantia.setFocusPainted(false);
+        btnGarantia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGarantiaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -752,6 +771,7 @@ public class FormCompras extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(btnGarantia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -771,6 +791,8 @@ public class FormCompras extends javax.swing.JFrame {
                 .addComponent(btnCompras, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnEnEspera, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnGarantia, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnAdministracion, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
@@ -890,6 +912,11 @@ public class FormCompras extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnEnEsperaActionPerformed
 
+    private void btnGarantiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGarantiaActionPerformed
+        new FormGarantia().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnGarantiaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -928,6 +955,7 @@ public class FormCompras extends javax.swing.JFrame {
     private javax.swing.JButton btnConfirmarVenta;
     private javax.swing.JButton btnDeshacer;
     private javax.swing.JButton btnEnEspera;
+    private javax.swing.JButton btnGarantia;
     private javax.swing.JButton btnHistorial;
     private javax.swing.JButton btnMarcas;
     private javax.swing.JButton btnProductos;
@@ -946,9 +974,7 @@ public class FormCompras extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -959,12 +985,8 @@ public class FormCompras extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
-    private javax.swing.JPanel jPanel15;
-    private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
