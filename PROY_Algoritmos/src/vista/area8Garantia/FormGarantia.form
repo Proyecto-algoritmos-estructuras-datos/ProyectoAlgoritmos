@@ -577,7 +577,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jLabel28" pref="349" max="32767" attributes="0"/>
+                              <Component id="lblPregunta" pref="349" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -586,14 +586,14 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jLabel28" pref="33" max="32767" attributes="0"/>
+                              <Component id="lblPregunta" pref="33" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JLabel" name="jLabel28">
+                    <Component class="javax.swing.JLabel" name="lblPregunta">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Inter SemiBold" size="16" style="0"/>
@@ -699,7 +699,7 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                   <SubComponents>
-                    <Component class="javax.swing.JTextArea" name="jTextArea1">
+                    <Component class="javax.swing.JTextArea" name="txtRuta">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="cc" green="cc" red="cc" type="rgb"/>
@@ -722,7 +722,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <EmptySpace min="-2" pref="85" max="-2" attributes="0"/>
-                              <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblResultado" min="-2" max="-2" attributes="0"/>
                               <EmptySpace pref="91" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -731,14 +731,14 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
-                              <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblResultado" min="-2" max="-2" attributes="0"/>
                               <EmptySpace pref="27" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JLabel" name="jLabel9">
+                    <Component class="javax.swing.JLabel" name="lblResultado">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Inter SemiBold" size="24" style="0"/>
@@ -836,9 +836,9 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="txtHojas3" min="-2" pref="28" max="-2" attributes="0"/>
-                                  <Component id="txtHojas2" min="-2" pref="28" max="-2" attributes="0"/>
-                                  <Component id="txtHojas6" alignment="1" min="-2" pref="28" max="-2" attributes="0"/>
+                                  <Component id="lblAltura" min="-2" pref="28" max="-2" attributes="0"/>
+                                  <Component id="lblHojas" min="-2" pref="28" max="-2" attributes="0"/>
+                                  <Component id="lblLongitud" alignment="1" min="-2" pref="28" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -864,21 +864,21 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jLabel35" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="txtHojas2" min="-2" pref="25" max="-2" attributes="0"/>
+                      <Component id="lblHojas" min="-2" pref="25" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel36" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel54" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="txtHojas3" min="-2" pref="25" max="-2" attributes="0"/>
+                      <Component id="lblAltura" min="-2" pref="25" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel53" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel55" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="txtHojas6" min="-2" pref="25" max="-2" attributes="0"/>
+                      <Component id="lblLongitud" min="-2" pref="25" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -962,7 +962,7 @@
                 <Property name="text" type="java.lang.String" value="Cantidad de nodos hojas:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="txtHojas2">
+            <Component class="javax.swing.JLabel" name="lblHojas">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Inter" size="14" style="0"/>
@@ -973,7 +973,7 @@
                 <Property name="text" type="java.lang.String" value="7"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="txtHojas3">
+            <Component class="javax.swing.JLabel" name="lblAltura">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Inter" size="14" style="0"/>
@@ -1006,7 +1006,7 @@
                 <Property name="text" type="java.lang.String" value="Longitud:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="txtHojas6">
+            <Component class="javax.swing.JLabel" name="lblLongitud">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Inter" size="14" style="0"/>
