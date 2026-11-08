@@ -24,9 +24,8 @@ public class Validaciones {
             throw new Exception("El stock ingresado no es válido.");
         }
     }
-    
 
-      public static int parsearId(String texto) throws Exception {
+    public static int parsearId(String texto) throws Exception {
         if (texto == null || texto.trim().isEmpty()) {
             throw new Exception("Ingrese el ID de la marca.");
         }
@@ -40,6 +39,27 @@ public class Validaciones {
             throw new Exception("El ID ingresado no es válido.");
         }
     }
-    
+      
+    public static int parsearCantidad(String texto) throws Exception {
+        if (texto == null || texto.trim().isEmpty()) {
+            throw new Exception("Ingrese la cantidad.");
+        }
+        try {
+            return Integer.parseInt(texto.trim());
+        } catch (NumberFormatException nfe) {
+            throw new Exception("La cantidad ingresada no es válida (use un número entero).");
+        }
+    }
+ 
+    public static BigDecimal parsearPrecioCosto(String texto) throws Exception {
+        if (texto == null || texto.trim().isEmpty()) {
+            throw new Exception("Ingrese el precio de costo.");
+        }
+        try {
+            return new BigDecimal(texto.trim().replace(",", "."));
+        } catch (NumberFormatException nfe) {
+            throw new Exception("El precio de costo ingresado no es válido.");
+        }
+    }
     
 }

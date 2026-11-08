@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="PROY_Algoritmos">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/PROY_Algoritmos.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
