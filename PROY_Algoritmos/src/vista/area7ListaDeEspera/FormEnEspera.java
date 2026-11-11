@@ -12,6 +12,17 @@ import vista.area6Compras.FormCompras;
 import vista.area7ListaDeEspera.FormEnEspera;
 import vista.area8Garantia.FormGarantia;
 import vista.area9Administracion.FormAdministracion;
+import controlador.CompraEsperaController;
+import java.awt.Color;
+import java.awt.Component;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import modelo.Compra;
+import modelo.DetalleCompra;
+import util.Mensajes;
 
 /**
  *
@@ -21,6 +32,13 @@ public class FormEnEspera extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FormEnEspera.class.getName());
 
+    private final CompraEsperaController controller =
+            new CompraEsperaController();
+    private final DefaultTableModel modeloCola = new DefaultTableModel();
+    private final DefaultTableModel modeloDetalle = new DefaultTableModel();
+    private static final DateTimeFormatter FORMATO_FECHA =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
     /**
      * Creates new form FormEnEspera
      */
@@ -28,7 +46,118 @@ public class FormEnEspera extends javax.swing.JFrame {
         initComponents();
         
         ControlAcceso.configurarVentana(this, btnAjusteStock, btnAdministracion);
+        configurarTablas();
+        cargarCola();
 
+    }
+
+    // Define las columnas de las dos tablas y pinta de celeste el frente de la cola
+    private void configurarTablas() {
+        tblCompras.setModel(modeloCola);
+        modeloCola.setColumnIdentifiers(new Object[]{"Posición", "N°", "Proveedor", "Fecha", "Total (s/)"});
+        tblCompras.setDefaultEditor(Object.class, null);
+        tblCompras.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(
+                        table, value, false, false, row, column);
+                boolean esFrente = row == 0;
+                c.setBackground(esFrente ? new Color(204, 229, 255) : Color.WHITE);
+                return c;
+            }
+        });
+
+        tblDetalle.setModel(modeloDetalle);
+        modeloDetalle.setColumnIdentifiers(new Object[]{"Producto", "Cantidad", "Costo unit.", "Subtotal"});
+        tblDetalle.setDefaultEditor(Object.class, null);
+    }
+
+    // Reconstruye la cola desde la BD y vuelve a dibujar la pantalla
+    private void cargarCola() {
+        try {
+            controller.cargarCola();
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+        refrescar();
+    }
+
+    // Vuelve a dibujar la cola: tabla, contador, detalle y estado de los botones
+    private void refrescar() {
+        modeloCola.setRowCount(0);
+        int posicion = 1;
+        for (Compra compra : controller.verCola()) {
+            Object[] fila = new Object[]{
+                posicion++,
+                compra.getIdCompra(),
+                compra.getProveedor().getRazonSocial(),
+                compra.getFechaCompra().format(FORMATO_FECHA),
+                compra.getTotal()
+            };
+            modeloCola.addRow(fila);
+        }
+        lblCantidadCola.setText(String.valueOf(controller.getCantidadEnCola()));
+
+        limpiarDetalle();
+        boolean hayCompras = !controller.colaVacia();
+        btnRecibirSiguiente.setEnabled(hayCompras);
+        btnMostrarDetalle.setEnabled(hayCompras);
+    }
+
+    private void limpiarDetalle() {
+        modeloDetalle.setRowCount(0);
+        lblNumeroFrente.setText("-");
+        lblTotalFrente.setText("0.00");
+    }
+
+    // Muestra los productos de la compra del frente (sin sacarla de la cola)
+    private void mostrarDetalleDelFrente() {
+        try {
+            Compra frente = controller.verFrente();
+            List<DetalleCompra> detalles = controller.verDetalleDelFrente();
+
+            modeloDetalle.setRowCount(0);
+            for (DetalleCompra detalle : detalles) {
+                Object[] fila = new Object[]{
+                    detalle.getProducto().getNombreProducto(),
+                    detalle.getCantidad(),
+                    detalle.getPrecioUnitario(),
+                    detalle.getSubtotal()
+                };
+                modeloDetalle.addRow(fila);
+            }
+            lblNumeroFrente.setText(String.valueOf(frente.getIdCompra()));
+            lblTotalFrente.setText(frente.getTotal().toPlainString());
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+    }
+
+    // Atiende la compra del frente: stock, precio de costo, kardex y salida de la cola
+    private void recibirSiguiente() {
+        Compra frente = controller.verFrente();
+        if (frente == null) {
+            Mensajes.error("No hay compras en espera para recibir.");
+            return;
+        }
+        boolean confirmacion = Mensajes.confirmacion(
+                "¿Desea recibir la compra N° " + frente.getIdCompra()
+                + " de " + frente.getProveedor().getRazonSocial()
+                + " por s/ " + frente.getTotal().toPlainString() + "?\n"
+                + "Se sumará el stock y se registrará la entrada en el kardex.",
+                "Recibir compra");
+        if (!confirmacion) {
+            return;
+        }
+        try {
+            Compra recibida = controller.recibirSiguiente();
+            Mensajes.exito("La compra N° " + recibida.getIdCompra()
+                    + " fue recibida. El stock y el kardex se actualizaron.");
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+        refrescar();
     }
 
     /**
@@ -48,18 +177,18 @@ public class FormEnEspera extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblCompras = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
+        lblCantidadCola = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        tblDetalle = new javax.swing.JTable();
         jLabel18 = new javax.swing.JLabel();
-        txtNumero = new javax.swing.JLabel();
+        lblNumeroFrente = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
-        jLabel23 = new javax.swing.JLabel();
+        lblTotalFrente = new javax.swing.JLabel();
         btnRecibirSiguiente = new javax.swing.JButton();
-        btnActualizar = new javax.swing.JButton();
+        btnMostrarDetalle = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -108,9 +237,9 @@ public class FormEnEspera extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(102, 102, 102));
         jLabel7.setText("Compras pendientes en cola:");
 
-        jLabel8.setFont(new java.awt.Font("Inter SemiBold", 0, 18)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel8.setText("4");
+        lblCantidadCola.setFont(new java.awt.Font("Inter SemiBold", 0, 18)); // NOI18N
+        lblCantidadCola.setForeground(new java.awt.Color(0, 0, 0));
+        lblCantidadCola.setText("4");
 
         jLabel16.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(0, 0, 0));
@@ -133,7 +262,7 @@ public class FormEnEspera extends javax.swing.JFrame {
                                 .addGap(12, 12, 12)
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel8))
+                                .addComponent(lblCantidadCola))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 975, javax.swing.GroupLayout.PREFERRED_SIZE)))))
@@ -154,7 +283,7 @@ public class FormEnEspera extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jLabel8))
+                    .addComponent(lblCantidadCola))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
@@ -164,7 +293,7 @@ public class FormEnEspera extends javax.swing.JFrame {
         jLabel12.setForeground(new java.awt.Color(0, 0, 0));
         jLabel12.setText("Detalles de la compra del frente:");
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        tblDetalle.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -175,23 +304,23 @@ public class FormEnEspera extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane3.setViewportView(jTable3);
+        jScrollPane3.setViewportView(tblDetalle);
 
         jLabel18.setFont(new java.awt.Font("Inter SemiBold", 0, 19)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(102, 102, 102));
         jLabel18.setText("N° ");
 
-        txtNumero.setFont(new java.awt.Font("Inter SemiBold", 0, 19)); // NOI18N
-        txtNumero.setForeground(new java.awt.Color(0, 0, 0));
-        txtNumero.setText("12");
+        lblNumeroFrente.setFont(new java.awt.Font("Inter SemiBold", 0, 19)); // NOI18N
+        lblNumeroFrente.setForeground(new java.awt.Color(0, 0, 0));
+        lblNumeroFrente.setText("12");
 
         jLabel22.setFont(new java.awt.Font("Inter SemiBold", 0, 24)); // NOI18N
         jLabel22.setForeground(new java.awt.Color(51, 51, 51));
         jLabel22.setText("TOTAL: s/");
 
-        jLabel23.setFont(new java.awt.Font("Inter SemiBold", 0, 24)); // NOI18N
-        jLabel23.setForeground(new java.awt.Color(51, 51, 51));
-        jLabel23.setText("3840");
+        lblTotalFrente.setFont(new java.awt.Font("Inter SemiBold", 0, 24)); // NOI18N
+        lblTotalFrente.setForeground(new java.awt.Color(51, 51, 51));
+        lblTotalFrente.setText("3840");
 
         btnRecibirSiguiente.setBackground(new java.awt.Color(0, 63, 156));
         btnRecibirSiguiente.setFont(new java.awt.Font("Inter SemiBold", 0, 13)); // NOI18N
@@ -203,11 +332,11 @@ public class FormEnEspera extends javax.swing.JFrame {
             }
         });
 
-        btnActualizar.setBackground(new java.awt.Color(66, 66, 66));
-        btnActualizar.setFont(new java.awt.Font("Inter SemiBold", 0, 13)); // NOI18N
-        btnActualizar.setForeground(new java.awt.Color(255, 255, 255));
-        btnActualizar.setText("MOSTRAR DETALLE");
-        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+        btnMostrarDetalle.setBackground(new java.awt.Color(66, 66, 66));
+        btnMostrarDetalle.setFont(new java.awt.Font("Inter SemiBold", 0, 13)); // NOI18N
+        btnMostrarDetalle.setForeground(new java.awt.Color(255, 255, 255));
+        btnMostrarDetalle.setText("MOSTRAR DETALLE");
+        btnMostrarDetalle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnActualizarActionPerformed(evt);
             }
@@ -230,16 +359,16 @@ public class FormEnEspera extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel18)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtNumero)
+                                .addComponent(lblNumeroFrente)
                                 .addGap(724, 724, 724))
                             .addGroup(jPanel9Layout.createSequentialGroup()
                                 .addComponent(jLabel22)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(lblTotalFrente, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(btnActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnMostrarDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnRecibirSiguiente, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(55, 55, 55))
@@ -251,17 +380,17 @@ public class FormEnEspera extends javax.swing.JFrame {
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
                     .addComponent(jLabel18)
-                    .addComponent(txtNumero))
+                    .addComponent(lblNumeroFrente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel22)
-                    .addComponent(jLabel23))
+                    .addComponent(lblTotalFrente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnRecibirSiguiente, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnMostrarDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
@@ -541,11 +670,11 @@ public class FormEnEspera extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRecibirSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecibirSiguienteActionPerformed
-        // TODO add your handling code here:
+        recibirSiguiente();
     }//GEN-LAST:event_btnRecibirSiguienteActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-        // TODO add your handling code here:
+        mostrarDetalleDelFrente();
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
@@ -607,7 +736,7 @@ public class FormEnEspera extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGarantiaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnActualizar;
+    private javax.swing.JButton btnMostrarDetalle;
     private javax.swing.JButton btnAdministracion;
     private javax.swing.JButton btnAjusteStock;
     private javax.swing.JButton btnCategorias;
@@ -625,11 +754,11 @@ public class FormEnEspera extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel lblTotalFrente;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel lblCantidadCola;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -638,8 +767,8 @@ public class FormEnEspera extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable3;
+    private javax.swing.JTable tblDetalle;
     private javax.swing.JTable tblCompras;
-    private javax.swing.JLabel txtNumero;
+    private javax.swing.JLabel lblNumeroFrente;
     // End of variables declaration//GEN-END:variables
 }
