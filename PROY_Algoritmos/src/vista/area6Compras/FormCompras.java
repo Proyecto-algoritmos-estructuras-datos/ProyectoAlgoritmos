@@ -11,6 +11,7 @@ import vista.area5AjusteStock.FormAjusteStock;
 import vista.area7ListaDeEspera.FormEnEspera;
 import vista.area8Garantia.FormGarantia;
 import vista.area9Administracion.FormAdministracion;
+import controlador.BusquedaABBController;
 import controlador.CompraController;
 import controlador.ProductoController;
 import controlador.ProveedorController;
@@ -20,7 +21,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -33,49 +36,52 @@ import util.Mensajes;
 import util.Validaciones;
 
 public class FormCompras extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FormCompras.class.getName());
 
     private final CompraController compraControl = new CompraController();
     private final ProveedorController provControl = new ProveedorController();
     private final ProductoController prodControl = new ProductoController();
- 
+
     private final DefaultTableModel modeloProveedor = new DefaultTableModel();
     private final DefaultTableModel modeloProducto = new DefaultTableModel();
     private final DefaultTableModel modeloCarrito = new DefaultTableModel();
- 
+
     private List<Proveedor> listaProveedores = new ArrayList<>();
     private List<Producto> listaProductos = new ArrayList<>();
- 
+
+    private List<Proveedor> proveedoresEnTabla = new ArrayList<>();
+    private List<Producto> productosEnTabla = new ArrayList<>();
+
+    private final BusquedaABBController busqueda = new BusquedaABBController();
+
     private FormNuevoProveedor ventanaNuevoProveedor;
-    
+
     public FormCompras() {
         initComponents();
-        
+
         ControlAcceso.configurarVentana(this, btnAjusteStock, btnAdministracion);
- 
-        // Buscar y Ordenar por quedan sin función hasta aplicar árboles binarios de búsqueda
-        txtBuscarProveedor.setEnabled(false);
-        cbxOrdenarProveedor.setEnabled(false);
-        btnBuscarProveedor.setEnabled(false);
-        txtBuscarProducto.setEnabled(false);
-        cbxOrdenarProducto.setEnabled(false);
-        btnBuscarProducto.setEnabled(false);
- 
+
+        // Buscar y Ordenar -  árboles binarios de búsqueda
+        cbxOrdenarProveedor.setModel(new javax.swing.DefaultComboBoxModel<>(
+                new String[]{"RUC", "Razón social", "Contacto", "Teléfono"}));
+
+        cbxOrdenarProducto.setModel(new javax.swing.DefaultComboBoxModel<>(
+                new String[]{"Nombre", "Marca", "Stock", "Último costo"}));
+
         configurarTablas();
         configurarCierreDeVentana();
- 
+
         txtFecha.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         txtTotalNumeroProductos.setText("/  " + CompraController.LIMITE_CARRITO);
         txtCantidad.setText("1");
         txtPrecio.setText("");
- 
+
         cargarTablaProveedores();
         cargarTablaProductos();
         refrescarCarrito();
         actualizarProveedorSeleccionado();
     }
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -848,7 +854,23 @@ public class FormCompras extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProveedorActionPerformed
-        // TODO add your handling code here:
+        try {
+            String texto = txtBuscarProveedor.getText().trim();
+            Comparator<Proveedor> comparador = obtenerComparadorProveedor();
+            List<Proveedor> resultado;
+            if (texto.isEmpty()) {
+                resultado = busqueda.ordenar(listaProveedores, comparador);
+            } else {
+                resultado = busqueda.buscarPorPrefijo(listaProveedores, comparador, texto, obtenerClaveProveedor());
+            }
+            mostrarProveedores(resultado);
+            if (resultado.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "No se encontraron proveedores con ese criterio.",
+                        "Sin resultados", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
     }//GEN-LAST:event_btnBuscarProveedorActionPerformed
 
     private void btnAgregarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProveedorActionPerformed
@@ -857,7 +879,7 @@ public class FormCompras extends javax.swing.JFrame {
             ventanaNuevoProveedor.toFront();
             return;
         }
- 
+
         ventanaNuevoProveedor = new FormNuevoProveedor(this::alRegistrarProveedor);
         ventanaNuevoProveedor.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -871,24 +893,54 @@ public class FormCompras extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarProveedorActionPerformed
 
     private void btnBuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductoActionPerformed
-        // TODO add your handling code here:
+        try {
+            String texto = txtBuscarProducto.getText().trim();
+            String campo = (String) cbxOrdenarProducto.getSelectedItem();
+            Comparator<Producto> comparador = obtenerComparadorProducto();
+            List<Producto> resultado;
+            if (texto.isEmpty()) {
+                resultado = busqueda.ordenar(listaProductos, comparador);
+            } else {
+                switch (campo) {
+                    case "Stock" -> {
+                        Producto referencia = new Producto();
+                        referencia.setStock(Validaciones.parsearStock(texto));
+                        resultado = busqueda.buscarExacto(listaProductos, comparador, referencia);
+                    }
+                    case "Último costo" -> {
+                        Producto referencia = new Producto();
+                        referencia.setPrecioCompra(Validaciones.parsearPrecio(texto));
+                        resultado = busqueda.buscarExacto(listaProductos, comparador, referencia);
+                    }
+                    default ->
+                        resultado = busqueda.buscarPorPrefijo(listaProductos, comparador, texto, obtenerClaveProducto());
+                }
+            }
+            mostrarProductos(resultado);
+            if (resultado.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "No se encontraron productos con ese criterio.",
+                        "Sin resultados", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
     }//GEN-LAST:event_btnBuscarProductoActionPerformed
 
     private void btnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProductoActionPerformed
         int fila = tblProducto.getSelectedRow();
- 
+
         if (fila == -1) {
             Mensajes.error("Seleccione un producto de la tabla.");
             return;
         }
- 
+
         try {
-            Producto producto = listaProductos.get(fila);
+            Producto producto = productosEnTabla.get(fila);
             int cantidad = Validaciones.parsearCantidad(txtCantidad.getText());
             BigDecimal precio = Validaciones.parsearPrecioCosto(txtPrecio.getText());
- 
+
             compraControl.agregarAlCarrito(producto, cantidad, precio);
- 
+
             tblProducto.clearSelection();
             txtCantidad.setText("1");
             txtPrecio.setText("");
@@ -904,7 +956,7 @@ public class FormCompras extends javax.swing.JFrame {
                 + " por s/ " + jLabel23.getText() + "?\n"
                 + "Quedará PENDIENTE hasta que se reciba la mercadería.",
                 "Registro de Compra");
- 
+
         if (confirmacion) {
             try {
                 Compra compra = compraControl.guardarCompra();
@@ -938,64 +990,86 @@ public class FormCompras extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDeshacerActionPerformed
 
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
-        if (!confirmarSalida()) { return; }
+        if (!confirmarSalida()) {
+            return;
+        }
         new FormProductos().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnProductosActionPerformed
 
     private void btnMarcasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMarcasActionPerformed
-        if (!confirmarSalida()) { return; }
+        if (!confirmarSalida()) {
+            return;
+        }
         new FormMarcas().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnMarcasActionPerformed
 
     private void btnCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCategoriasActionPerformed
-        if (!confirmarSalida()) { return; }
+        if (!confirmarSalida()) {
+            return;
+        }
         new FormCategorias().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnCategoriasActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        if (!confirmarSalida()) { return; }
+        if (!confirmarSalida()) {
+            return;
+        }
         SesionActual.cerrarSesion();
         new FormLogin().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistorialActionPerformed
-        if (!confirmarSalida()) { return; }
+        if (!confirmarSalida()) {
+            return;
+        }
         new FormHistorial().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnHistorialActionPerformed
 
     private void btnAdministracionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdministracionActionPerformed
-        if (!ControlAcceso.validarAdministracion()) { return; }
-        if (!confirmarSalida()) { return; }
+        if (!ControlAcceso.validarAdministracion()) {
+            return;
+        }
+        if (!confirmarSalida()) {
+            return;
+        }
 
         new FormAdministracion().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAdministracionActionPerformed
 
     private void btnAjusteStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAjusteStockActionPerformed
-        if (!ControlAcceso.validarAjusteStock()) { return; }
-        if (!confirmarSalida()) { return; }
+        if (!ControlAcceso.validarAjusteStock()) {
+            return;
+        }
+        if (!confirmarSalida()) {
+            return;
+        }
 
         new FormAjusteStock().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAjusteStockActionPerformed
 
     private void btnComprasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprasActionPerformed
-        
+
     }//GEN-LAST:event_btnComprasActionPerformed
 
     private void btnEnEsperaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnEsperaActionPerformed
-        if (!confirmarSalida()) { return; }
+        if (!confirmarSalida()) {
+            return;
+        }
         new FormEnEspera().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnEnEsperaActionPerformed
 
     private void btnGarantiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGarantiaActionPerformed
-        if (!confirmarSalida()) { return; }
+        if (!confirmarSalida()) {
+            return;
+        }
         new FormGarantia().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnGarantiaActionPerformed
@@ -1011,7 +1085,7 @@ public class FormCompras extends javax.swing.JFrame {
                 seleccionarProveedorDeLaTabla();
             }
         });
- 
+
         // Productos: al seleccionar una fila se autocompleta el precio de costo
         tblProducto.setModel(modeloProducto);
         modeloProducto.setColumnIdentifiers(new Object[]{"Nombre", "Marca", "Stock", "Último costo"});
@@ -1022,7 +1096,7 @@ public class FormCompras extends javax.swing.JFrame {
                 autocompletarPrecioCosto();
             }
         });
- 
+
         // Carrito: la última fila (la cima de la pila) se pinta de celeste
         tblCarritoCompra.setModel(modeloCarrito);
         modeloCarrito.setColumnIdentifiers(new Object[]{"Producto", "Cantidad", "Costo unit.", "Subtotal"});
@@ -1037,7 +1111,7 @@ public class FormCompras extends javax.swing.JFrame {
             }
         });
     }
-    
+
     // La X de la ventana también pide confirmación si hay productos en el carrito
     private void configurarCierreDeVentana() {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -1051,7 +1125,7 @@ public class FormCompras extends javax.swing.JFrame {
             }
         });
     }
- 
+
     private boolean confirmarSalida() {
         if (compraControl.carritoVacio()) {
             return true;
@@ -1060,13 +1134,13 @@ public class FormCompras extends javax.swing.JFrame {
                 "Hay productos en el carrito de compra y se perderán si sale de esta pantalla.\n¿Desea salir de todas formas?",
                 "Salir de Compras");
     }
- 
+
     private void cargarTablaProveedores() {
         modeloProveedor.setRowCount(0);
- 
+
         try {
             listaProveedores = provControl.verProveedoresActivos();
- 
+
             for (Proveedor prov : listaProveedores) {
                 Object[] fila = new Object[]{
                     prov.getRuc(),
@@ -1080,12 +1154,12 @@ public class FormCompras extends javax.swing.JFrame {
             Mensajes.error(e.getMessage());
         }
     }
- 
+
     // Solo productos activos
     private void cargarTablaProductos() {
         modeloProducto.setRowCount(0);
         listaProductos = new ArrayList<>();
- 
+
         try {
             for (Producto prod : prodControl.verTodosLosProductos()) {
                 if (!prod.isEstado()) {
@@ -1104,36 +1178,116 @@ public class FormCompras extends javax.swing.JFrame {
             Mensajes.error(e.getMessage());
         }
     }
- 
+
     private void seleccionarProveedorDeLaTabla() {
         int fila = tblProveedor.getSelectedRow();
         if (fila == -1) {
             return;
         }
- 
+
         try {
-            compraControl.seleccionarProveedor(listaProveedores.get(fila));
+            compraControl.seleccionarProveedor(proveedoresEnTabla.get(fila));
             actualizarProveedorSeleccionado();
         } catch (Exception e) {
             Mensajes.error(e.getMessage());
         }
     }
- 
+
+    // Solo llena la tabla; la lista completa (listaProveedores) no se modifica
+    private void mostrarProveedores(List<Proveedor> lista) {
+        proveedoresEnTabla = lista;
+        modeloProveedor.setRowCount(0);
+        for (Proveedor prov : lista) {
+            modeloProveedor.addRow(new Object[]{
+                prov.getRuc(),
+                prov.getRazonSocial(),
+                prov.getContacto(),
+                prov.getTelefono()
+            });
+        }
+    }
+
+    // Solo llena la tabla; la lista completa (listaProductos) no se modifica
+    private void mostrarProductos(List<Producto> lista) {
+        productosEnTabla = lista;
+        modeloProducto.setRowCount(0);
+        for (Producto prod : lista) {
+            modeloProducto.addRow(new Object[]{
+                prod.getNombreProducto(),
+                prod.getMarca().getNombreMarca(),
+                prod.getStock(),
+                prod.getPrecioCompra()
+            });
+        }
+    }
+
+    private Comparator<Proveedor> obtenerComparadorProveedor() {
+        String campo = (String) cbxOrdenarProveedor.getSelectedItem();
+        return switch (campo) {
+            case "RUC" ->
+                Comparator.comparing(Proveedor::getRuc, String.CASE_INSENSITIVE_ORDER);
+            case "Contacto" ->
+                Comparator.comparing(Proveedor::getContacto, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER));
+            case "Teléfono" ->
+                Comparator.comparing(Proveedor::getTelefono, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER));
+            default ->
+                Comparator.comparing(Proveedor::getRazonSocial, String.CASE_INSENSITIVE_ORDER);
+        };
+    }
+
+    private Function<Proveedor, String> obtenerClaveProveedor() {
+        String campo = (String) cbxOrdenarProveedor.getSelectedItem();
+        return switch (campo) {
+            case "RUC" ->
+                Proveedor::getRuc;
+            case "Contacto" ->
+                Proveedor::getContacto;
+            case "Teléfono" ->
+                Proveedor::getTelefono;
+            default ->
+                Proveedor::getRazonSocial;
+        };
+    }
+
+    private Comparator<Producto> obtenerComparadorProducto() {
+        String campo = (String) cbxOrdenarProducto.getSelectedItem();
+        return switch (campo) {
+            case "Marca" ->
+                Comparator.comparing(p -> p.getMarca().getNombreMarca(), String.CASE_INSENSITIVE_ORDER);
+            case "Stock" ->
+                Comparator.comparingInt(Producto::getStock);
+            case "Último costo" ->
+                Comparator.comparing(Producto::getPrecioCompra, Comparator.nullsFirst(Comparator.<BigDecimal>naturalOrder()));
+            default ->
+                Comparator.comparing(Producto::getNombreProducto, String.CASE_INSENSITIVE_ORDER);
+        };
+    }
+
+    private Function<Producto, String> obtenerClaveProducto() {
+        String campo = (String) cbxOrdenarProducto.getSelectedItem();
+        return switch (campo) {
+            case "Marca" ->
+                p -> p.getMarca().getNombreMarca();
+            default ->
+                Producto::getNombreProducto;
+        };
+    }
+
     private void autocompletarPrecioCosto() {
         int fila = tblProducto.getSelectedRow();
         if (fila == -1) {
             return;
         }
- 
+
         // Vacío si el producto nunca se compró (precio 0), para obligar a escribirlo
-        BigDecimal sugerido = compraControl.sugerirPrecioCosto(listaProductos.get(fila));
+        BigDecimal sugerido = compraControl.sugerirPrecioCosto(productosEnTabla.get(fila));
         txtPrecio.setText(sugerido == null ? "" : sugerido.toPlainString());
     }
- 
+
     // Callback de FormNuevoProveedor: recarga la tabla y deja seleccionado al proveedor recién creado
     private void alRegistrarProveedor(Proveedor registrado) {
         cargarTablaProveedores();
- 
+
         for (int i = 0; i < listaProveedores.size(); i++) {
             if (listaProveedores.get(i).getIdProveedor() == registrado.getIdProveedor()) {
                 tblProveedor.setRowSelectionInterval(i, i);
@@ -1142,16 +1296,16 @@ public class FormCompras extends javax.swing.JFrame {
             }
         }
     }
- 
+
     private void actualizarProveedorSeleccionado() {
         Proveedor prov = compraControl.getProveedorSeleccionado();
         txtNombreProveedor.setText(prov == null ? "Seleccione un proveedor" : prov.getRazonSocial());
     }
- 
+
     // Vuelve a dibujar el carrito desde la pila: tabla, contador, total y estado de los botones
     private void refrescarCarrito() {
         modeloCarrito.setRowCount(0);
- 
+
         for (DetalleCompra detalle : compraControl.verCarrito()) {
             Object[] fila = new Object[]{
                 detalle.getProducto().getNombreProducto(),
@@ -1161,25 +1315,25 @@ public class FormCompras extends javax.swing.JFrame {
             };
             modeloCarrito.addRow(fila);
         }
- 
+
         txtNumeroProductosCarrito.setText(String.valueOf(compraControl.getCantidadEnCarrito()));
         jLabel23.setText(compraControl.calcularTotal().toPlainString());
         actualizarEstadoControles();
     }
- 
+
     private void actualizarEstadoControles() {
         boolean vacio = compraControl.carritoVacio();
         boolean bloqueado = compraControl.proveedorBloqueado();
- 
+
         btnDeshacer.setEnabled(!vacio);
         btnConfirmarCompra.setEnabled(!vacio);
         btnAgregarProducto.setEnabled(!compraControl.carritoLleno());
- 
+
         // Con productos en el carrito el proveedor ya no se puede cambiar
         tblProveedor.setEnabled(!bloqueado);
         btnAgregarProveedor.setEnabled(!bloqueado);
     }
- 
+
     // Deja el formulario como nuevo (Cancelar y después de guardar)
     private void reiniciarFormulario() {
         compraControl.reiniciarCompra();
@@ -1190,7 +1344,7 @@ public class FormCompras extends javax.swing.JFrame {
         refrescarCarrito();
         actualizarProveedorSeleccionado();
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdministracion;
     private javax.swing.JButton btnAgregarProducto;
