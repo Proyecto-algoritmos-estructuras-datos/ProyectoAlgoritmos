@@ -19,6 +19,7 @@ public class Producto {
     private LocalDateTime fechaModificacion;
 
     public Producto() {
+        
     }
 
     public Producto(String codigo, String nombreProducto, String descripcion, Categoria categoria, Marca marca, BigDecimal precioCompra, BigDecimal precio, int stock, int stockMinimo, boolean estado) {
@@ -158,5 +159,7 @@ public class Producto {
     public String toString() {
         return "Producto{" + "idProducto=" + idProducto + ", codigo=" + codigo + ", nombreProducto=" + nombreProducto + ", descripcion=" + descripcion + ", categoria=" + categoria + ", marca=" + marca + ", precioCompra=" + precioCompra + ", precio=" + precio + ", stock=" + stock + ", stockMinimo=" + stockMinimo + ", estado=" + estado + ", fechaCreacion=" + fechaCreacion + ", fechaModificacion=" + fechaModificacion + '}';
     }
+    
+    
 
 }
