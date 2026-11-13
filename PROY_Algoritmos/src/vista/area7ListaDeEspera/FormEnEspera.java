@@ -736,7 +736,6 @@ public class FormEnEspera extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGarantiaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnMostrarDetalle;
     private javax.swing.JButton btnAdministracion;
     private javax.swing.JButton btnAjusteStock;
     private javax.swing.JButton btnCategorias;
@@ -745,6 +744,7 @@ public class FormEnEspera extends javax.swing.JFrame {
     private javax.swing.JButton btnGarantia;
     private javax.swing.JButton btnHistorial;
     private javax.swing.JButton btnMarcas;
+    private javax.swing.JButton btnMostrarDetalle;
     private javax.swing.JButton btnProductos;
     private javax.swing.JButton btnRecibirSiguiente;
     private javax.swing.JButton btnSalir;
@@ -754,11 +754,9 @@ public class FormEnEspera extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel lblTotalFrente;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel lblCantidadCola;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -767,8 +765,10 @@ public class FormEnEspera extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable tblDetalle;
-    private javax.swing.JTable tblCompras;
+    private javax.swing.JLabel lblCantidadCola;
     private javax.swing.JLabel lblNumeroFrente;
+    private javax.swing.JLabel lblTotalFrente;
+    private javax.swing.JTable tblCompras;
+    private javax.swing.JTable tblDetalle;
     // End of variables declaration//GEN-END:variables
 }
