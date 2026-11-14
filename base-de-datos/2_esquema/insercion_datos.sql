@@ -4,6 +4,10 @@
 -- stock_nuevo del kardex. El kardex está encadenado: cada stock_anterior
 -- es el stock_nuevo del movimiento previo del mismo producto.
 -- Requiere la base alpha_technology ya creada (script de estructura).
+-- v5: las ventas V0246 a V0250 (y su kardex) se fechan respecto al 14/11/2026 (@hoy):
+--   V0250 = 13/11 (1 día antes), V0249 = 11/11 (3), V0248 = 09/11 (5), V0247 = 07/11 (7), V0246 = 06/11 (8).
+--   Medido el 14/11/2026: V0250, V0249, V0248 y V0247 (7 días, límite: aún NO es "más de 7") -> rama de 7 días o menos;
+--   V0246 (8 días) y todas las anteriores -> rama de más de 7 días. Ningún registro es posterior al 14/11/2026.
 -- ==========================================================================
 USE alpha_technology;
 SET NAMES utf8mb4;
@@ -727,6 +731,7 @@ INSERT INTO detalle_compra (id_compra, id_producto, cantidad, precio_unitario) V
   (120, 86, 15, 110);
 
 -- 9. VENTA (250)
+SET @hoy = DATE('2026-11-14');  -- día de referencia: ninguna venta es posterior a esta fecha
 INSERT INTO venta (id_venta, numero, id_cliente, id_empleado, fecha_venta, total, estado, fecha_modificacion) VALUES
   (1, 'V0001', 14, 10, '2025-04-08 18:08:00', 1276, 'ANULADA', '2025-04-08 19:08:00'),
   (2, 'V0002', 14, 3, '2025-04-11 09:56:00', 2285, 'COMPLETADA', '2025-04-11 09:56:00'),
@@ -973,11 +978,11 @@ INSERT INTO venta (id_venta, numero, id_cliente, id_empleado, fecha_venta, total
   (243, 'V0243', 12, 2, '2026-10-06 13:40:00', 3464, 'COMPLETADA', '2026-10-06 13:40:00'),
   (244, 'V0244', 2, 12, '2026-10-08 11:33:00', 5334, 'COMPLETADA', '2026-10-08 11:33:00'),
   (245, 'V0245', 11, 5, '2026-10-08 12:56:00', 31029, 'COMPLETADA', '2026-10-08 12:56:00'),
-  (246, 'V0246', 7, 6, '2026-10-14 09:24:00', 1686, 'COMPLETADA', '2026-10-14 09:24:00'),
-  (247, 'V0247', 12, 10, '2026-10-18 14:28:00', 3135, 'COMPLETADA', '2026-10-18 14:28:00'),
-  (248, 'V0248', 13, 10, '2026-10-18 17:01:00', 2939, 'COMPLETADA', '2026-10-18 17:01:00'),
-  (249, 'V0249', 12, 10, '2026-10-19 12:22:00', 5043, 'COMPLETADA', '2026-10-19 12:22:00'),
-  (250, 'V0250', 13, 5, '2026-10-19 15:36:00', 1253, 'COMPLETADA', '2026-10-19 15:36:00');
+  (246, 'V0246', 7, 6, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 8 DAY), '09:24:00'), 1686, 'COMPLETADA', TIMESTAMP(DATE_SUB(@hoy, INTERVAL 8 DAY), '09:24:00')),
+  (247, 'V0247', 12, 10, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 7 DAY), '14:28:00'), 3135, 'COMPLETADA', TIMESTAMP(DATE_SUB(@hoy, INTERVAL 7 DAY), '14:28:00')),
+  (248, 'V0248', 13, 10, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 5 DAY), '17:01:00'), 2939, 'COMPLETADA', TIMESTAMP(DATE_SUB(@hoy, INTERVAL 5 DAY), '17:01:00')),
+  (249, 'V0249', 12, 10, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 3 DAY), '12:22:00'), 5043, 'COMPLETADA', TIMESTAMP(DATE_SUB(@hoy, INTERVAL 3 DAY), '12:22:00')),
+  (250, 'V0250', 13, 5, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 1 DAY), '15:36:00'), 1253, 'COMPLETADA', TIMESTAMP(DATE_SUB(@hoy, INTERVAL 1 DAY), '15:36:00'));
 
 -- 10. DETALLE_VENTA
 INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario) VALUES
@@ -2336,17 +2341,17 @@ INSERT INTO movimiento_inventario (id_producto, id_empleado, tipo_movimiento, ca
   (16, 7, 'ENTRADA', 48, 229, 277, 'Recepción de compra 117', 117, NULL, '2026-10-11 14:26:00'),
   (35, 11, 'ENTRADA', 26, 187, 213, 'Recepción de compra 119', 119, NULL, '2026-10-12 19:28:00'),
   (96, 11, 'ENTRADA', 25, 117, 142, 'Recepción de compra 119', 119, NULL, '2026-10-12 19:28:00'),
-  (95, 6, 'SALIDA', 2, 173, 171, 'Salida por venta V0246', NULL, 246, '2026-10-14 09:24:00'),
-  (58, 6, 'SALIDA', 1, 115, 114, 'Salida por venta V0246', NULL, 246, '2026-10-14 09:24:00'),
-  (21, 6, 'SALIDA', 3, 186, 183, 'Salida por venta V0246', NULL, 246, '2026-10-14 09:24:00'),
-  (45, 10, 'SALIDA', 1, 24, 23, 'Salida por venta V0247', NULL, 247, '2026-10-18 14:28:00'),
-  (97, 10, 'SALIDA', 3, 101, 98, 'Salida por venta V0247', NULL, 247, '2026-10-18 14:28:00'),
-  (29, 10, 'SALIDA', 1, 82, 81, 'Salida por venta V0247', NULL, 247, '2026-10-18 14:28:00'),
-  (36, 10, 'SALIDA', 4, 67, 63, 'Salida por venta V0248', NULL, 248, '2026-10-18 17:01:00'),
-  (35, 10, 'SALIDA', 4, 213, 209, 'Salida por venta V0248', NULL, 248, '2026-10-18 17:01:00'),
-  (69, 10, 'SALIDA', 3, 84, 81, 'Salida por venta V0248', NULL, 248, '2026-10-18 17:01:00'),
-  (20, 10, 'SALIDA', 1, 49, 48, 'Salida por venta V0249', NULL, 249, '2026-10-19 12:22:00'),
-  (31, 10, 'SALIDA', 2, 73, 71, 'Salida por venta V0249', NULL, 249, '2026-10-19 12:22:00'),
-  (49, 5, 'SALIDA', 4, 71, 67, 'Salida por venta V0250', NULL, 250, '2026-10-19 15:36:00'),
-  (19, 5, 'SALIDA', 1, 92, 91, 'Salida por venta V0250', NULL, 250, '2026-10-19 15:36:00'),
-  (16, 5, 'SALIDA', 2, 277, 275, 'Salida por venta V0250', NULL, 250, '2026-10-19 15:36:00');
+  (95, 6, 'SALIDA', 2, 173, 171, 'Salida por venta V0246', NULL, 246, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 8 DAY), '09:24:00')),
+  (58, 6, 'SALIDA', 1, 115, 114, 'Salida por venta V0246', NULL, 246, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 8 DAY), '09:24:00')),
+  (21, 6, 'SALIDA', 3, 186, 183, 'Salida por venta V0246', NULL, 246, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 8 DAY), '09:24:00')),
+  (45, 10, 'SALIDA', 1, 24, 23, 'Salida por venta V0247', NULL, 247, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 7 DAY), '14:28:00')),
+  (97, 10, 'SALIDA', 3, 101, 98, 'Salida por venta V0247', NULL, 247, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 7 DAY), '14:28:00')),
+  (29, 10, 'SALIDA', 1, 82, 81, 'Salida por venta V0247', NULL, 247, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 7 DAY), '14:28:00')),
+  (36, 10, 'SALIDA', 4, 67, 63, 'Salida por venta V0248', NULL, 248, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 5 DAY), '17:01:00')),
+  (35, 10, 'SALIDA', 4, 213, 209, 'Salida por venta V0248', NULL, 248, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 5 DAY), '17:01:00')),
+  (69, 10, 'SALIDA', 3, 84, 81, 'Salida por venta V0248', NULL, 248, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 5 DAY), '17:01:00')),
+  (20, 10, 'SALIDA', 1, 49, 48, 'Salida por venta V0249', NULL, 249, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 3 DAY), '12:22:00')),
+  (31, 10, 'SALIDA', 2, 73, 71, 'Salida por venta V0249', NULL, 249, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 3 DAY), '12:22:00')),
+  (49, 5, 'SALIDA', 4, 71, 67, 'Salida por venta V0250', NULL, 250, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 1 DAY), '15:36:00')),
+  (19, 5, 'SALIDA', 1, 92, 91, 'Salida por venta V0250', NULL, 250, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 1 DAY), '15:36:00')),
+  (16, 5, 'SALIDA', 2, 277, 275, 'Salida por venta V0250', NULL, 250, TIMESTAMP(DATE_SUB(@hoy, INTERVAL 1 DAY), '15:36:00'));
