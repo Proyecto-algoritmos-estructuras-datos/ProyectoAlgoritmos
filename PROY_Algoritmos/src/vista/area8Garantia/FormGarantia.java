@@ -14,6 +14,10 @@ import vista.area7ListaDeEspera.FormEnEspera;
 import vista.area9Administracion.FormAdministracion;
 import java.awt.Color;
 import modelo.DecisionGarantia;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import modelo.UnidadVenta;
+import util.Mensajes;
 
 /**
  *
@@ -23,6 +27,15 @@ public class FormGarantia extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FormGarantia.class.getName());
     private final GarantiaController controller = new GarantiaController();
+
+    // Tabla con el detalle de la venta buscada (no editable)
+    private final DefaultTableModel modeloDetalle = new DefaultTableModel(
+            new Object[]{"Producto", "Unidad", "Precio unit."}, 0) {
+        @Override
+        public boolean isCellEditable(int fila, int columna) {
+            return false;
+        }
+    };
 
     /**
      * Creates new form FormGarantia
@@ -409,14 +422,13 @@ public class FormGarantia extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 564, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(69, Short.MAX_VALUE))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
                         .addComponent(pnlResultado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(69, 69, 69))
                     .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(btnReiniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 564, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnReiniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(69, Short.MAX_VALUE))))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -429,7 +441,7 @@ public class FormGarantia extends javax.swing.JFrame {
                 .addComponent(pnlResultado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21)
                 .addComponent(btnReiniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabel27.setFont(new java.awt.Font("Inter SemiBold", 0, 20)); // NOI18N
@@ -451,11 +463,21 @@ public class FormGarantia extends javax.swing.JFrame {
         btnBuscar.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnBuscar.setForeground(new java.awt.Color(0, 0, 0));
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         btnElegir.setBackground(new java.awt.Color(204, 204, 204));
         btnElegir.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnElegir.setForeground(new java.awt.Color(0, 0, 0));
         btnElegir.setText("Elegir");
+        btnElegir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnElegirActionPerformed(evt);
+            }
+        });
 
         jPanel24.setBackground(new java.awt.Color(153, 204, 255));
         jPanel24.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 153)));
@@ -469,9 +491,9 @@ public class FormGarantia extends javax.swing.JFrame {
         jPanel24Layout.setHorizontalGroup(
             jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel24Layout.createSequentialGroup()
-                .addContainerGap(99, Short.MAX_VALUE)
-                .addComponent(lblPregunta, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(51, 51, 51))
+                .addContainerGap(35, Short.MAX_VALUE)
+                .addComponent(lblPregunta, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46))
         );
         jPanel24Layout.setVerticalGroup(
             jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1063,7 +1085,7 @@ public class FormGarantia extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSiActionPerformed
 
     private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
-        // TODO add your handling code here:
+        buscarVenta();
     }//GEN-LAST:event_txtCodigoActionPerformed
 
     private void btnReiniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReiniciarActionPerformed
@@ -1072,74 +1094,133 @@ public class FormGarantia extends javax.swing.JFrame {
         lblResultado.setForeground(Color.BLACK);
         pnlResultado.setBackground(Color.WHITE);
 
-        
+
     }//GEN-LAST:event_btnReiniciarActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        buscarVenta();
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnElegirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElegirActionPerformed
+        elegirProducto();
+    }//GEN-LAST:event_btnElegirActionPerformed
+
     private void configurarControles() {
-    txtRuta.setEditable(false);
-    txtRuta.setLineWrap(true);
-    txtRuta.setWrapStyleWord(true);
-    txtRuta.setBackground(new Color(204, 204, 204));
-    lblResultado.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-}
-    
-// Los números del panel derecho salen del árbol, no son texto fijo
-private void mostrarEstadisticas() {
-    lblHojas.setText(String.valueOf(controller.contarHojas()));
-    lblAltura.setText(String.valueOf(controller.altura()));
-    lblLongitud.setText(String.valueOf(controller.longitudMaxima()));
-}
+        txtRuta.setEditable(false);
+        txtRuta.setLineWrap(true);
+        txtRuta.setWrapStyleWord(true);
+        txtRuta.setBackground(new Color(204, 204, 204));
+        lblResultado.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tblDetalle.setModel(modeloDetalle);
+        tblDetalle.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+    }
+    // Los números del panel derecho salen del árbol, no son texto fijo
 
-private void responder(boolean si) {
-    try {
-        controller.responder(si);
+    private void mostrarEstadisticas() {
+        lblHojas.setText(String.valueOf(controller.contarHojas()));
+        lblAltura.setText(String.valueOf(controller.altura()));
+        lblLongitud.setText(String.valueOf(controller.longitudMaxima()));
+    }
+    // Paso 1: busca la venta por su id o por su código (V...) y llena la tabla
+
+    private void buscarVenta() {
+        try {
+            List<UnidadVenta> unidades = controller.buscarVenta(txtCodigo.getText());
+            mostrarDetalle(unidades);
+        } catch (Exception e) {
+            modeloDetalle.setRowCount(0);
+            Mensajes.error(e.getMessage());
+        }
         refrescar();
-    } catch (Exception e) {
-        javax.swing.JOptionPane.showMessageDialog(this, e.getMessage());
-    }
-}
-
-private void refrescar() {
-    DecisionGarantia actual = controller.getActual();
-    boolean fin = controller.hayDecision();
-    btnSi.setEnabled(!fin);
-    btnNo.setEnabled(!fin);
-
-    // Ruta recorrida, una respuesta por línea
-    StringBuilder ruta = new StringBuilder();
-    int n = 1;
-    for (String paso : controller.getRuta()) {
-        ruta.append(n++).append(". ").append(paso).append("\n");
-    }
-    txtRuta.setText(ruta.toString());
-
-    if (!fin) {
-        lblPregunta.setText(actual.getTexto());
-        lblResultado.setText("Responde las preguntas para ver la decisión.");
-        return;
     }
 
-    lblPregunta.setText("¡ Evaluación terminada !");
-    String sentencia;
-    Color colorPanel;
-    switch (actual.getResultado()) {
-        case ACEPTAR_CAMBIO:
-            sentencia = "Se acepta el cambio o devolución.";
-            colorPanel = Color.decode("#4BAF33");
-            break;
-        case GARANTIA_FABRICANTE:
-            sentencia = "Se envía a garantía del fabricante.";
-            colorPanel = Color.decode("#4BAF33");
-            break;
-        default:
-            sentencia = "Se rechaza el reclamo.";
-            colorPanel = Color.decode("#F27678");
+    // Una fila por unidad vendida: si se compraron 3, aparecen 3 filas (1 de 3, 2 de 3, 3 de 3)
+    private void mostrarDetalle(List<UnidadVenta> unidades) {
+        modeloDetalle.setRowCount(0);
+        for (UnidadVenta unidad : unidades) {
+            modeloDetalle.addRow(new Object[]{
+                unidad.getProducto().getNombreProducto(),
+                unidad.getEtiquetaUnidad(),
+                unidad.getPrecioUnitario()
+            });
+        }
     }
-    
-    pnlResultado.setBackground(colorPanel);
-    lblResultado.setText("<html><div style='text-align:center'>" + sentencia
-            + "<br><span style='font-size:10px'>" + actual.getTexto() + "</span></div></html>");
-}
+    // Paso 2: con el producto elegido, el árbol calcula solo los días y muestra la primera pregunta
 
+    private void elegirProducto() {
+        try {
+            controller.elegirProducto(tblDetalle.getSelectedRow());
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+        refrescar();
+    }
+
+    private void responder(boolean si) {
+        try {
+            controller.responder(si);
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+        refrescar();
+    }
+
+    private void refrescar() {
+        // Todavía no se eligió un producto: pantalla en reposo
+        if (!controller.hayProductoElegido()) {
+            lblPregunta.setText("-");
+            btnSi.setEnabled(false);
+            btnNo.setEnabled(false);
+            txtRuta.setText("");
+            pnlResultado.setBackground(Color.WHITE);
+            lblResultado.setForeground(Color.BLACK);
+            lblResultado.setText("Busque una venta y elija un producto.");
+            return;
+        }
+        DecisionGarantia actual = controller.getActual();
+        boolean fin = controller.hayDecision();
+        btnSi.setEnabled(!fin);
+        btnNo.setEnabled(!fin);
+        // Producto evaluado y ruta recorrida, una respuesta por línea
+        StringBuilder ruta = new StringBuilder();
+        ruta.append("Producto:").append(controller.getProductoElegido().getProducto().getNombreProducto()).append("(unidad").append(controller.getProductoElegido().getEtiquetaUnidad()).append(")\n");
+        int n = 1;
+        for (String paso : controller.getRuta()) {
+            ruta.append(n++).append(". ").append(paso).append("\n");
+        }
+        txtRuta.setText(ruta.toString());
+        if (!fin) {
+            lblPregunta.setText(actual.getTexto());
+            pnlResultado.setBackground(Color.WHITE);
+            lblResultado.setForeground(Color.BLACK);
+            lblResultado.setText("Responde las preguntas para ver la decisión.");
+            return;
+        }
+
+        lblPregunta.setText("¡ Evaluación terminada !");
+        String sentencia;
+        Color colorPanel;
+        switch (actual.getResultado()) {
+            case CAMBIO:
+                sentencia = "Se acepta el cambio del producto.";
+                colorPanel = Color.decode("#4BAF33");
+                break;
+            case DEVOLUCION:
+                sentencia = "Se acepta la devolución del dinero.";
+                colorPanel = Color.decode("#4BAF33");
+                break;
+            case GARANTIA:
+                sentencia = "Aplica garantía: reparar o cambiar.";
+                colorPanel = Color.decode("#4BAF33");
+                break;
+            default:
+                sentencia = "Se rechaza el reclamo.";
+                colorPanel = Color.decode("#F27678");
+        }
+        pnlResultado.setBackground(colorPanel);
+        lblResultado.setText("<html><div style='text-align:center'>" + sentencia
+                + "<br><span style='font-size:10px'>" + actual.getTexto() + "</span></div></html>");
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdministracion;
     private javax.swing.JButton btnAjusteStock;

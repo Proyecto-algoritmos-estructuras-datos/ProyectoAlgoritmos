@@ -4,16 +4,11 @@
  */
 package modelo;
 
-/**
- *
- * @author antho
- */
 public enum ResultadoGarantia {
-
-    ACEPTAR_CAMBIO("Aceptar cambio o devolución"),
-    GARANTIA_FABRICANTE("Enviar a garantía del fabricante"),
+    CAMBIO("Cambio del producto"),
+    DEVOLUCION("Devolución del dinero"),
+    GARANTIA("Garantía: reparar o cambiar"),
     RECHAZAR("Rechazar el reclamo");
-
     private final String etiqueta;
 
     ResultadoGarantia(String etiqueta) {
@@ -27,5 +22,6 @@ public enum ResultadoGarantia {
     @Override
     public String toString() {
         return etiqueta;
+
     }
 }
