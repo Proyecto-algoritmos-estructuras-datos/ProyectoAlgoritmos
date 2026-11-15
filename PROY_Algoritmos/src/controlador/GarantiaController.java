@@ -59,13 +59,13 @@ public class GarantiaController {
         // Preguntas, de abajo hacia arriba: pregunta(codigo, texto, hijoSi, hijoNo)
         NodoArbol<DecisionGarantia> p6 = pregunta("P6", "¿La falla es de fábrica?", d3, d4);
         NodoArbol<DecisionGarantia> p5 = pregunta("P5", "¿Está dentro de los " + MESES_GARANTIA + "meses ?", p6, d2);
- NodoArbol<DecisionGarantia> p4 = pregunta("P4", "¿El motivo es una falla del producto?", p5,
+        NodoArbol<DecisionGarantia> p4 = pregunta("P4", "¿El motivo es una falla del producto?", p5,
                 d1);
         NodoArbol<DecisionGarantia> p3 = pregunta("P3", "¿Está sin uso y con el empaque completo?", d6,
                 d7);
         NodoArbol<DecisionGarantia> p2 = pregunta("P2", "¿El producto tiene falla de fábrica?", d5, p3);
-        NodoArbol<DecisionGarantia> p1 = pregunta("P1", "¿Han pasado más de " + DIAS_DEVOLUCION + "días ?", p4, p2); 
-         arbol.setRaiz(p1);
+        NodoArbol<DecisionGarantia> p1 = pregunta("P1", "¿Han pasado más de " + DIAS_DEVOLUCION + "días ?", p4, p2);
+        arbol.setRaiz(p1);
     }
 
     private NodoArbol<DecisionGarantia> hoja(String codigo, String texto, ResultadoGarantia resultado) {
@@ -97,8 +97,8 @@ public class GarantiaController {
         }
         if (encontrada.estaAnulada()) {
             throw new Exception("La venta " + encontrada.getNumero() + " está ANULADA. No se puede evaluar.");
- }
- List<DetalleVenta> lineas = dao.verDetalle(encontrada.getIdVenta());
+        }
+        List<DetalleVenta> lineas = dao.verDetalle(encontrada.getIdVenta());
         if (lineas.isEmpty()) {
             throw new Exception("La venta no tiene productos.");
         }
@@ -138,10 +138,9 @@ public class GarantiaController {
         reiniciar();
         productoElegido = unidades.get(fila);
         diasTranscurridos = calcularDias(LocalDate.now());
+        // La primera pregunta (¿más de 7 días?) se responde sola. No se agrega a la ruta
         boolean masDe7 = diasTranscurridos > DIAS_DEVOLUCION;
         actual = arbol.getRaiz();
-        ruta.add(actual.getDato().getTexto() + " (han pasado " + diasTranscurridos + " días) → "
-                + (masDe7 ? "Sí" : "No"));
         actual = masDe7 ? actual.getIzquierdo() : actual.getDerecho();
     }
 
