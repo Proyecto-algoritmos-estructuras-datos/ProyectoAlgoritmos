@@ -95,6 +95,7 @@ public class FormGarantia extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         tblDetalle = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
+        lblDias = new javax.swing.JLabel();
         jPanel23 = new javax.swing.JPanel();
         jLabel29 = new javax.swing.JLabel();
         jLabel35 = new javax.swing.JLabel();
@@ -561,6 +562,10 @@ public class FormGarantia extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setText("Ruta de recorrido");
 
+        lblDias.setFont(new java.awt.Font("Inter SemiBold", 0, 18)); // NOI18N
+        lblDias.setForeground(new java.awt.Color(0, 0, 0));
+        lblDias.setText("Nro. de días pasados: -");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -570,7 +575,7 @@ public class FormGarantia extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel27)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 458, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -591,15 +596,20 @@ public class FormGarantia extends javax.swing.JFrame {
                                 .addComponent(jPanel24, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
                         .addComponent(btnElegir, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(21, 21, 21))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(20, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(8, 8, 8)
-                        .addComponent(jLabel6)))
-                .addContainerGap())
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblDias)
+                        .addGap(104, 104, 104))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -628,7 +638,9 @@ public class FormGarantia extends javax.swing.JFrame {
                     .addComponent(btnSi, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnNo, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel6)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(lblDias))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -1340,6 +1352,13 @@ public class FormGarantia extends javax.swing.JFrame {
     }
 
     private void refrescar() {
+        // Días transcurridos desde la venta: va fuera del recuadro de la ruta
+        if (controller.hayProductoElegido()) {
+            long dias = controller.getDiasTranscurridos();
+            lblDias.setText("Número de días pasados: " + dias + (dias == 1 ? " día" : " días"));
+        } else {
+            lblDias.setText("Número de días pasados: -");
+        }
         // Todavía no se eligió un producto: pantalla en reposo
         if (!controller.hayProductoElegido()) {
             lblPregunta.setText("-");
@@ -1481,6 +1500,7 @@ public class FormGarantia extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lblAltura;
+    private javax.swing.JLabel lblDias;
     private javax.swing.JLabel lblHojas;
     private javax.swing.JLabel lblLongitud;
     private javax.swing.JLabel lblPregunta;
