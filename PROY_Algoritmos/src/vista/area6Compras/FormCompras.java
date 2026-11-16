@@ -1136,20 +1136,9 @@ public class FormCompras extends javax.swing.JFrame {
     }
 
     private void cargarTablaProveedores() {
-        modeloProveedor.setRowCount(0);
-
         try {
             listaProveedores = provControl.verProveedoresActivos();
-
-            for (Proveedor prov : listaProveedores) {
-                Object[] fila = new Object[]{
-                    prov.getRuc(),
-                    prov.getRazonSocial(),
-                    prov.getContacto(),
-                    prov.getTelefono()
-                };
-                modeloProveedor.addRow(fila);
-            }
+            mostrarProveedores(listaProveedores);
         } catch (Exception e) {
             Mensajes.error(e.getMessage());
         }
@@ -1157,23 +1146,15 @@ public class FormCompras extends javax.swing.JFrame {
 
     // Solo productos activos
     private void cargarTablaProductos() {
-        modeloProducto.setRowCount(0);
         listaProductos = new ArrayList<>();
 
         try {
             for (Producto prod : prodControl.verTodosLosProductos()) {
-                if (!prod.isEstado()) {
-                    continue;
+                if (prod.isEstado()) {
+                    listaProductos.add(prod);
                 }
-                listaProductos.add(prod);
-                Object[] fila = new Object[]{
-                    prod.getNombreProducto(),
-                    prod.getMarca().getNombreMarca(),
-                    prod.getStock(),
-                    prod.getPrecioCompra()
-                };
-                modeloProducto.addRow(fila);
             }
+            mostrarProductos(listaProductos);
         } catch (Exception e) {
             Mensajes.error(e.getMessage());
         }
@@ -1181,7 +1162,7 @@ public class FormCompras extends javax.swing.JFrame {
 
     private void seleccionarProveedorDeLaTabla() {
         int fila = tblProveedor.getSelectedRow();
-        if (fila == -1) {
+        if (fila == -1 || fila >= proveedoresEnTabla.size()) {
             return;
         }
 
@@ -1275,7 +1256,7 @@ public class FormCompras extends javax.swing.JFrame {
 
     private void autocompletarPrecioCosto() {
         int fila = tblProducto.getSelectedRow();
-        if (fila == -1) {
+        if (fila == -1 || fila >= productosEnTabla.size()) {
             return;
         }
 
@@ -1288,8 +1269,8 @@ public class FormCompras extends javax.swing.JFrame {
     private void alRegistrarProveedor(Proveedor registrado) {
         cargarTablaProveedores();
 
-        for (int i = 0; i < listaProveedores.size(); i++) {
-            if (listaProveedores.get(i).getIdProveedor() == registrado.getIdProveedor()) {
+        for (int i = 0; i < proveedoresEnTabla.size(); i++) {
+            if (proveedoresEnTabla.get(i).getIdProveedor() == registrado.getIdProveedor()) {
                 tblProveedor.setRowSelectionInterval(i, i);
                 tblProveedor.scrollRectToVisible(tblProveedor.getCellRect(i, 0, true));
                 break;

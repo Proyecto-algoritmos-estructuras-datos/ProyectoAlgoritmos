@@ -88,27 +88,28 @@ INSERT INTO empleado (id_empleado, dni, nombres, apellidos, correo, telefono, ro
   (12, '77777776', 'Javier', 'Tello Armas', 'jtello@alphatech.pe', '987654332', 'EMPLEADO', 'jtello', '1234', '2025-03-01 18:00:00', '2025-03-01 18:00:00');
 
 -- 4. PROVEEDOR (20)
+-- 4. PROVEEDOR (20) - Distribuidores intermediarios multimarca
 INSERT INTO proveedor (id_proveedor, ruc, razon_social, contacto, telefono, correo, direccion, fecha_creacion, fecha_modificacion) VALUES
-  (1, '20100000001', 'HP Perú S.A.C.', 'Alberto Ruiz', '014567890', 'ventas@hpperu.com.pe', 'Av. Javier Prado Este 4200, Lima', '2024-12-02 08:00:00', '2024-12-02 08:00:00'),
-  (2, '20100000002', 'Dell Technologies Perú S.A.', 'Sandra Molina', '014567891', 'ventas@dellperu.com.pe', 'Av. República de Panamá 3535, Lima', '2024-12-02 09:00:00', '2024-12-02 09:00:00'),
-  (3, '20100000003', 'Lenovo Perú S.A.C.', 'Marco Antonio Lay', '014567892', 'ventas@lenovoperu.com.pe', 'Av. El Derby 254, Santiago de Surco', '2024-12-02 10:00:00', '2024-12-02 10:00:00'),
-  (4, '20100000004', 'Asus Perú Import S.A.C.', 'Rocío Delgado', '014567893', 'ventas@asusperu.com.pe', 'Calle Chinchón 890, San Isidro', '2024-12-02 11:00:00', '2024-12-02 11:00:00'),
-  (5, '20100000005', 'Samsung Electronics Perú S.A.', 'Iván Cárdenas', '014567894', 'ventas@samsungperu.com.pe', 'Av. Andrés Reyes 420, San Isidro', '2024-12-02 12:00:00', '2024-12-02 12:00:00'),
-  (6, '20100000006', 'Logitech Perú Distribuciones S.A.C.', 'Elena Bustamante', '014567895', 'ventas@logitechperu.com.pe', 'Av. Universitaria 1850, San Miguel', '2024-12-02 13:00:00', '2024-12-02 13:00:00'),
-  (7, '20100000007', 'TP-Link Perú S.A.C.', 'Gustavo Pinto', '014567896', 'ventas@tplinkperu.com.pe', 'Av. Arequipa 4650, Miraflores', '2024-12-02 14:00:00', '2024-12-02 14:00:00'),
-  (8, '20100000008', 'LG Electronics Perú S.A.', 'Karina Solís', '014567897', 'ventas@lgperu.com.pe', 'Av. Víctor A. Belaunde 147, San Isidro', '2024-12-02 15:00:00', '2024-12-02 15:00:00'),
-  (9, '20100000009', 'Philips Perú S.A.C.', 'Raúl Bermúdez', '014567898', 'ventas@philipsperu.com.pe', 'Av. La Marina 2355, San Miguel', '2024-12-02 16:00:00', '2024-12-02 16:00:00'),
-  (10, '20100000010', 'Xiaomi Import Perú S.A.C.', 'Fiorella Rojas', '014567899', 'ventas@xiaomiperu.com.pe', 'Av. Paseo de la República 3505, Lima', '2024-12-02 17:00:00', '2024-12-02 17:00:00'),
-  (11, '20100000011', 'Epson Perú S.A.C.', 'Lucía Tapia', '014567900', 'ventas@epsonperu.com.pe', 'Av. Javier Prado Oeste 1020, San Isidro', '2025-03-02 08:00:00', '2025-03-02 08:00:00'),
-  (12, '20100000012', 'Sony Perú S.A.', 'Diego Sánchez', '014567901', 'ventas@sonyperu.com.pe', 'Av. Santa Cruz 855, Miraflores', '2025-03-02 10:00:00', '2025-03-02 10:00:00'),
-  (13, '20100000013', 'Kingston Technology Perú S.A.C.', 'Mariela Ponce', '014567902', 'ventas@kingstonperu.com.pe', 'Av. Angamos Oeste 480, Miraflores', '2025-03-02 12:00:00', '2025-03-02 12:00:00'),
-  (14, '20100000014', 'Corsair Perú S.A.C.', 'Hugo Medina', '014567903', 'ventas@corsairperu.com.pe', 'Av. Benavides 1560, Miraflores', '2025-03-02 14:00:00', '2025-03-02 14:00:00'),
-  (15, '20100000015', 'Huawei Perú S.A.C.', 'Paola Vega', '014567904', 'ventas@huaweiperu.com.pe', 'Av. Canaval y Moreyra 380, San Isidro', '2025-03-02 16:00:00', '2025-03-02 16:00:00'),
-  (16, '20100000016', 'Brother Perú S.A.C.', 'Ernesto Flores', '014567905', 'ventas@brotherperu.com.pe', 'Av. Los Frutales 135, Ate', '2025-03-02 18:00:00', '2025-03-02 18:00:00'),
-  (17, '20100000017', 'Razer Perú S.A.C.', 'Claudia Ríos', '014567906', 'ventas@razerperu.com.pe', 'Av. Primavera 2390, Santiago de Surco', '2025-03-02 20:00:00', '2025-03-02 20:00:00'),
-  (18, '20100000018', 'Canon Perú S.A.', 'Julio Campos', '014567907', 'ventas@canonperu.com.pe', 'Av. Petit Thouars 4450, Miraflores', '2025-03-02 22:00:00', '2025-03-02 22:00:00'),
-  (19, '20100000019', 'Western Digital Perú S.A.C.', 'Andrea Lozano', '014567908', 'ventas@wdperu.com.pe', 'Av. Faucett 2050, Callao', '2025-03-03 00:00:00', '2025-03-03 00:00:00'),
-  (20, '20100000020', 'Cisco Perú S.A.C.', 'Renzo Acuña', '014567909', 'ventas@ciscoperu.com.pe', 'Av. Conquistadores 620, San Isidro', '2025-03-03 02:00:00', '2025-03-03 02:00:00');
+  (1, '20100000001', 'Distribuidora Tecnológica Andina S.A.C.', 'Alberto Ruiz', '014567890', 'ventas@tecnoandina.com.pe', 'Av. Javier Prado Este 4200, Lima', '2024-12-02 08:00:00', '2024-12-02 08:00:00'),
+  (2, '20100000002', 'Importaciones Digitales del Perú S.A.', 'Sandra Molina', '014567891', 'ventas@impodigital.com.pe', 'Av. República de Panamá 3535, Lima', '2024-12-02 09:00:00', '2024-12-02 09:00:00'),
+  (3, '20100000003', 'Mayorista Cómputo Lima S.A.C.', 'Marco Antonio Lay', '014567892', 'ventas@computolima.com.pe', 'Av. El Derby 254, Santiago de Surco', '2024-12-02 10:00:00', '2024-12-02 10:00:00'),
+  (4, '20100000004', 'Global Tech Perú Import S.A.C.', 'Rocío Delgado', '014567893', 'ventas@globaltechperu.com.pe', 'Calle Chinchón 890, San Isidro', '2024-12-02 11:00:00', '2024-12-02 11:00:00'),
+  (5, '20100000005', 'Corporación Electro Andina S.A.', 'Iván Cárdenas', '014567894', 'ventas@electroandina.com.pe', 'Av. Andrés Reyes 420, San Isidro', '2024-12-02 12:00:00', '2024-12-02 12:00:00'),
+  (6, '20100000006', 'Distribuidora Periféricos Pacífico S.A.C.', 'Elena Bustamante', '014567895', 'ventas@perifericospacifico.com.pe', 'Av. Universitaria 1850, San Miguel', '2024-12-02 13:00:00', '2024-12-02 13:00:00'),
+  (7, '20100000007', 'Redes y Sistemas Mayoristas S.A.C.', 'Gustavo Pinto', '014567896', 'ventas@redesmayoristas.com.pe', 'Av. Arequipa 4650, Miraflores', '2024-12-02 14:00:00', '2024-12-02 14:00:00'),
+  (8, '20100000008', 'Importadora Hogar y Tecnología S.A.', 'Karina Solís', '014567897', 'ventas@hogartec.com.pe', 'Av. Víctor A. Belaunde 147, San Isidro', '2024-12-02 15:00:00', '2024-12-02 15:00:00'),
+  (9, '20100000009', 'Comercial Electrónica Surco S.A.C.', 'Raúl Bermúdez', '014567898', 'ventas@electronicasurco.com.pe', 'Av. La Marina 2355, San Miguel', '2024-12-02 16:00:00', '2024-12-02 16:00:00'),
+  (10, '20100000010', 'Digital Import Perú S.A.C.', 'Fiorella Rojas', '014567899', 'ventas@digitalimport.com.pe', 'Av. Paseo de la República 3505, Lima', '2024-12-02 17:00:00', '2024-12-02 17:00:00'),
+  (11, '20100000011', 'Suministros Tecnológicos del Norte S.A.C.', 'Lucía Tapia', '014567900', 'ventas@sumitecnorte.com.pe', 'Av. Javier Prado Oeste 1020, San Isidro', '2025-03-02 08:00:00', '2025-03-02 08:00:00'),
+  (12, '20100000012', 'Mega Electro Distribuciones S.A.', 'Diego Sánchez', '014567901', 'ventas@megaelectro.com.pe', 'Av. Santa Cruz 855, Miraflores', '2025-03-02 10:00:00', '2025-03-02 10:00:00'),
+  (13, '20100000013', 'Almacenes Tecnológicos Miraflores S.A.C.', 'Mariela Ponce', '014567902', 'ventas@almacenestec.com.pe', 'Av. Angamos Oeste 480, Miraflores', '2025-03-02 12:00:00', '2025-03-02 12:00:00'),
+  (14, '20100000014', 'Gaming y Hardware Perú S.A.C.', 'Hugo Medina', '014567903', 'ventas@gamingyhardware.com.pe', 'Av. Benavides 1560, Miraflores', '2025-03-02 14:00:00', '2025-03-02 14:00:00'),
+  (15, '20100000015', 'Telecom y Móviles Import S.A.C.', 'Paola Vega', '014567904', 'ventas@telecomymoviles.com.pe', 'Av. Canaval y Moreyra 380, San Isidro', '2025-03-02 16:00:00', '2025-03-02 16:00:00'),
+  (16, '20100000016', 'Oficina y Cómputo Mayorista S.A.C.', 'Ernesto Flores', '014567905', 'ventas@oficinaycomputo.com.pe', 'Av. Los Frutales 135, Ate', '2025-03-02 18:00:00', '2025-03-02 18:00:00'),
+  (17, '20100000017', 'Nexo Tecnología Importaciones S.A.C.', 'Claudia Ríos', '014567906', 'ventas@nexotecnologia.com.pe', 'Av. Primavera 2390, Santiago de Surco', '2025-03-02 20:00:00', '2025-03-02 20:00:00'),
+  (18, '20100000018', 'Soluciones Informáticas Callao S.A.', 'Julio Campos', '014567907', 'ventas@solinfocallao.com.pe', 'Av. Petit Thouars 4450, Miraflores', '2025-03-02 22:00:00', '2025-03-02 22:00:00'),
+  (19, '20100000019', 'Storage Perú Distribuciones S.A.C.', 'Andrea Lozano', '014567908', 'ventas@storageperu.com.pe', 'Av. Faucett 2050, Callao', '2025-03-03 00:00:00', '2025-03-03 00:00:00'),
+  (20, '20100000020', 'Conectividad Total Perú S.A.C.', 'Renzo Acuña', '014567909', 'ventas@conectividadtotal.com.pe', 'Av. Conquistadores 620, San Isidro', '2025-03-03 02:00:00', '2025-03-03 02:00:00');
 
 -- 5. CLIENTE (20)
 INSERT INTO cliente (id_cliente, tipo_documento, numero_documento, nombre_razon_social, telefono, correo, direccion, fecha_creacion, fecha_modificacion) VALUES
