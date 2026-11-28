@@ -1,18 +1,106 @@
 package vista.area1Productos;
 
+import controlador.RelacionProductosController;
+import java.awt.Color;
+import java.math.BigDecimal;
+import java.util.List;
+import javax.swing.JLabel;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
+import modelo.Producto;
+import util.Mensajes;
+
 /**
  *
  * @author Diego
  */
-public class FormProductosRelacionados extends javax.swing.JFrame {
-    
+public class FormProductosRelacionados extends javax.swing.JDialog {
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FormProductosRelacionados.class.getName());
+
+    private static final String[] COLUMNAS = {"Producto", "Marca", "Precio", "Stock", "Veces juntos"};
+    private static final int[] ANCHOS = {260, 100, 80, 60, 90};
 
     /**
      * Creates new form FormProductosRelacionados
      */
-    public FormProductosRelacionados() {
+    public FormProductosRelacionados(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
+    }
+
+    // Lo usa FormProductos: muestra los productos relacionados de "base" (ya ordenados)
+    public FormProductosRelacionados(java.awt.Frame parent, Producto base,
+            List<Producto> relacionados, RelacionProductosController controlador) {
+        this(parent, true);
+        setTitle("Productos relacionados");
+        configurarTabla();
+        cargarDatos(base, relacionados, controlador);
+        setResizable(false);
+        pack();
+        setLocationRelativeTo(parent);
+    }
+
+    private void configurarTabla() {
+        DefaultTableModel modelo = new DefaultTableModel(COLUMNAS, 0) {
+            @Override
+            public boolean isCellEditable(int fila, int columna) {
+                return false;
+            }
+
+            @Override
+            public Class<?> getColumnClass(int columna) {
+                return switch (columna) {
+                    case 2 -> BigDecimal.class;
+                    case 3, 4 -> Integer.class;
+                    default -> String.class;
+                };
+            }
+        };
+        tblProductosRelacionados.setModel(modelo);
+        tblProductosRelacionados.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tblProductosRelacionados.getTableHeader().setReorderingAllowed(false);
+        for (int i = 0; i < ANCHOS.length; i++) {
+            tblProductosRelacionados.getColumnModel().getColumn(i).setPreferredWidth(ANCHOS[i]);
+        }
+    }
+
+    private void cargarDatos(Producto base, List<Producto> relacionados,
+            RelacionProductosController controlador) {
+        lblProducto.setText(base.getNombreProducto());
+        lblPrecio.setText(base.getPrecio() == null ? "-" : base.getPrecio().toString());
+        lblNumeroProductos.setText(String.valueOf(relacionados.size()));
+
+        if (relacionados.isEmpty()) {
+            mostrarSinRelacionados();
+            return;
+        }
+
+        DefaultTableModel modelo = (DefaultTableModel) tblProductosRelacionados.getModel();
+        try {
+            for (Producto p : relacionados) {
+                modelo.addRow(new Object[]{
+                    p.getNombreProducto(),
+                    p.getMarca().getNombreMarca(),
+                    p.getPrecio(),
+                    p.getStock(),
+                    controlador.pesoCon(base, p)
+                });
+            }
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
+    }
+
+    // En lugar de una tabla vacia, el area de la tabla muestra un mensaje
+    private void mostrarSinRelacionados() {
+        JLabel aviso = new JLabel("Este producto aún no se ha vendido junto con otros.",
+                SwingConstants.CENTER);
+        aviso.setFont(new java.awt.Font("Inter SemiBold", 0, 14));
+        aviso.setForeground(new Color(44, 44, 44));
+        jScrollPane1.setViewportView(aviso);
+        jScrollPane1.getViewport().setBackground(tblProductosRelacionados.getBackground());
     }
 
     /**
@@ -28,21 +116,21 @@ public class FormProductosRelacionados extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        lblProducto = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
+        lblPrecio = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblProductosRelacionados = new javax.swing.JTable();
         jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
-        btnProductosRelacionado = new javax.swing.JButton();
+        lblNumeroProductos = new javax.swing.JLabel();
+        btnCerrar = new javax.swing.JButton();
 
         jLabel6.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(44, 44, 44));
         jLabel6.setText("Operaciones fundamentales");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -54,17 +142,17 @@ public class FormProductosRelacionados extends javax.swing.JFrame {
         jLabel11.setForeground(new java.awt.Color(44, 44, 44));
         jLabel11.setText("Se venden junto con: ");
 
-        jLabel12.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(44, 44, 44));
-        jLabel12.setText("     Laptop HP 15");
+        lblProducto.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
+        lblProducto.setForeground(new java.awt.Color(44, 44, 44));
+        lblProducto.setText("     Laptop HP 15");
 
         jLabel13.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(44, 44, 44));
         jLabel13.setText("Precio:");
 
-        jLabel14.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(44, 44, 44));
-        jLabel14.setText("2.199");
+        lblPrecio.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
+        lblPrecio.setForeground(new java.awt.Color(44, 44, 44));
+        lblPrecio.setText("2.199");
 
         jLabel15.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(44, 44, 44));
@@ -90,17 +178,17 @@ public class FormProductosRelacionados extends javax.swing.JFrame {
         jLabel16.setForeground(new java.awt.Color(44, 44, 44));
         jLabel16.setText("Número de productos relacionados:");
 
-        jLabel17.setFont(new java.awt.Font("Inter SemiBold", 0, 24)); // NOI18N
-        jLabel17.setForeground(new java.awt.Color(44, 44, 44));
-        jLabel17.setText("5");
+        lblNumeroProductos.setFont(new java.awt.Font("Inter SemiBold", 0, 24)); // NOI18N
+        lblNumeroProductos.setForeground(new java.awt.Color(44, 44, 44));
+        lblNumeroProductos.setText("5");
 
-        btnProductosRelacionado.setBackground(new java.awt.Color(255, 51, 51));
-        btnProductosRelacionado.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
-        btnProductosRelacionado.setForeground(new java.awt.Color(255, 255, 255));
-        btnProductosRelacionado.setText("Cerrar");
-        btnProductosRelacionado.addActionListener(new java.awt.event.ActionListener() {
+        btnCerrar.setBackground(new java.awt.Color(255, 51, 51));
+        btnCerrar.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
+        btnCerrar.setForeground(new java.awt.Color(255, 255, 255));
+        btnCerrar.setText("Cerrar");
+        btnCerrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnProductosRelacionadoActionPerformed(evt);
+                btnCerrarActionPerformed(evt);
             }
         });
 
@@ -117,13 +205,13 @@ public class FormProductosRelacionados extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel11)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)))
+                        .addComponent(lblProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel15)
                 .addGap(24, 24, 24)
                 .addComponent(jLabel13)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel14)
+                .addComponent(lblPrecio)
                 .addGap(57, 57, 57))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
@@ -131,9 +219,9 @@ public class FormProductosRelacionados extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(123, 123, 123)
-                .addComponent(jLabel17)
+                .addComponent(lblNumeroProductos)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnProductosRelacionado, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
@@ -148,9 +236,9 @@ public class FormProductosRelacionados extends javax.swing.JFrame {
                 .addGap(29, 29, 29)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
-                    .addComponent(jLabel12)
+                    .addComponent(lblProducto)
                     .addComponent(jLabel13)
-                    .addComponent(jLabel14)
+                    .addComponent(lblPrecio)
                     .addComponent(jLabel15))
                 .addGap(28, 28, 28)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -158,8 +246,8 @@ public class FormProductosRelacionados extends javax.swing.JFrame {
                 .addComponent(jLabel16)
                 .addGap(1, 1, 1)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel17)
-                    .addComponent(btnProductosRelacionado, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblNumeroProductos)
+                    .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
@@ -178,48 +266,23 @@ public class FormProductosRelacionados extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnProductosRelacionadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosRelacionadoActionPerformed
+    private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
         this.dispose();
-    }//GEN-LAST:event_btnProductosRelacionadoActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FormProductosRelacionados().setVisible(true));
-    }
+    }//GEN-LAST:event_btnCerrarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnProductosRelacionado;
+    private javax.swing.JButton btnCerrar;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblNumeroProductos;
+    private javax.swing.JLabel lblPrecio;
+    private javax.swing.JLabel lblProducto;
     private javax.swing.JTable tblProductosRelacionados;
     // End of variables declaration//GEN-END:variables
 }
