@@ -1,6 +1,7 @@
 package vista.area1Productos;
 
 import controlador.CategoriaController;
+import controlador.RelacionProductosController;
 import controlador.MarcaController;
 import controlador.ProductoController;
 import java.awt.Color;
@@ -1198,7 +1199,21 @@ public class FormProductos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGarantiaActionPerformed
 
     private void btnProductosRelacionadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosRelacionadoActionPerformed
-        new FormProductosRelacionados().setVisible(true);
+        int fila = tblProductos.getSelectedRow();
+
+        if (fila == -1) {
+            Mensajes.error("Seleccione un producto de la tabla.");
+            return;
+        }
+
+        try {
+            Producto base = listaProductos.get(fila);
+            RelacionProductosController relControl = new RelacionProductosController();
+            List<Producto> relacionados = relControl.sugerirProductos(base);
+            new FormProductosRelacionados(this, base, relacionados, relControl).setVisible(true);
+        } catch (Exception e) {
+            Mensajes.error(e.getMessage());
+        }
     }//GEN-LAST:event_btnProductosRelacionadoActionPerformed
 
     private void cargarComboCategorias() {

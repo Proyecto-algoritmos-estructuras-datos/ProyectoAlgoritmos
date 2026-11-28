@@ -20,30 +20,40 @@ import modelo.Venta;
 public class VentaDAO implements IVentaDAO {
 
     private static final String SQL_VENTA_POR_ID = """
- SELECT id_venta, numero, fecha_venta, estado
- FROM venta
- WHERE id_venta = ?
- """;
+    SELECT id_venta, numero, fecha_venta, estado
+    FROM venta
+    WHERE id_venta = ?
+    """;
+    
     private static final String SQL_VENTA_POR_NUMERO = """
- SELECT id_venta, numero, fecha_venta, estado
- FROM venta
- WHERE numero = ?
- """;
+    SELECT id_venta, numero, fecha_venta, estado
+    FROM venta
+    WHERE numero = ?
+    """;
+    
     private static final String SQL_DETALLE = """
- SELECT
- d.id_detalle_venta,
- d.id_venta,
- d.cantidad,
- d.precio_unitario,
- p.id_producto,
- p.codigo,
- p.nombre_producto
- FROM detalle_venta d
- INNER JOIN producto p ON d.id_producto = p.id_producto
- WHERE d.id_venta = ?
- ORDER BY d.id_detalle_venta
- """;
+    SELECT
+    d.id_detalle_venta,
+    d.id_venta,
+    d.cantidad,
+    d.precio_unitario,
+    p.id_producto,
+    p.codigo,
+    p.nombre_producto
+    FROM detalle_venta d
+    INNER JOIN producto p ON d.id_producto = p.id_producto
+    WHERE d.id_venta = ?
+    ORDER BY d.id_detalle_venta
+    """;
     // "v2", "V2" o "V0002" se convierten en "V0002", que es como se guarda en la tabla venta
+    
+    private static final String SQL_LINEAS_COMPLETADAS = """
+    SELECT d.id_venta, d.id_producto
+    FROM detalle_venta d
+    INNER JOIN venta v ON v.id_venta = d.id_venta
+    WHERE v.estado = 'COMPLETADA'
+    ORDER BY d.id_venta, d.id_producto
+    """;
 
     public static String normalizarNumero(String dato) {
         String resto = dato.trim().substring(1);
@@ -105,6 +115,21 @@ public class VentaDAO implements IVentaDAO {
             return lista;
         } catch (SQLException e) {
             throw new Exception("Error al cargar el detalle de la venta: " + e.getMessage());
+        }
+    }
+    
+    @Override
+    public List<int[]> listarLineasVentasCompletadas() throws Exception {
+        List<int[]> lineas = new ArrayList<>();
+        try (Connection conn = new Conexion().conectar();
+                PreparedStatement ps = conn.prepareStatement(SQL_LINEAS_COMPLETADAS);
+                ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lineas.add(new int[]{rs.getInt("id_venta"), rs.getInt("id_producto")});
+            }
+            return lineas;
+        } catch (SQLException e) {
+            throw new Exception("Error al cargar las ventas para los productos relacionados: " + e.getMessage());
         }
     }
 }

@@ -362,7 +362,7 @@ public class FormAdministracion extends javax.swing.JFrame {
 
         jPanel13.setBackground(new java.awt.Color(1, 91, 187));
 
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/apla.png"))); // NOI18N
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/apla.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -384,7 +384,7 @@ public class FormAdministracion extends javax.swing.JFrame {
         btnProductos.setBackground(new java.awt.Color(0, 29, 63));
         btnProductos.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnProductos.setForeground(new java.awt.Color(255, 255, 255));
-        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/productos.png"))); // NOI18N
+        btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/productos.png"))); // NOI18N
         btnProductos.setText("   Productos      ");
         btnProductos.setBorder(null);
         btnProductos.setBorderPainted(false);
@@ -398,7 +398,7 @@ public class FormAdministracion extends javax.swing.JFrame {
         btnMarcas.setBackground(new java.awt.Color(0, 29, 63));
         btnMarcas.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnMarcas.setForeground(new java.awt.Color(255, 255, 255));
-        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/marcas.png"))); // NOI18N
+        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/marcas.png"))); // NOI18N
         btnMarcas.setText("   Marcas             ");
         btnMarcas.setBorder(null);
         btnMarcas.setBorderPainted(false);
@@ -413,7 +413,7 @@ public class FormAdministracion extends javax.swing.JFrame {
         btnCategorias.setBackground(new java.awt.Color(0, 29, 63));
         btnCategorias.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnCategorias.setForeground(new java.awt.Color(255, 255, 255));
-        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/categorias.png"))); // NOI18N
+        btnCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/imagenes/categorias.png"))); // NOI18N
         btnCategorias.setText("  Categorias      ");
         btnCategorias.setBorder(null);
         btnCategorias.setBorderPainted(false);
