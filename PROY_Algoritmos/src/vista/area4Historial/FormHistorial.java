@@ -139,27 +139,7 @@ private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {
     spnDesde.setValue(new java.util.Date());
     spnHasta.setValue(new java.util.Date());
     cargarYPaginarMovimientos(); // tu método de siempre: vuelve a mostrar todo
-}
-
-
-    private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {                                          
-        if (listaDoblePaginada != null) {
-            actualizarTabla(listaDoblePaginada.irAnterior());
-        }
-    }                                         
-
-    private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        if (listaDoblePaginada != null) {
-            actualizarTabla(listaDoblePaginada.irSiguiente());
-        }
-    }                                          
-
-    private void btnFinActionPerformed(java.awt.event.ActionEvent evt) {                                       
-        if (listaDoblePaginada != null) {
-            actualizarTabla(listaDoblePaginada.irUltimo());
-        }
-    }
-    
+}                                     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -235,6 +215,11 @@ private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {
         btnSiguiente.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnSiguiente.setForeground(new java.awt.Color(0, 0, 0));
         btnSiguiente.setText("Siguiente");
+        btnSiguiente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSiguienteActionPerformed(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Inter SemiBold", 0, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
@@ -244,6 +229,11 @@ private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {
         btnAnterior.setFont(new java.awt.Font("Inter SemiBold", 0, 14)); // NOI18N
         btnAnterior.setForeground(new java.awt.Color(0, 0, 0));
         btnAnterior.setText("Anterior");
+        btnAnterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnteriorActionPerformed(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Inter SemiBold", 0, 13)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(33, 29, 29));
@@ -353,6 +343,7 @@ private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {
         );
 
         jPanel12.setBackground(new java.awt.Color(0, 30, 66));
+
         btnProductos.setBackground(new java.awt.Color(0, 29, 63));
         btnProductos.setFont(new java.awt.Font("Inter SemiBold", 0, 12)); // NOI18N
         btnProductos.setForeground(new java.awt.Color(255, 255, 255));
@@ -630,7 +621,9 @@ private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {
     }//GEN-LAST:event_btnAjusteStockActionPerformed
 
     private void btnInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicioActionPerformed
-        // TODO add your handling code here:
+        if (listaDoblePaginada != null) {
+            actualizarTabla(listaDoblePaginada.irPrimero());
+        }
     }//GEN-LAST:event_btnInicioActionPerformed
 
     private void btnEnEsperaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnEsperaActionPerformed
@@ -664,6 +657,18 @@ private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {
        javax.swing.JOptionPane.showMessageDialog(this, e.getMessage());
    }    }//GEN-LAST:event_btnFiltrarActionPerformed
 
+    private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteActionPerformed
+        if (listaDoblePaginada != null) {
+            actualizarTabla(listaDoblePaginada.irSiguiente());
+        }
+    }//GEN-LAST:event_btnSiguienteActionPerformed
+
+    private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
+        if (listaDoblePaginada != null) {
+            actualizarTabla(listaDoblePaginada.irAnterior());
+        }
+    }//GEN-LAST:event_btnAnteriorActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdministracion;
     private javax.swing.JButton btnAjusteStock;
@@ -671,8 +676,8 @@ private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JButton btnCategorias;
     private javax.swing.JButton btnCompras;
     private javax.swing.JButton btnEnEspera;
-    private javax.swing.JButton btnGarantia;
     private javax.swing.JButton btnFiltrar;
+    private javax.swing.JButton btnGarantia;
     private javax.swing.JButton btnHistorial;
     private javax.swing.JButton btnInicio;
     private javax.swing.JButton btnLimpiar;
@@ -680,8 +685,6 @@ private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JButton btnProductos;
     private javax.swing.JButton btnSalir;
     private javax.swing.JButton btnSiguiente;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel4;
